@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
 import path from 'path';
+import expressLayouts from 'express-ejs-layouts';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
@@ -56,16 +57,20 @@ class App {
   }
 
   private initializeViewEngine() {
-    console.log("call initializeViewEngine")
+    const publicDirectoryPath = path.join(__dirname, "public");
+    this.app.use(express.static(publicDirectoryPath));
+
+    // express-ejs-layouts 세팅
+    this.app.use(expressLayouts);
+    this.app.set('layout', './layout/layout');
+    this.app.set('layout extractScripts', true);
+
     this.app.set('views', path.join(__dirname, 'views'));
     this.app.set('view engine','ejs'); 
-    const publicDirectoryPath = path.join(__dirname, "./public");
-    this.app.use(express.static(publicDirectoryPath));
+    this.app.engine('html', require('ejs').renderFile);
   }
 
   private initializeRoutes(routes: Routes[]) {
-    console.log("call initializeRoutes")
-    console.log(routes)
     routes.forEach(route => {
       this.app.use('/', route.router);
     });

@@ -13,7 +13,10 @@ class IndexRoute implements Routes {
 
   // page 세팅
   private initializeRoutes() {
-    this.router.get(`${this.path}`, this.indexController.index);
+    console.log("call initializeRoutes")
+    this.router.get(this.path+``, this.indexController.index);
+    this.router.get(this.path+`testLayout`, this.indexController.testLayout);
+    console.log(this.router)
   }
 }
 
