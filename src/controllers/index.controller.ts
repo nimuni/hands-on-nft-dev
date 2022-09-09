@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 class IndexController {
   public index = (req: Request, res: Response, next: NextFunction): void => {
     try {
-      res.sendStatus(200);
+      res.render('index', {})
     } catch (error) {
       next(error);
     }

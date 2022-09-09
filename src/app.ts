@@ -5,6 +5,7 @@ import express from 'express';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
+import path from 'path';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
@@ -23,6 +24,7 @@ class App {
     this.port = PORT || 3000;
 
     this.initializeMiddlewares();
+    this.initializeViewEngine();
     this.initializeRoutes(routes);
     this.initializeSwagger();
     this.initializeErrorHandling();
@@ -53,7 +55,17 @@ class App {
     this.app.use(cookieParser());
   }
 
+  private initializeViewEngine() {
+    console.log("call initializeViewEngine")
+    this.app.set('views', path.join(__dirname, 'views'));
+    this.app.set('view engine','ejs'); 
+    const publicDirectoryPath = path.join(__dirname, "./public");
+    this.app.use(express.static(publicDirectoryPath));
+  }
+
   private initializeRoutes(routes: Routes[]) {
+    console.log("call initializeRoutes")
+    console.log(routes)
     routes.forEach(route => {
       this.app.use('/', route.router);
     });

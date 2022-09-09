@@ -3,7 +3,7 @@ import MoralisController from '@controllers/moralis.controller';
 import { Routes } from '@interfaces/routes.interface';
 
 class IndexRoute implements Routes {
-  public path = '/moralis';
+  public path = '/api/moralis';
   public router = Router();
   public moralisController = new MoralisController();
 

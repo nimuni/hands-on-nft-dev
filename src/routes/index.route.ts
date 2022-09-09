@@ -11,6 +11,7 @@ class IndexRoute implements Routes {
     this.initializeRoutes();
   }
 
+  // page 세팅
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.indexController.index);
   }
