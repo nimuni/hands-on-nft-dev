@@ -30,6 +30,7 @@
     "helmet": "^5.1.1",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
     "moralis-v1": "^1.11.0",
     "morgan": "^1.10.0",
     "swagger-jsdoc": "^6.2.1",

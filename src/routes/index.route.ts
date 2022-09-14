@@ -16,6 +16,7 @@ class IndexRoute implements Routes {
     console.log("call initializeRoutes")
     this.router.get(this.path+``, this.indexController.index);
     this.router.get(this.path+`testLayout`, this.indexController.testLayout);
+    this.router.get(this.path+`testLayout2`, this.indexController.testLayout2);
     console.log(this.router)
   }
 }
