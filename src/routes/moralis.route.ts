@@ -13,6 +13,7 @@ class MoralisRoute implements Routes {
 
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.moralisController.getMoralis);
+    this.router.get(`${this.path}/getWalletNFTs/:chainName/:walletAddress`, this.moralisController.getMoralis);
   }
 }
 

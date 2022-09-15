@@ -6,7 +6,21 @@ class MoralisController {
 
   public getMoralis = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      let result = await this.moralisService.test("0x017DeaE179A3E9632c11d63971090056886f6f70","rinkeby");
+      let walletAddress = req.params.walletAddress;
+      let chainName = req.params.chainName;
+
+      let result = await this.moralisService.test(walletAddress, chainName);
+      res.status(200).json(result)
+    } catch (error) {
+      next(error);
+    }
+  };
+  public getWalletNFTs = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      let chainName = req.params.chainName;
+      let walletAddress = req.params.walletAddress;
+
+      let result = await this.moralisService.getWalletNFTs(chainName, walletAddress);
       res.status(200).json(result)
     } catch (error) {
       next(error);

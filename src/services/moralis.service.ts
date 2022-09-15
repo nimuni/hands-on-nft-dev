@@ -7,20 +7,28 @@ import { isEmpty } from '@utils/util';
 // Reference
 // https://docs.moralis.io/docs/nodejs-dapp-from-scratch
 // https://docs.moralis.io/reference/supported-chains-for-nft-api
+// 내 지갑주소 임시로세팅
+const testWalletAddress = "0x017DeaE179A3E9632c11d63971090056886f6f70"
 
 class MoralisService {
-  public async test(address:string, chain:string) {
-    const testAddress = address || "0x017DeaE179A3E9632c11d63971090056886f6f70"
+  public async test(walletAddress:string, chainName:string) {
+    const tempWalletAddress = walletAddress || testWalletAddress
     let nativeBalance = await Moralis.EvmApi.balance.getNativeBalance({
-      address: testAddress,
-      chain: getChainNameFromString(chain)
+      address: tempWalletAddress,
+      chain: getChainNameFromString(chainName)
     })
-    console.log("nativeBalance")
-    console.log(nativeBalance)
 
     const native = nativeBalance.result.balance.ether
-
     return { native }
+  }
+
+  public async getWalletNFTs(walletAddress:string, chainName:string){
+    const tempWalletAddress = walletAddress || testWalletAddress
+    const response = await Moralis.EvmApi.nft.getWalletNFTs({
+      address: tempWalletAddress,
+      chain: getChainNameFromString(chainName)
+    });
+    return response
   }
 }
 
