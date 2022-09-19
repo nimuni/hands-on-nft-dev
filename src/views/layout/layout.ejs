@@ -3,9 +3,13 @@
 <head>
   <%- include('./html-head') %>
 </head>
-<body>
-  <%- include('./header') %>
-  <%- body %>
+<body class="body-css">
+  <div class="wrap-body">
+    <%- include('./header') %>
+    <div class="container body-content-css">
+      <%- body %>
+    </div>
+  </div>
   <%- include('./footer') %>
 </body>
 </html>

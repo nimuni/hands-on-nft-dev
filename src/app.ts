@@ -59,7 +59,8 @@ class App {
       // appId: MORALIS_APP_ID,
       // serverUrl: MORALIS_SERVER_URL,
       // masterKey: MORALIS_MASTER_KEY
-      apiKey: MORALIS_WEB3_API_KEY
+      apiKey: MORALIS_WEB3_API_KEY,
+      logLevel: 'verbose'
     })
   }
 
