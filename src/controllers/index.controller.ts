@@ -3,7 +3,8 @@ const _ = require('lodash');
 import { MORALIS_APP_ID, MORALIS_SERVER_URL, MORALIS_MASTER_KEY} from '@config';
 const DEFAULT_PARAMS = {
   title: process.env.WEB_TITLE,
-  extractScripts: true 
+  extractScripts: true,
+  extractStyles: true
 }
 
 class IndexController {
