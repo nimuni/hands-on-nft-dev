@@ -2,13 +2,15 @@ import { Request, Response, NextFunction } from 'express';
 const _ = require('lodash');
 import { MORALIS_APP_ID, MORALIS_SERVER_URL, MORALIS_MASTER_KEY} from '@config';
 const DEFAULT_PARAMS = {
-  title: process.env.WEB_TITLE
+  title: process.env.WEB_TITLE,
+  extractScripts: true 
 }
 
 class IndexController {
   public index = (req: Request, res: Response, next: NextFunction): void => {
     try {
       let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
+      console.log(ejs_params)
       res.render('index', ejs_params)
     } catch (error) {
       next(error);

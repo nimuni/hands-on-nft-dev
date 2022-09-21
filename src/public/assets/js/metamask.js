@@ -22,6 +22,7 @@ window.onload = async function(){
   
   // button event listener setting
   await initEventActions();
+  await initEthereumEventListener();
 }
 
 async function initWeb3() {
@@ -94,6 +95,30 @@ async function initEventActions() {
   })
 }
 
+async function initEthereumEventListener() {
+  ethereum.on('accountsChanged', (accounts) => {
+    console.log("accountsChanged")
+  })
+  ethereum.on('chainChanged', (chainId) => {
+    console.log("chainChanged")
+
+    // 체인 바뀌면 페이지 리로딩필요
+    // window.location.reload();
+  })
+  ethereum.on('connect', connectInfo => {
+    console.log("connect")
+    console.log(connectInfo)
+  });
+  ethereum.on('disconnect', error => {
+    console.log("disconnect")
+    console.log(error)
+  });
+  ethereum.on('message', message => {
+    console.log("message")
+    console.log(message)
+  });
+}
+
 async function connectWallet() {
   if(ethereum){
     await ethereum.request({ method: 'eth_requestAccounts' });
@@ -104,3 +129,48 @@ async function connectWallet() {
  * Metamask function
  */
 
+// rpc error handler
+const rpcErrorHandler = function(error) {
+  console.log(error.message);
+  console.log(error.code);
+  console.log(error.data);
+}
+
+// request sample
+const requestEthereum = async function(params) {
+  // interface RequestArguments {
+  //   method: string;
+  //   params?: unknown[] | object;
+  // }
+
+  try {
+    let paramsArray = [
+      {
+        ...params
+      }
+    ]
+    let args = {
+      method: 'eth_sendTransaction',
+      paramsArray
+    }
+    let result = await ethereum.request(args)
+    console.log(result)
+
+
+    // const transactionHash = await ethereum.request({
+    //   method: 'eth_sendTransaction',
+    //   params: [
+    //     {
+    //       to: '0x...',
+    //       'from': '0x...',
+    //       value: '0x...',
+    //       // And so on...
+    //     },
+    //   ],
+    // });
+    // // Handle the result
+    // console.log(transactionHash);
+  } catch (error) {
+    console.log(error)
+  }
+}
