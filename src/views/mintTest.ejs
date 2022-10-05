@@ -1,0 +1,117 @@
+<script>
+  let loginBtn = document.getElementById("login");
+  loginBtn.addEventListener("click", e => {
+    Moralis.Web3.authenticate().then(function (user) {
+        // user.set("name",document.getElementById('username').value);
+        // user.set("email",document.getElementById('useremail').value);
+        console.log(user)
+        user.set("name", document.getElementById('username').value );
+        user.set("email", document.getElementById('useremail').value );
+        user.save();
+        console.log(user)
+    })
+  })
+
+  let uploadBtn = document.getElementById("upload");
+  let nameElem = document.getElementById("name")
+  let descriptionElem = document.getElementById("description")
+  let fileElem = document.getElementById("file")
+  uploadBtn.addEventListener("click", async e => {
+    console.log("call uploadBtn")
+    const fileInput = document.getElementById("file");
+    const data = fileInput.files[0];
+    const imageFile = new Moralis.File(data.name, data);
+
+    await imageFile.saveIPFS();
+    const imageURI = imageFile.ipfs();
+    const metadata = {
+      "name": nameElem.value,
+      "description": descriptionElem.value,
+      "image": imageURI,
+    }
+    console.log("metadata")
+    console.log(metadata)
+    const metadataFile = new Moralis.File("metadata.json", { base64 : btoa(JSON.stringify(metadata))});
+    console.log("base64")
+    console.log(btoa(JSON.stringify(metadata)))
+    console.log("metadataFile")
+    console.log(metadataFile)
+    await metadataFile.saveIPFS();
+    console.log("metadataFile2")
+    console.log(metadataFile)
+    const metadataURI = metadataFile.ipfs();
+    console.log("metadataURI")
+    console.log(metadataURI)
+    const txt = await mintToken(metadataURI);
+    console.log("after minttoken result txt")
+    console.log(txt)
+  });
+
+  async function mintToken(_uri){
+    const encodedFunction = web3.eth.abi.encodeFunctionCall({
+      name: "mintToken",
+      type: "function",
+      inputs: [{
+        type: 'string',
+        name: 'tokenURI'
+        }]
+    }, [_uri]);
+    console.log("call mintToken")
+    console.log(_uri)
+
+    console.log("encodedFunction")
+    console.log(encodedFunction)
+
+    const transactionParameters = {
+      to: nft_contract_address,
+      from: ethereum.selectedAddress,
+      data: encodedFunction
+    };
+    console.log("transactionParameters")
+    console.log(transactionParameters)
+    const txt = await ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [transactionParameters]
+    });
+    console.log("txt")
+    console.log(txt)
+    return txt
+  }
+</script>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>Mint NFT</h1>
+      <div class="form-group">
+        <div class="input-group">
+          <input id="username" type="text" class="form-control mb-3">
+        </div>
+        <div class="input-group">
+          <input id="useremail" type="text" class="form-control mb-3">
+        </div>
+      </div>
+      <div>
+        <button class="btn btn-primary mb-3" id="login">Connect Metamask</button>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group">
+        <div class="input-group mb-3">
+          <input id="name" type="text" class="form-control">
+        </div>
+        <div class="input-group mb-3">
+          <input id="description" type="text" class="form-control">
+        </div>
+        <div class="input-group mb-3">
+          <input id="file" type="file">
+        </div>
+      </div>
+      <div>
+        <button class="btn btn-primary" id="upload">Upload and Mint</button>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="input-group mb-3" id="resultSpace"></div>
+    </div>
+  </div>
+</div>

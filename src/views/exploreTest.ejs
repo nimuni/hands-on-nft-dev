@@ -1,0 +1,161 @@
+<script>
+let getBalanceBtn = document.getElementById("getBalanceBtn");
+getBalanceBtn.addEventListener("click", e=>{
+  let address;
+  address = document.getElementById("wallet-address-1").value
+
+  let outputWei = document.getElementById("get-balance-output-wei");
+  let outputEth = document.getElementById("get-balance-output-eth");
+  try {
+    web3.eth.getBalance(address, function (error, wei) {
+      if (!error) {
+        let balance = web3.utils.fromWei(wei, 'ether');
+        outputWei.innerHTML = wei + " wei"
+        outputEth.innerHTML = balance + " eth"
+      }
+    });
+  } catch (err) {
+    document.getElementById("output-error").innerHTML = err;
+  }
+})
+
+let btn2 = document.getElementById("btn2");
+let contract2;
+let contractAddress2 = document.getElementById("contract-address-2");
+let tokenId2 = document.getElementById("token-id-2");
+let nftResultDiv2 = document.getElementById("nft-result-div-2")
+afterInitFunction = function(){
+  console.log("call afterInitFunction")
+  contractAddress2.value = nft_contract_address;
+}
+const addCardDOM = function(){
+
+}
+
+btn2.addEventListener("click", async e => {
+  console.log("call btn2")
+  if(contract){
+
+    if(!contract2){
+      contract2 = new web3.eth.Contract(nft_contract_abi, contractAddress2.value);
+    }
+    try {
+      // get metadata url from blockchain
+      let NFTMetadataUrl = await contract2.methods.tokenURI(Number(tokenId2.value)).call({from: '0xAddF4475192878D52774e8270a477C1a3e808eaa'});
+      console.log("NFTMetadataUrl")
+      console.log(NFTMetadataUrl)
+
+      // get metadata from NFTMetadataUrl
+      let NFTMetadata = await fetch(NFTMetadataUrl)
+      console.log("NFTMetadata")
+      console.log(NFTMetadata)
+
+      // get image from NFTMetadata
+      let imageData = await fetch(NFTMetadata?.image)
+      console.log("imageData")
+      console.log(imageData)
+
+
+      // show data
+      // nftResultDiv2
+
+      // show image
+    } catch (error) {
+      console.error(error)
+    }
+  } else {
+    console.log("Contract 초기화가 되지 않았습니다.")
+  }
+})
+
+
+
+let btn3 = document.getElementById("btn3");
+let btn4 = document.getElementById("btn4");
+let btn5 = document.getElementById("btn5");
+btn3.addEventListener("click", e=>{
+  console.log("call btn3")
+})
+btn4.addEventListener("click", e=>{
+  console.log("call btn4")
+})
+btn5.addEventListener("click", e=>{
+  console.log("call btn5")
+})
+</script>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>Explore NFT</h1>
+      <h3><%= contractAddress %></h3>
+    </div>
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12">
+          <input type="text" id="address"/>
+          <div id="output"></div>
+        </div>
+        <div class="col-12">
+
+
+          <button type="button" class="btn btn-primary" id="btn3">test3</button>
+          <button type="button" class="btn btn-primary" id="btn4">test4</button>
+          <button type="button" class="btn btn-primary" id="btn5">test5</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion my-2">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="feature-head-1">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#feature-collapse-1" aria-expanded="true" aria-controls="feature-collapse-1">
+          이더 조회
+        </button>
+      </h2>
+      <div id="feature-collapse-1" class="accordion-collapse collapse show" aria-labelledby="feature-head-1">
+        <div class="accordion-body">
+          이더 조회 내용
+          <div>
+            <input type="text" id="wallet-address-1" placeholder="walletAddress"/>
+            <button type="button" class="btn btn-primary" id="getBalanceBtn">조회</button>
+          </div>
+          <div>
+            <div id="get-balance-output-wei"></div>
+            <div id="get-balance-output-eth"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="feature-head-2">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#feature-collapse-2" aria-expanded="false" aria-controls="feature-collapse-2">
+          컨트랙트 NFT 조회
+        </button>
+      </h2>
+      <div id="feature-collapse-2" class="accordion-collapse collapse" aria-labelledby="feature-head-2">
+        <div class="accordion-body">
+          <div class="row" id="nft-result-div-2">
+            <div class="col-12">
+              <input type="text" id="contract-address-2" placeholder="Contract Address"/>
+              <input type="text" id="token-id-2" placeholder="Token ID"/>
+              <button type="button" class="btn btn-primary" id="btn2">test2</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="feature-head-3">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#feature-collapse-3" aria-expanded="false" aria-controls="feature-collapse-3">
+          아코디언3
+        </button>
+      </h2>
+      <div id="feature-collapse-3" class="accordion-collapse collapse" aria-labelledby="feature-head-3">
+        <div class="accordion-body">
+          내용3
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -49,6 +49,25 @@ class IndexController {
       next(error);
     }
   };
+  public mintTest = (req: Request, res: Response, next: NextFunction): void => {
+    console.log("call mintTest")
+    try {
+      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
+      res.render('mintTest', ejs_params)
+    } catch (error) {
+      next(error);
+    }
+  };
+  public exploreTest = (req: Request, res: Response, next: NextFunction): void => {
+    console.log("call exploreTest")
+    try {
+      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
+      ejs_params.contractAddress = req.query.contractAddress;
+      res.render('exploreTest', ejs_params)
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default IndexController;

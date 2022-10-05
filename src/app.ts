@@ -66,8 +66,9 @@ class App {
 
   private initializeMiddlewares() {
     this.app.use(morgan(LOG_FORMAT, { stream }));
-    this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
     this.app.use(hpp());
+    // this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
+    this.app.use(cors({}));
 
     // TODO csp작업 해놔야함. 현재 처리x 아래 활성화 필요
     // helmet default
@@ -111,7 +112,7 @@ class App {
     this.app.set('layout extractScripts', true);
 
     this.app.set('views', path.join(__dirname, 'views'));
-    this.app.set('view engine','ejs'); 
+    this.app.set('view engine','ejs');
     this.app.engine('html', require('ejs').renderFile);
   }
 
