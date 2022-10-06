@@ -47,6 +47,7 @@ async function initWeb3() {
       // console.log(web3.version)
       let accounts = await web3.eth.getAccounts();
       console.log(`현재 로그인된 계정\n${accounts[0]}`)
+      web3.eth.defaultAccount = accounts[0]
     } else if(typeof window.web3 !== 'undefined'){
       web3 = new Web3(window.web3.curruntProvider);
     } else {

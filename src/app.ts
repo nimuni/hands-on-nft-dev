@@ -67,8 +67,13 @@ class App {
   private initializeMiddlewares() {
     this.app.use(morgan(LOG_FORMAT, { stream }));
     this.app.use(hpp());
-    // this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
-    this.app.use(cors({}));
+    this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
+    // this.app.use(cors({}));
+    // this.app.use(function(req, res, next) {
+    //   res.header("Access-Control-Allow-Origin", "*");
+    //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    //   next();
+    // });
 
     // TODO csp작업 해놔야함. 현재 처리x 아래 활성화 필요
     // helmet default
