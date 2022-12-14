@@ -1,10 +1,11 @@
 const default_contrack_type = "ethereum";
-const default_contrack_chain = 'rinkeby';
-const MORALIS_SERVER_URL="https://w140jt5jjlbv.usemoralis.com:2053/server"
-const MORALIS_APP_ID="EPXW2YoTnol6ysUDOadc2XE4BB2iHwXUm3tWmSwH"
+const default_contrack_chain = 'goerli';
 
 const { ethereum } = window;
-let web3, installed, contract, nft_contract_address, nft_contract_abi;
+let web3, installed, contract, contractWrapper, net_env, transactionBaseAddress;
+let nft_contract, nft_contract_address, nft_contract_abi;
+let nft_marketplace_contract, nft_marketplace_address, nft_marketplace_abi;
+let nft_auction_contract, nft_auction_address, nft_auction_abi;
 
 /**
  * Metamask and web3 initialize
@@ -13,12 +14,12 @@ let web3, installed, contract, nft_contract_address, nft_contract_abi;
 let afterInitFunction = function(){};
 window.onload = async function(){
   // Moralis init
-  await Moralis.start({serverUrl:MORALIS_SERVER_URL, appId:MORALIS_APP_ID})
+  // await Moralis.start({serverUrl:MORALIS_SERVER_URL, appId:MORALIS_APP_ID})
 
   // web3 injection
   await initWeb3();
 
-  // contract injection
+  // contract init
   await initContract();
 
   // connect wallet button change
@@ -34,39 +35,43 @@ window.onload = async function(){
 async function initWeb3() {
   console.log("initWeb3")
 
-  // moralis용
   if(!web3){
-    if(window.ethereum){
+    if(ethereum){
       console.log("metamask 사용")
-      web3 = new Web3(window.ethereum);
-      // console.log(web3)
-      // console.log(web3.eth)
-      // console.log(web3.shh)
-      // console.log(web3.bzz)
-      // console.log(web3.utils)
-      // console.log(web3.version)
+      web3 = new Web3(ethereum);
+
       let accounts = await web3.eth.getAccounts();
       console.log(`현재 로그인된 계정\n${accounts[0]}`)
       web3.eth.defaultAccount = accounts[0]
-    } else if(typeof window.web3 !== 'undefined'){
-      web3 = new Web3(window.web3.curruntProvider);
+    } else if(typeof ethereum !== 'undefined'){
+      web3 = new Web3(ethereum.curruntProvider);
     } else {
-      // moralis 없는경우, web3 인젝션이 안됨
-      // throw new Error("No web3 instance injected.")
-
-      console.log("infura 사용")
-      window.web3 = new Web3(new Web3.providers.HttpProvider("https://goerli.infura.io/v3/2c31c29191f84636ae5d8d792d10945f"));
-      web3 = window.web3
+      // web3 인젝션이 안된경우
+      throw new Error("No Metamask in browser")
     }
+    ///////////////////////////////////////
+    // web3 option setting
+    ///////////////////////////////////////
+    // 디폴트로 50블록 처리될때까지 기다리는데 100블록 처리될 때 까지 기다리는 로직
+    // web3.eth.transactionBlockTimeout = 100;
+    // 디폴트로 750초 대기하나, 1000초동안 대기하는 로직
+    // web3.eth.transactionPollingTimeout = 1000;
+  } else {
+    throw new Error("No web3 instance injected.")
   }
 }
 
 async function initContract() {
-  // const nft_contract_address = "0x0Fb6EF3505b9c52Ed39595433a21aF9B5FCc4431";
-  nft_contract_address = "0x725CcA4b7320910df880276B1fabBAA68976006C";
-  nft_contract_abi = [{inputs:[],stateMutability:"nonpayable",type:"constructor"},{anonymous:!1,inputs:[{indexed:!0,internalType:"address",name:"owner",type:"address"},{indexed:!0,internalType:"address",name:"approved",type:"address"},{indexed:!0,internalType:"uint256",name:"tokenId",type:"uint256"}],name:"Approval",type:"event"},{anonymous:!1,inputs:[{indexed:!0,internalType:"address",name:"owner",type:"address"},{indexed:!0,internalType:"address",name:"operator",type:"address"},{indexed:!1,internalType:"bool",name:"approved",type:"bool"}],name:"ApprovalForAll",type:"event"},{inputs:[{internalType:"address",name:"to",type:"address"},{internalType:"uint256",name:"tokenId",type:"uint256"}],name:"approve",outputs:[],stateMutability:"nonpayable",type:"function"},{inputs:[{internalType:"string",name:"tokenURI",type:"string"}],name:"mintToken",outputs:[{internalType:"uint256",name:"",type:"uint256"}],stateMutability:"nonpayable",type:"function"},{inputs:[{internalType:"address",name:"from",type:"address"},{internalType:"address",name:"to",type:"address"},{internalType:"uint256",name:"tokenId",type:"uint256"}],name:"safeTransferFrom",outputs:[],stateMutability:"nonpayable",type:"function"},{inputs:[{internalType:"address",name:"from",type:"address"},{internalType:"address",name:"to",type:"address"},{internalType:"uint256",name:"tokenId",type:"uint256"},{internalType:"bytes",name:"data",type:"bytes"}],name:"safeTransferFrom",outputs:[],stateMutability:"nonpayable",type:"function"},{inputs:[{internalType:"address",name:"operator",type:"address"},{internalType:"bool",name:"approved",type:"bool"}],name:"setApprovalForAll",outputs:[],stateMutability:"nonpayable",type:"function"},{anonymous:!1,inputs:[{indexed:!0,internalType:"address",name:"from",type:"address"},{indexed:!0,internalType:"address",name:"to",type:"address"},{indexed:!0,internalType:"uint256",name:"tokenId",type:"uint256"}],name:"Transfer",type:"event"},{inputs:[{internalType:"address",name:"from",type:"address"},{internalType:"address",name:"to",type:"address"},{internalType:"uint256",name:"tokenId",type:"uint256"}],name:"transferFrom",outputs:[],stateMutability:"nonpayable",type:"function"},{inputs:[{internalType:"address",name:"owner",type:"address"}],name:"balanceOf",outputs:[{internalType:"uint256",name:"",type:"uint256"}],stateMutability:"view",type:"function"},{inputs:[{internalType:"uint256",name:"tokenId",type:"uint256"}],name:"getApproved",outputs:[{internalType:"address",name:"",type:"address"}],stateMutability:"view",type:"function"},{inputs:[{internalType:"address",name:"owner",type:"address"},{internalType:"address",name:"operator",type:"address"}],name:"isApprovedForAll",outputs:[{internalType:"bool",name:"",type:"bool"}],stateMutability:"view",type:"function"},{inputs:[],name:"name",outputs:[{internalType:"string",name:"",type:"string"}],stateMutability:"view",type:"function"},{inputs:[{internalType:"uint256",name:"tokenId",type:"uint256"}],name:"ownerOf",outputs:[{internalType:"address",name:"",type:"address"}],stateMutability:"view",type:"function"},{inputs:[{internalType:"bytes4",name:"interfaceId",type:"bytes4"}],name:"supportsInterface",outputs:[{internalType:"bool",name:"",type:"bool"}],stateMutability:"view",type:"function"},{inputs:[],name:"symbol",outputs:[{internalType:"string",name:"",type:"string"}],stateMutability:"view",type:"function"},{inputs:[{internalType:"uint256",name:"tokenId",type:"uint256"}],name:"tokenURI",outputs:[{internalType:"string",name:"",type:"string"}],stateMutability:"view",type:"function"}];
+  nft_contract = new NftContractWrapper(await getAccount());
+  market_contract = new MarketContractWrapper(await getAccount());
+  auction_contract = new AuctionContractWrapper(await getAccount());
 
-  contract = new web3.eth.Contract(nft_contract_abi, nft_contract_address);
+  net_env = "goerli" // "mainnet"
+
+  // initializing Contract instance
+  // nft_contract = new web3.eth.Contract(nft_contract_abi, nft_contract_address);
+  // nft_marketplace_contract = new web3.eth.Contract(nft_marketplace_abi, nft_marketplace_address);
+  // nft_auction_contract = new web3.eth.Contract(nft_auction_abi, nft_auction_address);
 }
 
 function isInstalledMetamask() {
@@ -103,6 +108,7 @@ async function changeConnectButtonLabel() {
 }
 
 async function initEventActions() {
+  console.log("call initEventActions")
   let connectWalletBtn = document.getElementById("connectWallet");
   connectWalletBtn.addEventListener("click", async (e) => {
     try {
@@ -132,7 +138,7 @@ async function initEthereumEventListener() {
     console.log("chainChanged")
 
     // 체인 바뀌면 페이지 리로딩필요
-    // window.location.reload();
+    window.location.reload();
   })
   ethereum.on('connect', connectInfo => {
     console.log("connect")
@@ -143,33 +149,88 @@ async function initEthereumEventListener() {
     console.log(error)
   });
   ethereum.on('message', message => {
-    console.log("message")
-    console.log(message)
+    // console.log("message")
+    // console.log(message)
   });
 }
 
 async function connectWallet() {
+  console.log("call connectWallet")
+
   if(ethereum){
-    Moralis.Web3.authenticate().then(function (user) {
-        // user.set("name",document.getElementById('username').value);
-        // user.set("email",document.getElementById('useremail').value);
-        console.log(user)
-        user.set("name","testName");
-        user.set("email","testEmail");
-        user.save();
-        console.log(user)
-    })
     // 계정주소 가져오기
     let accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+    console.log("eth_requestAccounts=")
+    console.log(accounts)
     // 체인정보 가져오기
     let networkId = await ethereum.request({ method: 'net_version' });
+    console.log("net_version=")
+    console.log(networkId)
   }
 }
-async function authenticate() {
-  console.log("call authenticate")
-  let user = await Moralis.Web3.authenticate();
 
-  if(user) {
-    user.save()
+async function sampleTransaction(params) {
+  const transactionParameters = {
+    // nonce: '0x00', // ignored by MetaMask
+    gasPrice: '0x09184e72a000', // customizable by user during MetaMask confirmation. 가스가격이 높을수록 빠른처리
+    // gas: '0x2710', // customizable by user during MetaMask confirmation.
+    to: '0x0000000000000000000000000000000000000000', // Required except during contract publications.
+    from: ethereum.selectedAddress, // must match user's active address.
+    value: '0x00', // Wei로 표시되며, 전송할때 혹은 민팅수수료 등 계약에 지불할때에 사용
+    data:
+      '0x7f7465737432000000000000000000000000000000000000000000000000000000600057', // Optional, but used for defining smart contract creation and interaction.
+    // chainId: '0x5', // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
+  };
+  // Hex    Decimal   Network
+  // 0x1	  1	        Ethereum Main Network (Mainnet)
+  // 0x3	  3	        Ropsten Test Network
+  // 0x4	  4	        Rinkeby Test Network
+  // 0x5	  5	        Goerli Test Network
+  // 0x2a	  42	      Kovan Test Network
+
+  const txHash = await ethereum.request({
+    method: 'eth_sendTransaction',
+    params: [transactionParameters],
+  });
+
+  return txHash
+}
+
+/////////////////////////
+// IPFS function
+/////////////////////////
+async function uploadFile(file) {
+  console.log("call uploadFile")
+  let data = new FormData();
+  data.append('file', file);
+  data.append('user', await getAccount())
+
+  try {
+    let resultHash = await fetch('/api/IPFS/upload', {
+      method: 'POST',
+      // headers: {},
+      body: data
+    })
+    return resultHash;
+  } catch (error) {
+    console.error(error);
+    throw(error)
+  }
+}
+async function uploadJson(json) {
+  let data = new FormData();
+  data.append('metadata', json);
+  data.append('user', await getAccount())
+
+  try {
+    let resultHash = await fetch('/api/IPFS/upload', {
+      method: 'POST',
+      // headers: {},
+      body: data
+    })
+    return resultHash;
+  } catch (error) {
+    console.error(error);
+    throw(error)
   }
 }

@@ -17,6 +17,53 @@ class IndexController {
       next(error);
     }
   };
+  public explore = (req: Request, res: Response, next: NextFunction): void => {
+    try {
+      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
+      console.log(ejs_params)
+      res.render('explore', ejs_params)
+    } catch (error) {
+      next(error);
+    }
+  };
+  public nftDetail = (req: Request, res: Response, next: NextFunction): void => {
+    try {
+      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
+      ejs_params.contractAddress = req.params.contractAddress
+      ejs_params.tokenID = req.params.tokenID
+      console.log(ejs_params)
+      res.render('nftDetail', ejs_params)
+    } catch (error) {
+      next(error);
+    }
+  };
+  public market = (req: Request, res: Response, next: NextFunction): void => {
+    try {
+      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
+      console.log(ejs_params)
+      res.render('market', ejs_params)
+    } catch (error) {
+      next(error);
+    }
+  };
+  public auction = (req: Request, res: Response, next: NextFunction): void => {
+    try {
+      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
+      console.log(ejs_params)
+      res.render('auction', ejs_params)
+    } catch (error) {
+      next(error);
+    }
+  };
+  public create = (req: Request, res: Response, next: NextFunction): void => {
+    try {
+      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
+      console.log(ejs_params)
+      res.render('create', ejs_params)
+    } catch (error) {
+      next(error);
+    }
+  };
 
   public test = (req: Request, res: Response, next: NextFunction): void => {
     console.log("call test")
@@ -58,12 +105,12 @@ class IndexController {
       next(error);
     }
   };
-  public exploreTest = (req: Request, res: Response, next: NextFunction): void => {
-    console.log("call exploreTest")
+  public contractTest = (req: Request, res: Response, next: NextFunction): void => {
+    console.log("call contractTest")
     try {
       let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
       ejs_params.contractAddress = req.query.contractAddress;
-      res.render('exploreTest', ejs_params)
+      res.render('contractTest', ejs_params)
     } catch (error) {
       next(error);
     }

@@ -7,35 +7,142 @@ html, body {
 }
 
 .header-css {
-  /* background-color: rgb(253, 239, 217); */
   background-color: rgb(233, 232, 232);
   position: relative;
-  
+
 }
 body.body-css {
-  /* background-color: rgb(255, 252, 240); */
   background-color: white;
 }
-body > div.wrap-body {
-  min-height: 100%; 
-  margin: -56px 0 -112px;
+.wrap-body {
+  height: auto;
+  padding-top: 56px;
 }
 .body-content-css {
-  background-color: white; 
-  margin-top: 56px;
-  padding-top: 56px;
-  margin-bottom: 112px;
+  min-height: 1040px;
+  background-color: white;
+}
+.holding-body{
+  overflow: hidden;
 }
 .footer-css {
-  width:100%;
-  height: 112px;
-  /* background-color: rgb(253, 239, 217); */
-  background-color: white;
-  bottom:0;
+  width: 100%;
+  height: 240px;
+  background-color: lightgray;
+  bottom: 0;
+  left: 0;
 }
 .text-overflow-hide {
   overflow: hidden;
   white-space: nowrap;
   display: inline-block;
   text-overflow: ellipsis;
+}
+
+.div-width-sm {
+  width: 540px;
+}
+.div-width-md {
+  width: 720px;
+}
+.div-width-lg {
+  width: 960px;
+}
+.div-width-xl {
+  width: 1140px;
+}
+.div-width-xx {
+  width: 1320px;
+}
+
+.center-wrapper-out {
+  width: 100%;
+  text-align: center;
+}
+.center-wrapper-in {
+  display: inline-block;
+}
+
+.font-align-left {
+  text-align: left;
+}
+.font-align-right {
+  text-align: right;
+}
+.font-shadow-default {
+  text-shadow: 1px 1px 1px rgb(119, 119, 119);
+}
+
+.div-file-upload {
+  width: 350px;
+  height: 250px;
+  border: 3px dashed rgb(204, 204, 204);
+  border-radius: 10px;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.div-vh-center {
+  display: inline-block;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.file-preview-div {
+  background-color: #e0e0e0;
+  width:336px;
+  height: 242px;
+  border-radius: 10px;
+  align-items: center;
+}
+.file-preview {
+  margin: auto;
+  display: block;
+  max-width:100%;
+  max-height:100%;
+  object-fit: cover;
+}
+
+.icon-color {
+  color: rgb(204, 204, 204);
+  font-size: large;
+}
+.icon-size-sm {
+  font-size: 1rem;
+}
+.icon-size-md {
+  font-size: 2rem;
+}
+.icon-size-bg {
+  font-size: 4rem;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+}
+
+.loading-blind-div {
+  z-index: 9999;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.6);
+  left:0px;
+  top:0px;
+  right:0px;
+  bottom:0px;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+.loading-blind-in-box {
+  margin: auto;
+  text-align: center;
+  color: white;
 }

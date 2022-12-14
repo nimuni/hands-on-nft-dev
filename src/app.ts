@@ -9,11 +9,11 @@ import path from 'path';
 import expressLayouts from 'express-ejs-layouts';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS, MORALIS_APP_ID, MORALIS_SERVER_URL, MORALIS_MASTER_KEY, MORALIS_WEB3_API_KEY} from '@config';
+import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
+import fileUpload from "express-fileupload";
 import { logger, stream } from '@utils/logger';
-import Moralis from "moralis"
 
 class App {
   public app: express.Application;
@@ -25,17 +25,11 @@ class App {
     this.env = NODE_ENV || 'development';
     this.port = PORT || 3000;
 
-    this.initializeMoralis()
-      .then(()=>{
-        this.initializeMiddlewares();
-        this.initializeViewEngine();
-        this.initializeRoutes(routes);
-        this.initializeSwagger();
-        this.initializeErrorHandling();
-      })
-      .catch((e)=>{
-        console.error(e)
-      })
+    this.initializeMiddlewares();
+    this.initializeViewEngine();
+    this.initializeRoutes(routes);
+    this.initializeSwagger();
+    this.initializeErrorHandling();
   }
 
   public listen() {
@@ -51,29 +45,31 @@ class App {
   public getServer() {
     return this.app;
   }
-  private async initializeMoralis(){
-    console.log(`MORALIS_APP_ID=${MORALIS_APP_ID}`)
-    console.log(`MORALIS_SERVER_URL=${MORALIS_SERVER_URL}`)
-    console.log(`MORALIS_MASTER_KEY=${MORALIS_MASTER_KEY}`)
-    await Moralis.start({
-      // appId: MORALIS_APP_ID,
-      // serverUrl: MORALIS_SERVER_URL,
-      // masterKey: MORALIS_MASTER_KEY
-      apiKey: MORALIS_WEB3_API_KEY,
-      logLevel: 'verbose'
-    })
-  }
 
   private initializeMiddlewares() {
+    this.app.use(fileUpload(
+      {
+        limits: {
+          fileSize: 1024*1024*100 // 100 MiB
+        },
+        abortOnLimit: true,
+        createParentPath: true,
+        useTempFiles: true,
+        tempFileDir: '/tmp/',
+        debug: true
+      }
+    ));
     this.app.use(morgan(LOG_FORMAT, { stream }));
     this.app.use(hpp());
     this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
     // this.app.use(cors({}));
-    // this.app.use(function(req, res, next) {
-    //   res.header("Access-Control-Allow-Origin", "*");
-    //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    //   next();
-    // });
+    this.app.use(function(req, res, next) {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+      next();
+    });
 
     // TODO csp작업 해놔야함. 현재 처리x 아래 활성화 필요
     // helmet default

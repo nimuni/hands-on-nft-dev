@@ -1,17 +1,4 @@
 <script>
-  let loginBtn = document.getElementById("login");
-  loginBtn.addEventListener("click", e => {
-    Moralis.Web3.authenticate().then(function (user) {
-        // user.set("name",document.getElementById('username').value);
-        // user.set("email",document.getElementById('useremail').value);
-        console.log(user)
-        user.set("name", document.getElementById('username').value );
-        user.set("email", document.getElementById('useremail').value );
-        user.save();
-        console.log(user)
-    })
-  })
-
   let uploadBtn = document.getElementById("upload");
   let nameElem = document.getElementById("name")
   let descriptionElem = document.getElementById("description")
@@ -48,15 +35,39 @@
   });
 
   async function mintToken(_uri){
+    // const encodedFunction = web3.eth.abi.encodeFunctionCall({
+    //   name: "safeMint",
+    //   type: "function",
+    //   inputs: [
+    //     {
+    //       type: 'address',
+    //       name: 'to'
+    //     },
+    //     {
+    //       type: 'string',
+    //       name: 'tokenURI'
+    //     }
+    //   ]
+    // }, [web3.eth.defaultAccount, _uri]);
+
+    // v4 테스트
     const encodedFunction = web3.eth.abi.encodeFunctionCall({
-      name: "mintToken",
+      name: "createToken",
       type: "function",
-      inputs: [{
-        type: 'string',
-        name: 'tokenURI'
-        }]
-    }, [_uri]);
-    console.log("call mintToken")
+      inputs: [
+        {
+          "internalType": "string",
+          "name": "tokenURI",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        }
+      ]
+    }, [_uri, 100000000000000]);
+    console.log("call safeMint")
     console.log(_uri)
 
     console.log("encodedFunction")
