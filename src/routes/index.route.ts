@@ -15,7 +15,7 @@ class IndexRoute implements Routes {
   private initializeRoutes() {
     this.router.get(this.path+`/`, this.indexController.index);
     this.router.get(this.path+`/nft`, this.indexController.explore);
-    this.router.get(this.path+`/nft/:contractAddress/:tokenID`, this.indexController.nftDetail);
+    this.router.get(this.path+`/nft/:contractAddress/:tokenId`, this.indexController.nftDetail);
     this.router.get(this.path+`/market`, this.indexController.market);
     this.router.get(this.path+`/auction`, this.indexController.auction);
     // this.router.get(this.path+`/ranking`, this.indexController.rankCollection);

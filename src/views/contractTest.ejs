@@ -57,8 +57,8 @@ const closeForm = function(){
   formModal.classList.add("d-none");
 }
 const setDefaultFormValue = async function(nft=true, market=true, tokenId=true, from=true, to=true, price=true){
-  nft ? inputNftContract.value = nft_contract_address : inputNftContract.value = ""
-  market ? inputMarketContract.value = nft_marketplace_address : inputMarketContract.value = ""
+  nft ? inputNftContract.value = nft_address : inputNftContract.value = ""
+  market ? inputMarketContract.value = market_address : inputMarketContract.value = ""
   tokenId ? inputTokenId.value = 0 : inputTokenId.value = ""
   from ? inputAddressFrom.value = await getAccount() : inputAddressFrom.value = ""
   to ? inputAddressTo.value = "" : inputAddressTo.value = ""

@@ -6,6 +6,9 @@ const DEFAULT_PARAMS = {
   extractScripts: true,
   extractStyles: true
 }
+const { dirname } = require('path');
+const appDir = dirname(require.main.filename);
+
 
 class IndexController {
   public index = (req: Request, res: Response, next: NextFunction): void => {
@@ -30,7 +33,7 @@ class IndexController {
     try {
       let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
       ejs_params.contractAddress = req.params.contractAddress
-      ejs_params.tokenID = req.params.tokenID
+      ejs_params.tokenId = req.params.tokenId
       console.log(ejs_params)
       res.render('nftDetail', ejs_params)
     } catch (error) {

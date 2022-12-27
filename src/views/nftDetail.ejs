@@ -1,5 +1,633 @@
+
 <div>
-  nftDetail
-  <%= contractAddress %>
-  <%= tokenID %>
+  <div class="wrapper">
+    <div class="row">
+      <div class="col-12 col-md-5">
+        <div class="item-summary">
+          <article class="my-5">
+            <div class="row">
+              <div class="col-12">
+                <!-- show base coin -->
+                <!-- show like count -->
+              </div>
+              <div class="col-12">
+                <img id="nftImage"/>
+              </div>
+            </div>
+          </article>
+          <section class="my-5">
+            <div class="accordion" id="accordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="header-one">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription" aria-expanded="true" aria-controls="collapseDescription">
+                    <i class="bi bi-list-columns-reverse mr-4"></i>
+                    &nbsp Description
+                  </button>
+                </h2>
+                <div id="collapseDescription" class="accordion-collapse collapse show" aria-labelledby="header-one" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="header-two">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProperties" aria-expanded="true" aria-controls="collapseProperties">
+                    <i class="bi bi-tags-fill"></i>
+                    &nbsp Properties
+                  </button>
+                </h2>
+                <div id="collapseProperties" class="accordion-collapse collapse show" aria-labelledby="header-two" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <div class="row properties-grid justify-content-between"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="header-two">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails" aria-expanded="true" aria-controls="collapseDetails">
+                    <i class="bi bi-info-square"></i>
+                    &nbsp Details
+                  </button>
+                </h2>
+                <div id="collapseDetails" class="accordion-collapse collapse show" aria-labelledby="header-two" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <div class="nft-detail">
+                      Contract Address
+                      <span id="contractAddressSpan"></span>
+                    </div>
+                    <div class="nft-detail">
+                      Token ID
+                      <span><%= tokenId %></span>
+                    </div>
+                    <div class="nft-detail">
+                      Token Standard
+                      <!-- HARD CODING. TODO Change -->
+                      <span>ERC-721</span>
+                    </div>
+                    <div class="nft-detail">
+                      Chain
+                      <!-- HARD CODING. TODO Change -->
+                      <span>Ethereum</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div class="col-12 col-md-7">
+        <div class="item-detail">
+          <section class="my-5">
+            <div class="flex-between">
+              <a id="creatorNameLink">creatorname</a>
+              <!-- creator name -->
+              <!-- external link -->
+              <div id="externalLinksDiv">
+              </div>
+            </div>
+            <div class="item-name">
+              <h1 id="nftNameH1">NFT name</h1>
+            </div>
+            <div class="item-owner">
+              Owned by <a id="nftOwnerLink">owner</a>
+            </div>
+          </section>
+          <section>
+            <div id="viewCountsDiv" style="display:flex">
+            </div>
+          </section>
+          <section class="my-5">
+            <div class="accordion" id="accordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="header-one">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice" aria-expanded="true" aria-controls="collapsePrice">
+                    <i class="bi bi-graph-up mr-4"></i>
+                    &nbsp Price History
+                  </button>
+                </h2>
+                <div id="collapsePrice" class="accordion-collapse collapse show" aria-labelledby="header-one" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <canvas id="chart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="my-5">
+            <div class="accordion" id="accordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="header-one">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOffers" aria-expanded="true" aria-controls="collapseOffers">
+                    <i class="bi bi-wallet-fill mr-4"></i>
+                    &nbsp Offers
+                  </button>
+                </h2>
+                <div id="collapseOffers" class="accordion-collapse collapse show" aria-labelledby="header-one" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <table class="table" id="OffersTable">
+                      <tr>
+                        <th>Price</th>
+                        <th>USD Price</th>
+                        <th>Floor Difference</th>
+                        <th>Expiration</th>
+                        <th>From</th>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+    <div class="row my-5">
+      <div class="col-12">
+        <div class="accordion" id="accordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="header-one">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseActivity" aria-expanded="true" aria-controls="collapseActivity">
+                <i class="bi bi-arrow-down-up"></i>
+                &nbsp Item Activity
+              </button>
+            </h2>
+            <div id="collapseActivity" class="accordion-collapse collapse show" aria-labelledby="header-one" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <table class="table" id="itemActivityTable">
+                  <tr>
+                    <th>Event</th>
+                    <th>Price</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Date</th>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row my-5">
+      <div class="col-12">
+        <div class="accordion" id="accordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="header-one">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMoreItems" aria-expanded="true" aria-controls="collapseMoreItems">
+                <i class="bi bi-grid-3x2-gap-fill"></i>
+                &nbsp More Items
+              </button>
+            </h2>
+            <div id="collapseMoreItems" class="accordion-collapse collapse show" aria-labelledby="header-one" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <div class="row">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- import chartjs -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- import decimaljs to show correct decimal -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/10.4.3/decimal.min.js"></script>
+<!-- page script -->
+<script>
+  let testtemp;
+  let contractAddress = "<%= contractAddress %>"
+  let tokenId = "<%= tokenId %>"
+  let nftImage = document.getElementById("nftImage")
+  let collapseDescription = document.getElementById("collapseDescription")
+  let contractAddressSpan = document.getElementById("contractAddressSpan");
+  const setNFTdata = async (data) => {
+    // init NFT image
+    nftImage.src = data.image;
+
+    // init NFT description
+    collapseDescription.children[0].innerHTML = data.description
+
+    // init NFT Properties
+    setProperties(data.attributes);
+
+    // init details
+    contractAddressSpan.innerHTML =
+      `<a class="cursor-pointer" onclick="openEtherscan('contract', '${contractAddress}')">
+        ${maskingString(contractAddress)}
+      </a>`
+
+    let nftNameH1 = document.getElementById("nftNameH1");
+    nftNameH1.innerHTML = data.name;
+
+    // init externalLink
+    // console.log(`link=${data.external_url}`);
+  }
+  const setProperties = (array) => {
+    const grid = document.getElementsByClassName("properties-grid")[0];
+    if(array){
+      array.forEach(element => {
+        let {trait_type, value} = element;
+
+        let propertiesCol = document.createElement("div");
+        propertiesCol.classList.add("col-4");
+        propertiesCol.classList.add("py-2");
+
+        let propertiesWrap = document.createElement("div");
+        propertiesWrap.classList.add("properties-wrap")
+
+        let propertiesType = document.createElement("div");
+        propertiesType.classList.add("properties-type")
+        propertiesType.innerHTML = trait_type;
+
+        let propertiesValue = document.createElement("div");
+        propertiesValue.classList.add("properties-value")
+        propertiesValue.innerHTML = value;
+
+        propertiesWrap.appendChild(propertiesType)
+        propertiesWrap.appendChild(propertiesValue)
+        propertiesCol.appendChild(propertiesWrap)
+        grid.appendChild(propertiesCol);
+      });
+    }
+  }
+  const setItemActivity = (dataArray) => {
+    // init Item Activity
+    const itemActivityTable = document.getElementById("itemActivityTable")
+
+    const addActivityData = (rowData) => {
+      let newRow = itemActivityTable.insertRow(-1);
+      const FromIndex = 2;
+      const ToIndex = 3;
+      rowData.forEach(function(value, index, array){
+        let tempCell = newRow.insertCell(-1);
+        if(index == FromIndex || index == ToIndex){
+          // TODO. Address인 경우 사용자 페이지로 링크
+          tempCell.innerHTML =  `<a class="cursor-pointer" onclick="openUserInfoPage('${contractAddress}')" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="${contractAddress}">${maskingString(contractAddress)}</a>`;
+        } else {
+          tempCell.innerHTML = value;
+        }
+      })
+    }
+
+    if(dataArray){
+      dataArray.forEach(async element => {
+        let tempBlock = await web3.eth.getBlock(element.blockNumber);
+        console.log("tempBlock")
+        console.log(tempBlock)
+
+        // time difference
+        let diffObj = getTimeDiffAndUnit(new Date().getTime(), new Date(tempBlock.timestamp*1000).getTime())
+        let rowData = [
+          element.event,
+          "",
+          maskingString(element.returnValues.from),
+          maskingString(element.returnValues.to),
+          new Intl.RelativeTimeFormat('ko-KR').format(diffObj.diff,diffObj.unit)
+        ];
+        // fn_table_AddRowText("itemActivityTable", rowData);
+        addActivityData(rowData);
+      });
+    }
+  }
+  let priceChart
+  const setPriceHistory = (priceData) => {
+    const ctx = document.getElementById("chart");
+    const oneDaySeconds = 1000*60*60*24
+    let datasets;
+    let labels;
+    const removeLastZeros = (value) => {
+      return value.replace(/(0+$)/, "")
+    }
+    const minimizeShowFloat = (value) => {
+      const MAXIMUM_LENGTH = 18;
+      const MINIMUM_LENGTH = 6
+
+      let result = Number.parseFloat(value.toFixed(MAXIMUM_LENGTH)).toFixed(MINIMUM_LENGTH)
+      return removeLastZeros(result);
+    }
+    const maximizeShowFloat = (value) => {
+      const MAXIMUM_LENGTH = 18;
+      const MINIMUM_LENGTH = 18;
+      let result = Number.parseFloat(value.toFixed(MAXIMUM_LENGTH)).toFixed(MINIMUM_LENGTH)
+      return removeLastZeros(result);
+    }
+
+    // data sample
+    labels = [
+      new Intl.DateTimeFormat('ko-KR').format(new Date()),
+      new Intl.DateTimeFormat('ko-KR').format(new Date()-oneDaySeconds),
+      new Intl.DateTimeFormat('ko-KR').format(new Date()-oneDaySeconds*2),
+      // new Intl.DateTimeFormat('ko-KR').format(new Date()-oneDaySeconds*3),
+      // new Intl.DateTimeFormat('ko-KR').format(new Date()-oneDaySeconds*4),
+    ]
+    datasets = [{
+      label: "ETH",
+      data: [0.000000001, 0.0001, 0.0002],// [0.0001, 0.0002, 0.0003, 0.153, 0.1],
+      fill: false,
+      borderColor: 'rgba(0, 0, 0, 0.2)',
+      borderWidth: 1,
+      backgroundColor: '#86b7fe',
+      pointBorderColor: '#86b7fe',
+      pointBackgroundColor: '#86b7fe',
+      pointBorderWidth: 4,
+      pointRadius: 4,
+      pointHitRadius: 8,
+      pointHoverRadius: 8,
+      tension: 0
+    }]
+
+    priceChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels, // ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: datasets
+      },
+      options: {
+        scales: {
+          x: {
+            offset: true
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 0.000001,
+              callback: function(value, index, values) {
+                return `${minimizeShowFloat(value)}`
+              },
+            }
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: "Market Price"
+          },
+          subtitle: {
+            display: true,
+            text: "시간별 거래된 금액"
+          },
+          tooltip: {
+            callbacks: {
+              title: function(context) {
+                return new Intl.DateTimeFormat('ko-KR').format(new Date(context[0].label))
+              },
+              // afterTitle: function(context) {
+              //   console.log(context)
+              //   return "123"
+              // },
+              label: function(context) {
+                return " " + removeLastZeros(maximizeShowFloat(context.raw)) + " " + context.dataset.label
+              },
+            }
+          }
+        }
+      }
+    })
+  }
+  const setCreatorLink = async (contractAddress, tokenId, external_url) => {
+    const getCreatorLink = async (contractAddress, tokenId) => {
+      // temp. DB구현 전까지 임시 리턴할 데이터
+      return {discord: "url"};
+
+      // TODO. DB에서 조회기능 구현
+      const url = "";
+      let fetchResponse = await fetch(url)
+      if(fetchResponse.ok){
+        let CreatorLinkData = await fetchResponse.json();
+        return CreatorLinkData
+      } else {
+        console.error("setCreatorLink fetchResponse not ok")
+        console.log(fetchResponse)
+        return null;
+      }
+    }
+
+    const externalLinksDiv = document.getElementById("externalLinksDiv");
+    let { discord } = await getCreatorLink();
+
+    let shareButton = `<button type="button" class="btn btn-outline-dark mx-1" onclick="copyUrlToClipboard()"><i class="bi bi-share-fill"></i></button>`
+    let discordButton = `<button type="button" class="btn btn-outline-dark mx-1" onclick="javascript:window.location.href='${external_url}'"><i class="bi bi-discord"></i></button>`
+    let websiteButton = `<button type="button" class="btn btn-outline-dark mx-1" onclick="javascript:window.location.href='${external_url}'"><i class="bi bi-globe2"></i></button>`
+    let reportButton = `<button type="button" class="btn btn-outline-dark mx-1" onclick="javascript:console.log(1)"><i class="bi bi-flag-fill"></i></button>`
+
+    externalLinksDiv.insertAdjacentHTML("beforeend", shareButton);
+    if(external_url) externalLinksDiv.insertAdjacentHTML("beforeend", websiteButton);
+    if(discord) externalLinksDiv.insertAdjacentHTML("beforeend", discordButton);
+    externalLinksDiv.insertAdjacentHTML("beforeend", reportButton);
+
+  }
+  const copyUrlToClipboard = async () => {
+    window.navigator.clipboard.writeText(window.location.href);
+    alert('링크 주소가 복사되었습니다.')
+  }
+  const setViewCounts = async (contractAddress, tokenId) => {
+    const getViewCounts = async (contractAddress, tokenId) => {
+      const url = "";
+      // temp
+      return {viewCount: 31, likeCount: 5};
+
+      // TODO. DB에서 데이터조회
+      let fetchResponse = await fetch(url)
+      if(fetchResponse.ok){
+        let ViewCountsData = await fetchResponse.json();
+        return ViewCountsData
+      } else {
+        console.error("setViewCounts fetchResponse not ok")
+        console.log(fetchResponse)
+        return null;
+      }
+    }
+
+    const viewCountsDiv = document.getElementById("viewCountsDiv");
+    let ViewCountsData = await getViewCounts(contractAddress, tokenId);
+    viewCountsDiv.innerHTML = "";
+    let viewDiv = document.createElement("div");
+    viewDiv.classList.add("mx-1")
+    viewDiv.insertAdjacentHTML("beforeend", `
+      <span><i class="bi bi-eye"></i></span>
+      <span>${ViewCountsData.viewCount}</span>
+    `)
+    let likeDiv = document.createElement("div");
+    likeDiv.classList.add("mx-1")
+    likeDiv.insertAdjacentHTML("beforeend", `
+      <span><i class="bi bi-hand-thumbs-up"></i></span>
+      <span>${ViewCountsData.likeCount}</span>
+    `)
+    ViewCountsData.likeCount;
+    viewCountsDiv.append(viewDiv);
+    viewCountsDiv.append(likeDiv);
+  }
+  const setOffers = async (contractAddress, tokenId) => {
+    const OffersTable = document.getElementById("OffersTable")
+    // init table
+    fn_table_Initialize("OffersTable")
+
+    // db 조회
+    // TODO. getOffersDBData 조회기능 만들어야함
+    const getOffers = async (contractAddress, tokenId) => {
+      const url = "";
+      let fetchResponse = await fetch(url)
+      if(fetchResponse.ok){
+        let offersData = await fetchResponse.json();
+        return offersData
+      } else {
+        console.error("getOffersDBData fetchResponse not ok")
+        console.log(fetchResponse)
+        return null;
+      }
+    }
+    let offersDataArray = await getOffers(contractAddress, tokenId);
+
+    const addOfferData = (rowData) => {
+      let newRow = OffersTable.insertRow(sort);
+      rowData.forEach(function(value, index, array){
+        let tempCell = newRow.insertCell(-1);
+        if(index == rowData.length-1){
+          // TODO. Address인 경우 사용자 페이지로 링크
+          tempCell.innerHTML =  `<a class="cursor-pointer" onclick="openUserInfoPage('${contractAddress}')">${maskingString(contractAddress)}</a>`;
+        } else {
+          tempCell.innerHTML = value;
+        }
+      })
+    }
+
+    if(offersDataArray) {
+      offersDataArray.forEach(element => {
+        addOfferData(element);
+      });
+    }
+  }
+  const setCreatorItem = (nftAddress, nftArray) => {
+    let moreItemsDiv = document.getElementById("collapseMoreItems").children[0].children[0];
+    moreItemsDiv.innerHTML = "";
+
+    const addCardItems = (contractAddress, tokenId, nftData) => {
+      let colWrapper = document.createElement("div");
+      colWrapper.classList.add('col-3');
+      colWrapper.classList.add('my-2');
+      colWrapper.classList.add('cursor-pointer');
+      let cardWrapper = document.createElement("div");
+      cardWrapper.classList.add('card')
+      cardWrapper.style = "width: 18rem;"
+      let cardImage = document.createElement("img");
+      cardImage.classList.add('card-img-top')
+      cardImage.src = nftData.image
+      cardImage.style = "max-height: 286px; object-fit: scale-down;"
+      let cardBody = document.createElement("div")
+      cardBody.classList.add('card-body')
+      let cardTitle = document.createElement("h5")
+      cardTitle.classList.add('card-title')
+      cardTitle.innerHTML = nftData.name;
+      let cardText = document.createElement("p")
+      cardText.classList.add('card-text')
+      cardText.innerHTML = nftData.description;
+      moreItemsDiv.append();
+
+      colWrapper.onclick = ()=>{
+        window.location.href = window.location.origin + `/nft/${contractAddress}/${tokenId}`;
+      }
+
+      cardBody.append(cardTitle)
+      cardBody.append(cardText)
+      cardWrapper.append(cardImage)
+      cardWrapper.append(cardBody)
+      colWrapper.append(cardWrapper)
+      moreItemsDiv.append(colWrapper)
+    }
+    const addItemToMoreItems = async (contractAddress, tokenId) => {
+      const metadataURI = await nft_contract.tokenURI(tokenId);
+      let fetchResponse = await fetch(metadataURI)
+      if(fetchResponse.ok){
+        let nftData = await fetchResponse.json();
+        addCardItems(contractAddress, tokenId, nftData)
+      }
+    }
+    for (let index = 0; index < nftArray.length; index++) {
+      if(index < 4) addItemToMoreItems(contractAddress, nftArray[index])
+    }
+  }
+  const setCreatorOwner = (dataArray) => {
+    // creator, owner setting
+    let creatorNameLink = document.getElementById("creatorNameLink");
+    creatorNameLink.href = window.location.origin + `/user/${dataArray[0].returnValues.to}`;
+    creatorNameLink.innerHTML = maskingString(dataArray[0].returnValues.to)
+    let nftOwnerLink = document.getElementById("nftOwnerLink");
+    nftOwnerLink.href = window.location.origin + `/user/${dataArray[dataArray.length-1].returnValues.to}`;
+    nftOwnerLink.innerHTML = maskingString(dataArray[dataArray.length-1].returnValues.to)
+  }
+  afterInitFunction = async function(){
+    if(web3.utils.isAddress(contractAddress)){
+      nft_contract = new NftContractWrapper(await getAccount(), contractAddress);
+      const metadataURI = await nft_contract.tokenURI(tokenId);
+      let fetchResponse = await fetch(metadataURI)
+      if(fetchResponse.ok){
+        let nftData = await fetchResponse.json();
+        setNFTdata(nftData)
+        let contractEventArray = await nft_contract.getPastEvents({eventName: "Transfer", tokenId: tokenId});
+        setItemActivity(contractEventArray)
+        setCreatorOwner(contractEventArray)
+
+        // TODO. Price History 세팅 - DB에서 받아오던지 Market Contract에서 받아오던지 해야...
+        let priceData
+        setPriceHistory(priceData)
+
+        // TODO. Link 세팅 from db
+        setCreatorLink(contractAddress, tokenId, nftData.external_url);
+
+        // TODO. Offers 세팅 from db
+        // setOffers(contractAddress, tokenId);
+
+        // TODO. View count 세팅 from db
+        setViewCounts(contractAddress, tokenId);
+
+        // More Items 세팅 from contract
+        let creatorAddress = contractEventArray[0].returnValues.to
+        let creatorItems = await nft_contract.getCreatorNFTIds(creatorAddress);
+        let creatorAnotherItems = creatorItems.filter(element => element != tokenId)
+        setCreatorItem(contractAddress, creatorAnotherItems);
+
+        // Call the totalSupply
+        // console.log(await nft_contract.totalSupply())
+      } else {
+        console.log("Metadata load error")
+        throw `Metadata load error. \n contractAddress=${contractAddress}\n tokenId=${tokenId}`
+      }
+    } else {
+      alert(`Contract Address is not valid. contract address = ${contractAddress}`);
+    }
+  }
+</script>
+<style>
+.accordion{
+
+  --bs-accordion-color: var(--bs-body-color);
+  --bs-accordion-bg: #fff;
+  --bs-accordion-transition: color 0.15s ease-in-out,background-color 0.15s ease-in-out,border-color 0.15s ease-in-out,box-shadow 0.15s ease-in-out,border-radius 0.15s ease;
+  --bs-accordion-border-color: var(--bs-border-color);
+  --bs-accordion-border-width: 1px;
+  --bs-accordion-border-radius: 0.375rem;
+  --bs-accordion-inner-border-radius: calc(0.375rem - 1px);
+  --bs-accordion-btn-padding-x: 1.25rem;
+  --bs-accordion-btn-padding-y: 1rem;
+  --bs-accordion-btn-color: var(--bs-body-color);
+  --bs-accordion-btn-bg: var(--bs-accordion-bg);
+  --bs-accordion-btn-icon: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='var%28--bs-body-color%29'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e);
+  --bs-accordion-btn-icon-width: 1.25rem;
+  --bs-accordion-btn-icon-transform: rotate(-180deg);
+  --bs-accordion-btn-icon-transition: transform 0.2s ease-in-out;
+  --bs-accordion-btn-active-icon: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%230c63e4'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e);
+  --bs-accordion-btn-focus-border-color: #86b7fe;
+  --bs-accordion-btn-focus-box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  --bs-accordion-body-padding-x: 1.25rem;
+  --bs-accordion-body-padding-y: 1rem;
+
+  --bs-accordion-active-color: #000 !important;
+  --bs-accordion-active-bg: #fff !important;
+}
+</style>

@@ -114,6 +114,7 @@ class App {
 
     this.app.set('views', path.join(__dirname, 'views'));
     this.app.set('view engine','ejs');
+    this.app.use("/assets", express.static(path.join(__dirname, "public","assets")))
     this.app.engine('html', require('ejs').renderFile);
   }
 

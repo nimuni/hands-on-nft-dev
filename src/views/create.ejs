@@ -227,20 +227,20 @@
       })
     */
     let option = {
-      sending: ()=>{
+      sending: (payload)=>{
         console.log("event sending")
         console.log(payload)
       },
-      sent: ()=>{
+      sent: (payload)=>{
         console.log("event sent")
         console.log(payload)
         fn_overlay_blindLoading(true, "블록체인에 NFT 민팅 전송")
       },
-      transactionHash: ()=>{
+      transactionHash: (transactionHash)=>{
         console.log("event transactionHash")
         console.log(transactionHash)
       },
-      receipt: ()=>{
+      receipt: (receipt)=>{
         console.log("event receipt")
         console.log(receipt)
         if(receipt.status) {
@@ -252,12 +252,15 @@
 
           // TODO
           // NFT 상세 페이지로 이동
+          setTimeout(() => {
+            window.location.href = `../nft/${receipt.events.Transfer.address}/${receipt.events.Transfer.returnValues.tokenId}`;
+          }, 2000);
         } else {
           console.log("처리가 실패되었습니다.")
         }
         fn_overlay_blindLoading(false)
       },
-      error: ()=>{
+      error: (error, receipt)=>{
         console.log("event error")
         console.log(error)
       }

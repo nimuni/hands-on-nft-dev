@@ -3,9 +3,9 @@ const default_contrack_chain = 'goerli';
 
 const { ethereum } = window;
 let web3, installed, contract, contractWrapper, net_env, transactionBaseAddress;
-let nft_contract, nft_contract_address, nft_contract_abi;
-let nft_marketplace_contract, nft_marketplace_address, nft_marketplace_abi;
-let nft_auction_contract, nft_auction_address, nft_auction_abi;
+let nft_contract, nft_address, nft_abi;
+let market_contract, market_address, market_abi;
+let auction_contract, auction_address, auction_abi;
 
 /**
  * Metamask and web3 initialize
@@ -33,11 +33,8 @@ window.onload = async function(){
 }
 
 async function initWeb3() {
-  console.log("initWeb3")
-
   if(!web3){
     if(ethereum){
-      console.log("metamask 사용")
       web3 = new Web3(ethereum);
 
       let accounts = await web3.eth.getAccounts();
@@ -67,11 +64,6 @@ async function initContract() {
   auction_contract = new AuctionContractWrapper(await getAccount());
 
   net_env = "goerli" // "mainnet"
-
-  // initializing Contract instance
-  // nft_contract = new web3.eth.Contract(nft_contract_abi, nft_contract_address);
-  // nft_marketplace_contract = new web3.eth.Contract(nft_marketplace_abi, nft_marketplace_address);
-  // nft_auction_contract = new web3.eth.Contract(nft_auction_abi, nft_auction_address);
 }
 
 function isInstalledMetamask() {
@@ -108,7 +100,6 @@ async function changeConnectButtonLabel() {
 }
 
 async function initEventActions() {
-  console.log("call initEventActions")
   let connectWalletBtn = document.getElementById("connectWallet");
   connectWalletBtn.addEventListener("click", async (e) => {
     try {

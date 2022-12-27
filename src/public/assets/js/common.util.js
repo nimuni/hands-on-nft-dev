@@ -6,6 +6,82 @@ const changeUrlForCors = function(url){
   return result;
 }
 
+const openEtherscan = (type="tx", value1, value2) => {
+  const baseURI = "https://etherscan.io";
+  console.log(type)
+  console.log(value1)
+  switch (type) {
+    case "tx":
+      window.open(`${baseURI}/tx/${value1}`);
+      break;
+    case "contract":
+      window.open(`${baseURI}/address/${value1}`)
+      break;
+    default:
+      window.open(`${baseURI}/tx/${value1}`);
+      break;
+  }
+}
+
+const openUserInfoPage = (address) => {
+  window.location.href = window.location.origin + `/user/${address}`
+}
+/////////////////////////
+// common util function
+/////////////////////////
+
+
+const getTimeDiffAndUnit = function(_fromTimestamp, _toTimestamp=new Date().getTime()) {
+  const SECOND_CONDITION = 1000;
+  const MINUTE_CONDITION = SECOND_CONDITION * 60;
+  const HOUR_CONDITION = MINUTE_CONDITION * 60;
+  const DAY_CONDITION = HOUR_CONDITION * 24;
+  const WEEK_CONDITION = DAY_CONDITION * 7;
+  const MONTH_CONDITION = DAY_CONDITION * 31;
+  const YEAR_CONDITION = DAY_CONDITION * 365;
+
+  let from = new Date(_fromTimestamp)
+  let to = new Date(_toTimestamp)
+
+  let diff = (to - from);
+  let diffAbs = Math.abs(diff)
+  if(isNaN(diff)) return;
+
+  if(diffAbs < MINUTE_CONDITION){
+    return {unit:"second", diff: parseInt(diff / SECOND_CONDITION)}
+  } else if(diffAbs < HOUR_CONDITION){
+    return {unit:"minute", diff: parseInt(diff / MINUTE_CONDITION)}
+  } else if(diffAbs < DAY_CONDITION){
+    return {unit:"hour", diff: parseInt(diff / HOUR_CONDITION)}
+  } else if(diffAbs < WEEK_CONDITION){
+    return {unit:"day", diff: parseInt(diff / DAY_CONDITION)}
+  } else if(diffAbs < MONTH_CONDITION){
+    return {unit:"week", diff: parseInt(diff / WEEK_CONDITION)}
+  } else if(diffAbs < YEAR_CONDITION){
+    return {unit:"month", diff: parseInt(diff / MONTH_CONDITION)}
+  } else {
+    return {unit:"year", diff: parseInt(diff / YEAR_CONDITION)}
+  }
+}
+
+const maskingString = function(str, frontCount=6, backCount=4) {
+  if(str.length > (frontCount + backCount + 3)) {
+    let originStr = str.split('');
+    originStr.forEach(function(elem, i) {
+      if (i >= frontCount && i < (originStr.length - backCount)) {
+        originStr[i] = ".";
+      } else {
+        return;
+      }
+    });
+    let resultStr = originStr.join('');
+    let regex = /[.]+/;
+    return resultStr.replace(regex, '...');
+  } else {
+    return str;
+  }
+};
+
 /////////////////////////
 // common table function
 /////////////////////////
@@ -18,10 +94,11 @@ const changeUrlForCors = function(url){
 // fn_table_getInputDataFromTableId(tableId, buttonExist=false)
 const fn_table_Initialize = (tableId, rowDataArray) => {
   fn_table_DataClear(tableId)
-
-  rowDataArray.forEach(element => {
-    fn_table_AddRowInput(tableId, element, -1, true);
-  });
+  if(rowDataArray){
+    rowDataArray.forEach(element => {
+      fn_table_AddRowInput(tableId, element, -1, true);
+    });
+  }
 }
 const fn_table_DataClear = (tableId) => {
   let table = document.getElementById(tableId);
@@ -98,7 +175,7 @@ const fn_table_getInputDataFromTableId = (tableId, buttonExist=false) => {
 
 
 /////////////////////////
-// overlays function
+// HTML overlays function
 /////////////////////////
 const fn_overlay_blindLoading = function(show, message){
   const body = document.getElementsByTagName('body')[0];
