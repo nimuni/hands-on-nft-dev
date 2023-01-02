@@ -14,72 +14,72 @@
                 <img id="nftImage"/>
               </div>
             </div>
-          </article>
-          <section class="my-5">
-            <div class="accordion" id="accordion">
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="header-one">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription" aria-expanded="true" aria-controls="collapseDescription">
-                    <i class="bi bi-list-columns-reverse mr-4"></i>
-                    &nbsp Description
-                  </button>
-                </h2>
-                <div id="collapseDescription" class="accordion-collapse collapse show" aria-labelledby="header-one" data-bs-parent="#accordionExample">
-                  <div class="accordion-body">
+            <div class="my-5">
+              <div class="accordion" id="accordion">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="header-one">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription" aria-expanded="true" aria-controls="collapseDescription">
+                      <i class="bi bi-list-columns-reverse mr-4"></i>
+                      &nbsp Description
+                    </button>
+                  </h2>
+                  <div id="collapseDescription" class="accordion-collapse collapse show" aria-labelledby="header-one" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
 
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="header-two">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProperties" aria-expanded="true" aria-controls="collapseProperties">
-                    <i class="bi bi-tags-fill"></i>
-                    &nbsp Properties
-                  </button>
-                </h2>
-                <div id="collapseProperties" class="accordion-collapse collapse show" aria-labelledby="header-two" data-bs-parent="#accordionExample">
-                  <div class="accordion-body">
-                    <div class="row properties-grid justify-content-between"></div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="header-two">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProperties" aria-expanded="true" aria-controls="collapseProperties">
+                      <i class="bi bi-tags-fill"></i>
+                      &nbsp Properties
+                    </button>
+                  </h2>
+                  <div id="collapseProperties" class="accordion-collapse collapse show" aria-labelledby="header-two" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <div class="row properties-grid justify-content-between"></div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="header-two">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails" aria-expanded="true" aria-controls="collapseDetails">
-                    <i class="bi bi-info-square"></i>
-                    &nbsp Details
-                  </button>
-                </h2>
-                <div id="collapseDetails" class="accordion-collapse collapse show" aria-labelledby="header-two" data-bs-parent="#accordionExample">
-                  <div class="accordion-body">
-                    <div class="nft-detail">
-                      Contract Address
-                      <span id="contractAddressSpan"></span>
-                    </div>
-                    <div class="nft-detail">
-                      Token ID
-                      <span><%= tokenId %></span>
-                    </div>
-                    <div class="nft-detail">
-                      Token Standard
-                      <!-- HARD CODING. TODO Change -->
-                      <span>ERC-721</span>
-                    </div>
-                    <div class="nft-detail">
-                      Chain
-                      <!-- HARD CODING. TODO Change -->
-                      <span>Ethereum</span>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="header-two">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails" aria-expanded="true" aria-controls="collapseDetails">
+                      <i class="bi bi-info-square"></i>
+                      &nbsp Details
+                    </button>
+                  </h2>
+                  <div id="collapseDetails" class="accordion-collapse collapse show" aria-labelledby="header-two" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <div class="nft-detail">
+                        Contract Address
+                        <span id="contractAddressSpan"></span>
+                      </div>
+                      <div class="nft-detail">
+                        Token ID
+                        <span><%= tokenId %></span>
+                      </div>
+                      <div class="nft-detail">
+                        Token Standard
+                        <!-- HARD CODING. TODO Change -->
+                        <span>ERC-721</span>
+                      </div>
+                      <div class="nft-detail">
+                        Chain
+                        <!-- HARD CODING. TODO Change -->
+                        <span>Ethereum</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </section>
+          </article>
         </div>
       </div>
       <div class="col-12 col-md-7">
         <div class="item-detail">
-          <section class="my-5">
+          <div class="my-5">
             <div class="flex-between">
               <a id="creatorNameLink">creatorname</a>
               <!-- creator name -->
@@ -93,12 +93,31 @@
             <div class="item-owner">
               Owned by <a id="nftOwnerLink">owner</a>
             </div>
-          </section>
-          <section>
+          </div>
+          <div>
             <div id="viewCountsDiv" style="display:flex">
             </div>
-          </section>
-          <section class="my-5">
+          </div>
+          <div class="my-5">
+            <div style="border-radius:10px;border:1px solid #e5e8eb;">
+              <div style="padding:25px;">
+                <img src="http://hands.spurs.co.kr/image/view2.jpg">
+              </div>
+              <div style="border-top:1px solid #e5e8eb;padding:25px;background:#fbfdff;border-radius:0px 0px 10px 10px;">
+                <div>Current price</div>
+                <div style="margin-top:10px;"><span style="font-size:30px;font-weight:bold;color:#000">0.17 ETH</span> $200.30</div>
+                <div>
+                  <a href="#" class="btn btn-modern btn-primary btn-arrow-effect-1">
+                    Buy now <i class="fas fa-external-link-alt ms-2"></i>
+                  </a>
+                  <a href="#" class="btn btn-modern btn-primary btn-outline btn-arrow-effect-1" >
+                    Make offer <i class="fas fa-arrow-right ms-2"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="my-5">
             <div class="accordion" id="accordion">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="header-one">
@@ -114,8 +133,8 @@
                 </div>
               </div>
             </div>
-          </section>
-          <section class="my-5">
+          </div>
+          <div class="my-5">
             <div class="accordion" id="accordion">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="header-one">
@@ -139,7 +158,7 @@
                 </div>
               </div>
             </div>
-          </section>
+          </div>
         </div>
       </div>
     </div>
