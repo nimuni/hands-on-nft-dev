@@ -766,11 +766,15 @@ class NftContractWrapper {
   #defaultFromAccount;
 
   constructor(_fromAddress, _nftAddress){
-    // this.#nft_address = _nftAddress || "0xe2dD7AC22920958837f58aB8f7eFBCa548b5528c"
-    this.#nft_address = _nftAddress || "0xF44e7Bcc4870fa0eCE41C23815887D689e7Fd6c5"
+    this.initNFTInstance(_nftAddress);
+
     this.#defaultFromAccount = _fromAddress;
-    this.#nftContractInstance = new web3.eth.Contract(this.#nft_abi, this.#nft_address);
   }
+
+  initNFTInstance(_nftAddress="0xF44e7Bcc4870fa0eCE41C23815887D689e7Fd6c5"){
+    this.#nftContractInstance = new web3.eth.Contract(this.#nft_abi, _nftAddress);
+  }
+
   /////////////////////////////////////////////
   // Class Util function
   /////////////////////////////////////////////
@@ -858,7 +862,7 @@ class NftContractWrapper {
       from: this.#defaultFromAccount,
       // value: this.#defaultListingPrice // wei
     }
-    return this.#nftContractInstance.methods.setApprovalForAll(_from, _approved).send(txOptions)
+    return this.#nftContractInstance.methods.setApprovalForAll(_operator, _approved).send(txOptions)
             .on('sending', option.sending || _emptyFunc)
             .on('sent', option.sent || _emptyFunc)
             .on('transactionHash', option.transactionHash || _emptyFunc)
@@ -911,12 +915,82 @@ class NftContractWrapper {
   async getCreatorNFTIds(_creatorAddress){
     return this.#nftContractInstance.methods.getCreatorNFTIds(_creatorAddress).call();
   }
+  /////////////////////////////////////////////
+  // Wrapper function
+  /////////////////////////////////////////////
+  getAddress(){
+    return this.#nft_address;
+  }
 }
 
 class MarketContractWrapper {
   // #market_address = "0x1ec54e1aE7b3001A496401B946088b91A0A47411";
   #market_address = "0x6B88E7102a55B81AD0BDc11A05d114F0738bCE58";
   #market_abi = [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_nftContractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_offerIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "acceptOffer",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_nftContractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_nftId",
+          "type": "uint256"
+        }
+      ],
+      "name": "buyMarketItem",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_nftContractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_nftId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_price",
+          "type": "uint256"
+        }
+      ],
+      "name": "listingMarketItem",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
     {
       "inputs": [],
       "stateMutability": "nonpayable",
@@ -1055,16 +1129,16 @@ class MarketContractWrapper {
         },
         {
           "internalType": "uint256",
-          "name": "_tokenId",
+          "name": "_nftId",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "_offerIndex",
+          "name": "_endTime",
           "type": "uint256"
         }
       ],
-      "name": "acceptOffer",
+      "name": "offerMarketItem",
       "outputs": [],
       "stateMutability": "payable",
       "type": "function"
@@ -1078,13 +1152,24 @@ class MarketContractWrapper {
         },
         {
           "internalType": "uint256",
-          "name": "_nftId",
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_offerIndex",
           "type": "uint256"
         }
       ],
-      "name": "buyMarketItem",
-      "outputs": [],
-      "stateMutability": "payable",
+      "name": "withdrawOutdatedOffer",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -1160,6 +1245,19 @@ class MarketContractWrapper {
         }
       ],
       "name": "getMarketItemsCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getMarketsCount",
       "outputs": [
         {
           "internalType": "uint256",
@@ -1286,19 +1384,6 @@ class MarketContractWrapper {
           "internalType": "struct NFTMarketplace.MarketItem[]",
           "name": "",
           "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getMarketsCount",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -1553,81 +1638,6 @@ class MarketContractWrapper {
       ],
       "stateMutability": "view",
       "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_nftContractAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_nftId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_price",
-          "type": "uint256"
-        }
-      ],
-      "name": "listingMarketItem",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_nftContractAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_nftId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_endTime",
-          "type": "uint256"
-        }
-      ],
-      "name": "offerMarketItem",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_nftContractAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_offerIndex",
-          "type": "uint256"
-        }
-      ],
-      "name": "withdrawOutdatedOffer",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
     }
   ];
   #marketContractInstance;
@@ -1652,7 +1662,7 @@ class MarketContractWrapper {
   async buyMarketItem(_nftContractAddress, _nftId, option) {
     let txOptions = {
       from: this.#defaultFromAccount,
-      value: Number(this.#defaultListingPrice) // wei
+      value: Number(option.value) // wei
     }
     return this.#marketContractInstance.methods.buyMarketItem(_nftContractAddress, _nftId).send(txOptions)
             .on('sending', option.sending || _emptyFunc)
@@ -1666,7 +1676,53 @@ class MarketContractWrapper {
       from: this.#defaultFromAccount,
       value: Number(this.#defaultListingPrice) // wei
     }
+    console.log("call listingMarketItem in wrapper")
+    console.log(_nftContractAddress)
+    console.log(_nftId)
+    console.log(_price)
+    console.log(option)
     return this.#marketContractInstance.methods.listingMarketItem(_nftContractAddress, _nftId, _price).send(txOptions)
+            .on('sending', option.sending || _emptyFunc)
+            .on('sent', option.sent || _emptyFunc)
+            .on('transactionHash', option.transactionHash || _emptyFunc)
+            .on('receipt', option.receipt || _emptyFunc)
+            .on('error', option.error || _emptyFunc);
+  }
+
+  async offerMarketItem(_nftContractAddress, _nftId, _endTime, option) {
+    let txOptions = {
+      from: this.#defaultFromAccount,
+      value: Number(option.value) // wei
+    }
+    return this.#marketContractInstance.methods.offerMarketItem(_nftContractAddress, _nftId, _endTime).send(txOptions)
+            .on('sending', option.sending || _emptyFunc)
+            .on('sent', option.sent || _emptyFunc)
+            .on('transactionHash', option.transactionHash || _emptyFunc)
+            .on('receipt', option.receipt || _emptyFunc)
+            .on('error', option.error || _emptyFunc);
+  }
+  async acceptOffer(_nftContractAddress, _tokenId, _offerIndex, option) {
+    let txOptions = {
+      from: this.#defaultFromAccount,
+      // value: Number(this.#defaultListingPrice) // wei
+    }
+    return this.#marketContractInstance.methods.acceptOffer(_nftContractAddress, _tokenId, _offerIndex).send(txOptions)
+            .on('sending', option.sending || _emptyFunc)
+            .on('sent', option.sent || _emptyFunc)
+            .on('transactionHash', option.transactionHash || _emptyFunc)
+            .on('receipt', option.receipt || _emptyFunc)
+            .on('error', option.error || _emptyFunc);
+  }
+
+  /////////////////////////////////////////////
+  // external function
+  /////////////////////////////////////////////
+  async withdrawOutdatedOffer(_nftContractAddress, _tokenId, _offerIndex, option) {
+    let txOptions = {
+      from: this.#defaultFromAccount,
+      value: Number(this.#defaultListingPrice) // wei
+    }
+    return this.#marketContractInstance.methods.withdrawOutdatedOffer(_nftContractAddress, _tokenId, _offerIndex).send(txOptions)
             .on('sending', option.sending || _emptyFunc)
             .on('sent', option.sent || _emptyFunc)
             .on('transactionHash', option.transactionHash || _emptyFunc)
@@ -1709,6 +1765,18 @@ class MarketContractWrapper {
   }
   async getTotalMarketSoldItems(){
     return this.#marketContractInstance.methods.getTotalMarketSoldItems().call();
+  }
+  async getOfferList(_nftContractAddress, _tokenId){
+    return this.#marketContractInstance.methods.getOfferList(_nftContractAddress, _tokenId).call();
+  }
+  async getMyOutdatedOffers(_nftContractAddress, _tokenId){
+    return this.#marketContractInstance.methods.getMyOutdatedOffers(_nftContractAddress, _tokenId).call();
+  }
+  /////////////////////////////////////////////
+  // Wrapper function
+  /////////////////////////////////////////////
+  getAddress(){
+    return this.#market_address;
   }
 }
 
@@ -2267,5 +2335,11 @@ class AuctionContractWrapper {
     }
     let _resultHash = await this.#auctionContractInstance.methods.endAuctionItem(_nft, _tokenId).send(txOptions);
     return _resultHash;
+  }
+  /////////////////////////////////////////////
+  // Wrapper function
+  /////////////////////////////////////////////
+  getAddress(){
+    return this.#auction_address;
   }
 }

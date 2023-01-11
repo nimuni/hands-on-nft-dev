@@ -84,11 +84,11 @@
               <a id="creatorNameLink">creatorname</a>
               <!-- creator name -->
               <!-- external link -->
-              <div id="externalLinksDiv">
-              </div>
+              <div id="externalLinksDiv"></div>
             </div>
             <div class="item-name">
               <h1 id="nftNameH1">NFT name</h1>
+              <div><button class="btn btn-default btn-primary" id="moveSellPageBtn">Sell NFT</button></div>
             </div>
             <div class="item-owner">
               Owned by <a id="nftOwnerLink">owner</a>
@@ -147,7 +147,7 @@
                   <div class="accordion-body">
                     <table class="table" id="OffersTable">
                       <tr>
-                        <th>Price</th>
+                        <th>Price(ETH)</th>
                         <th>USD Price</th>
                         <th>Floor Difference</th>
                         <th>Expiration</th>
@@ -225,6 +225,19 @@
   let nftImage = document.getElementById("nftImage")
   let collapseDescription = document.getElementById("collapseDescription")
   let contractAddressSpan = document.getElementById("contractAddressSpan");
+  let priceChart;
+
+  const moveSellPage = async () => {
+    console.log("call moveSellPage")
+    let owner = await nft_contract.ownerOf(tokenId);
+    let myaddress = await getAccount()
+    if(owner.toLowerCase()==myaddress.toLowerCase()){
+      window.location.href = window.location.origin + window.location.pathname + "/sell"
+    }
+  }
+  let sellBtn = document.getElementById("moveSellPageBtn");
+  sellBtn.addEventListener("click", moveSellPage)
+
   const setNFTdata = async (data) => {
     // init NFT image
     nftImage.src = data.image;
@@ -314,7 +327,6 @@
       });
     }
   }
-  let priceChart
   const setPriceHistory = (priceData) => {
     const ctx = document.getElementById("chart");
     const oneDaySeconds = 1000*60*60*24
@@ -345,9 +357,14 @@
       // new Intl.DateTimeFormat('ko-KR').format(new Date()-oneDaySeconds*3),
       // new Intl.DateTimeFormat('ko-KR').format(new Date()-oneDaySeconds*4),
     ]
+    data = [
+      0.000000001,
+      0.0001,
+      0.0002
+    ]
     datasets = [{
       label: "ETH",
-      data: [0.000000001, 0.0001, 0.0002],// [0.0001, 0.0002, 0.0003, 0.153, 0.1],
+      data: data,// [0.0001, 0.0002, 0.0003, 0.153, 0.1],
       fill: false,
       borderColor: 'rgba(0, 0, 0, 0.2)',
       borderWidth: 1,
@@ -488,35 +505,63 @@
     fn_table_Initialize("OffersTable")
 
     // db 조회
-    // TODO. getOffersDBData 조회기능 만들어야함
     const getOffers = async (contractAddress, tokenId) => {
       const url = "";
-      let fetchResponse = await fetch(url)
-      if(fetchResponse.ok){
-        let offersData = await fetchResponse.json();
-        return offersData
+
+      let offersArray = await market_contract.getOfferList(contractAddress, tokenId);
+      if(offersArray.length > 0){
+        let temp = [];
+        const timeOption = {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric'
+        }
+        offersArray.forEach(element => {
+          // price: element.price,
+          // remainPrice: element.remainPrice,
+          // offerer: element.offerer,
+          // endTime: element.endTime,
+          // ended: element.ended
+          let diffObj = getTimeDiffAndUnit(new Date().getTime(), element.endTime)
+          new Intl.RelativeTimeFormat('ko-KR').format(diffObj.diff,diffObj.unit)
+          console.log(diffObj)
+          console.log(element.endTime)
+          temp.push({
+            price: web3.utils.fromWei(element.price, 'ether'),
+            usdPrice: "",
+            floorDiff: "",
+            // expiration: new Intl.DateTimeFormat('ko-KR', timeOption).format(element.endTime),
+            expiration: "약 "+new Intl.RelativeTimeFormat('ko-KR').format(diffObj.diff,diffObj.unit),
+            from: maskingString(element.offerer)
+          })
+        });
+        return temp;
       } else {
         console.error("getOffersDBData fetchResponse not ok")
-        console.log(fetchResponse)
+        console.log(offersArray)
         return null;
       }
     }
-    let offersDataArray = await getOffers(contractAddress, tokenId);
-
     const addOfferData = (rowData) => {
+      let sort = -1
       let newRow = OffersTable.insertRow(sort);
-      rowData.forEach(function(value, index, array){
-        let tempCell = newRow.insertCell(-1);
+      console.log(rowData)
+      Object.keys(rowData).forEach((value, index, array) => {
+        let tempCell = newRow.insertCell(sort);
         if(index == rowData.length-1){
-          // TODO. Address인 경우 사용자 페이지로 링크
-          tempCell.innerHTML =  `<a class="cursor-pointer" onclick="openUserInfoPage('${contractAddress}')">${maskingString(contractAddress)}</a>`;
         } else {
-          tempCell.innerHTML = value;
+          tempCell.innerHTML = rowData[value];
         }
       })
     }
 
-    if(offersDataArray) {
+
+    let offersDataArray = await getOffers(contractAddress, tokenId);
+
+    if(offersDataArray.length > 0) {
       offersDataArray.forEach(element => {
         addOfferData(element);
       });
@@ -610,6 +655,8 @@
         let creatorItems = await nft_contract.getCreatorNFTIds(creatorAddress);
         let creatorAnotherItems = creatorItems.filter(element => element != tokenId)
         setCreatorItem(contractAddress, creatorAnotherItems);
+
+        setOffers(contractAddress, tokenId);
 
         // Call the totalSupply
         // console.log(await nft_contract.totalSupply())

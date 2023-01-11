@@ -40,6 +40,17 @@ class IndexController {
       next(error);
     }
   };
+  public nftListForSale = (req: Request, res: Response, next: NextFunction): void => {
+    try {
+      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
+      ejs_params.contractAddress = req.params.contractAddress
+      ejs_params.tokenId = req.params.tokenId
+      console.log(ejs_params)
+      res.render('nftListForSale', ejs_params)
+    } catch (error) {
+      next(error);
+    }
+  };
   public market = (req: Request, res: Response, next: NextFunction): void => {
     try {
       let ejs_params = _.cloneDeep(DEFAULT_PARAMS)

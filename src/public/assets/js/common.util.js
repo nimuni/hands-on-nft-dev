@@ -29,7 +29,22 @@ const openUserInfoPage = (address) => {
 /////////////////////////
 // common util function
 /////////////////////////
-
+const validEth = (str) => {
+  const regex =  /^\d*(\.?\d*)$/;
+  return regex.test(str) && Number(str) > 0.000000000000000001 ? true : false;
+}
+const validEthMessage = (str) => {
+  const regex =  /^\d*(\.?\d*)$/;
+  if(regex.test(str)){
+    if(Number(str) > 0.000000000000000001){
+      return "Valid"
+    } else {
+      return "Input value have to bigger than 1 wei"
+    }
+  } else {
+    return "Please check the Input value"
+  }
+}
 
 const getTimeDiffAndUnit = function(_fromTimestamp, _toTimestamp=new Date().getTime()) {
   const SECOND_CONDITION = 1000;
@@ -40,8 +55,8 @@ const getTimeDiffAndUnit = function(_fromTimestamp, _toTimestamp=new Date().getT
   const MONTH_CONDITION = DAY_CONDITION * 31;
   const YEAR_CONDITION = DAY_CONDITION * 365;
 
-  let from = new Date(_fromTimestamp)
-  let to = new Date(_toTimestamp)
+  let from = new Date(Number(_fromTimestamp))
+  let to = new Date(Number(_toTimestamp))
 
   let diff = (to - from);
   let diffAbs = Math.abs(diff)
@@ -227,4 +242,36 @@ const fn_overlay_blindDotAnimation = function(show){
 const fn_overlay_blindLabel = function(value="Loading..."){
   const loadingLabelDom = document.getElementById("loadingLabel");
   loadingLabelDom.innerText = value;
+}
+
+/////////////////////////
+// common table function
+/////////////////////////
+const getYearStr = (_date) => {
+  let day = new Date(_date);
+  return day.getFullYear();
+}
+const getMonthStr = (_date) => {
+  let day = new Date(_date);
+  return (day.getMonth() + 1).toString().padStart(2, "0");
+}
+const getDayStr = (_date) => {
+  let day = new Date(_date);
+  return day.getDate().toString().padStart(2, "0");
+}
+const getHourStr = (_date) => {
+  let day = new Date(_date);
+  return day.getHours().toString().padStart(2, "0");
+}
+const getMinutesStr = (_date) => {
+  let day = new Date(_date);
+  return day.getMinutes().toString().padStart(2, "0");
+}
+const getYYYYMMDDStr = (_date) => {
+  return `${getYearStr(_date)}-${getMonthStr(_date)}-${getDayStr(_date)}`;
+}
+const getDatePickerDay = (datePickerDom) => {
+  let inputDate = new Date(datePickerDom.value);
+  if(inputDate)
+  return datePickerDom
 }

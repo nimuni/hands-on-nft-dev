@@ -62,6 +62,9 @@ body.body-css {
 .center-wrapper-in {
   display: inline-block;
 }
+.display-block {
+  display: block;
+}
 
 .font-align-left {
   text-align: left;
@@ -84,9 +87,16 @@ body.body-css {
   align-items: center;
 }
 
-.div-vh-center {
+.div-flex-vh-center {
   display: inline-block;
-  margin: 0 auto;
+  margin: auto 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.div-flex-center {
+  display: inline-block;
+  margin: auto;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -171,8 +181,28 @@ body.body-css {
 .item-detail > section > .item-name > h1 {
   color: rgb(40, 40, 40);
 }
+.item-name {
+  display: flex;
+  justify-content: space-between;
+}
 .cursor-pointer {
   cursor: pointer;
+}
+.flex-box {
+  display: flex;
+}
+.flex-vertical-box {
+  display: flex;
+  flex-direction: column;
+}
+.justify-sb {
+  justify-content: space-between;
+}
+.div-vertical-center {
+  text-align: center;
+  padding: 10px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .properties-wrap {
@@ -196,4 +226,19 @@ body.body-css {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.font-color-1 {
+  color: rgb(70, 70, 70);
+}
+.font-color-allow {
+  color: rgb(70, 210, 70);
+}
+.font-color-warn {
+  color: rgb(210, 70, 70);
+}
+.border-line {
+  border-top: 1px solid rgb(138, 147, 155);
+  color: rgb(138, 147, 155);
+  margin-top: 3rem;
+  margin-bottom: 3rem;
 }

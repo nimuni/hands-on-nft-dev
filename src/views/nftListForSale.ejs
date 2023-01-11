@@ -1,0 +1,634 @@
+<div>
+  <div class="row">
+    <div class="col-lg-7 col-sm-12">
+      <form>
+        <section class="flex-box my-4">
+          <div class="div-vertical-center">
+            <i class="bi bi-chevron-left" style="height:100%"></i>
+          </div>
+          <div class="div-vertical-center">
+            <h2 class="m-0">
+              List for sale
+            </h2>
+          </div>
+        </section>
+        <section class="my-4">
+          <div style="margin-bottom: 16px;">
+            <h5>Choose a type of sale</h5>
+          </div>
+          <div>
+            <div class="rounded-box-line round-selected" id="fixedPriceDiv">
+              <div class="flex-box justify-sb">
+                <div class="display-block">
+                  <div>
+                    <span style="font-weight: bold;">Fixed price</span>
+                  </div>
+                  <div>
+                    <span style="color: rgb(124, 124, 124);">The item is listed at the price you set</span>
+                  </div>
+                </div>
+                <div class="div-flex-vh-center">
+                  <input type="radio" name="sale" id="fixedRadio" value="fixed" text="fixed" checked="true"/>
+                </div>
+              </div>
+            </div>
+            <div class="rounded-box-line" id="timedAuctionDiv">
+              <div class="flex-box justify-sb">
+                <div class="display-block">
+                  <div>
+                    <span style="font-weight: bold;">Timed auction</span>
+                  </div>
+                  <div>
+                    <span style="color: rgb(124, 124, 124);">The item is listed for the auction.</span>
+                  </div>
+                </div>
+                <div class="div-flex-vh-center">
+                  <input type="radio" name="sale" id="auctionRadio" value="auction" text="auction"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="my-4 d-none" id="chooseMethodDiv">
+          <div style="margin-bottom: 16px;">
+            <h5>Choose a method</h5>
+          </div>
+          <div>
+            <div class="rounded-box-line round-selected" id="highestAuctionDiv">
+              <div class="flex-box justify-sb">
+                <div class="display-block flex-box">
+                  <div class="div-flex-vh-center" style="margin-right: 16px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5Z"/>
+                    </svg>
+                  </div>
+                  <div class="display-block">
+                    <div>
+                      <span style="font-weight: bold;">Sell to Highest bidder</span>
+                    </div>
+                    <div>
+                      <span style="color: rgb(124, 124, 124);">The highest bid wins at the end.</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="div-flex-vh-center">
+                  <input type="radio" name="auction" id="highestRadio" value="highest" text="highest" checked="true"/>
+                </div>
+              </div>
+            </div>
+            <div class="rounded-box-line" id="decliningAuctionDiv">
+              <div class="flex-box justify-sb">
+                <div class="display-block flex-box">
+                  <div class="div-flex-vh-center" style="margin-right: 16px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-graph-down-arrow" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm10 11.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-1 0v2.6l-3.613-4.417a.5.5 0 0 0-.74-.037L7.06 8.233 3.404 3.206a.5.5 0 0 0-.808.588l4 5.5a.5.5 0 0 0 .758.06l2.609-2.61L13.445 11H10.5a.5.5 0 0 0-.5.5Z"/>
+                    </svg>
+                  </div>
+                  <div class="display-block">
+                    <div>
+                      <span style="font-weight: bold;">Sell with declining price</span>
+                    </div>
+                    <div>
+                      <span style="color: rgb(124, 124, 124);">The price falls until someone purchases the item.</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="div-flex-vh-center">
+                  <input type="radio" name="auction" id="decliningRadio" value="declining" text="declining"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="my-4">
+          <div style="margin-bottom: 16px;">
+            <h5>Set a price</h5>
+          </div>
+          <div>
+            <div class="my-2">
+              <span id="startPriceSpan" class="d-none">Starting price</span>
+            </div>
+            <div>
+              <div class="input-group">
+                <input type="text" id="startingPriceInput" class="form-control set-price-input input-eth" placeholder="Amount" aria-label="Amount" aria-describedby="basic-addon2">
+                <span class="input-group-text set-price-span" id="basic-addon2">ETH</span>
+              </div>
+              <div class="mx-3 mb-3 input-info">
+                <span class="d-none info-allow font-color-allow">
+                  <i class="bi bi-check-circle"></i>
+                </span>
+                <span class="d-none info-deny font-color-warn">
+                  <i class="bi bi-dash-circle"></i>
+                </span>
+                <span class="info-message font-color-warn"></span>
+              </div>
+            </div>
+          </div>
+          <div id="endingPriceDiv" class="d-none">
+            <div class="my-2">
+              <span>Ending price</span>
+            </div>
+            <div class="input-group">
+              <input type="text" id="endingPriceInput" class="form-control set-price-input input-eth" placeholder="Amount" aria-label="Amount" aria-describedby="basic-addon2">
+              <span class="input-group-text set-price-span" id="basic-addon2">ETH</span>
+            </div>
+            <div class="mx-3 mb-3 input-info">
+              <span class="d-none info-allow font-color-allow">
+                <i class="bi bi-check-circle"></i>
+              </span>
+              <span class="d-none info-deny font-color-warn">
+                <i class="bi bi-dash-circle"></i>
+              </span>
+              <span class="info-message font-color-warn"></span>
+            </div>
+          </div>
+        </section>
+        <section class="my-4 d-none" id="durationSection">
+          <div style="margin-bottom: 16px;">
+            <h5>Set a duration</h5>
+          </div>
+          <div>
+            <div class="mb-3">
+              <button class="set-duration-input" type="button" data-bs-container="body" onclick="toggleTimePopup()">
+                <div class="flex-box justify-sb">
+                  <div class="flex-box">
+                    <div class="div-flex-vh-center" style="margin-right: 16px;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <span id="durationSpan"></span>
+                    </div>
+                  </div>
+                  <div class="div-flex-vh-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                  </div>
+                </div>
+              </button>
+              <div class="card d-none" id="timePopup">
+                <div class="card-body">
+                  <div class="row">
+                    <!-- <div class="col-12 mb-4">
+                      <p>Date Range</p>
+                      <button class="set-duration-input" type="button">
+                        <div class="flex-box justify-sb">
+                          <div>
+                            <span id="selectedDateRange">1 day</span>
+                          </div>
+                          <div class="div-flex-vh-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                          </div>
+                        </div>
+                      </button>
+                    </div> -->
+                    <div class="col-12 mb-4">
+                      <div class="row">
+                        <!-- <div class="col">
+                          <p>Starting</p>
+                          <input type="date" id="datePickerStart" class="form-control"/>
+                        </div>
+                        <div class="col-1">
+                          <div style="margin-top: 40px;">
+                            <span></span>
+                          </div>
+                          <div style="height: 38px;">
+                            <div class="div-flex-vh-center">
+                              -
+                            </div>
+                          </div>
+                        </div> -->
+                        <div class="col-6">
+                          <div class="row">
+                            <div class="col-12">
+                              <p>Ending</p>
+                            </div>
+                            <div class="col-6">
+                              <input type="date" id="endDatePicker" class="form-control"/>
+                            </div>
+                            <div class="col-6">
+                              <input type="time" id="endTimePicker" class="form-control"/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <button type="button" class="btn btn-primary" onclick="toggleTimePopup()">Confirm</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="my-4">
+          <div style="margin-bottom: 16px;">
+            <h5>Summary</h5>
+          </div>
+          <div class="pr-5">
+            <div class="flex-box justify-sb mb-2 font-color-1">
+              <span>Listing price</span>
+              <div>
+                <span id="listingPriceSpan">0</span> ETH
+              </div>
+            </div>
+            <div class="flex-box justify-sb mb-2 font-color-1">
+              <span>Service fee</span>
+              <div>
+                <span id="serviceFeeSpan">0</span> ETH
+              </div>
+            </div>
+            <div class="flex-box justify-sb mb-2 font-color-1">
+              <span>Creator fee</span>
+              <div>
+                <span id="creatorFeeSpan">0</span> ETH
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="my-4">
+          <div class="border-line"></div>
+          <div class="flex-box justify-sb" style="margin-bottom: 16px;">
+            <h5>Potential earning</h5>
+            <h5><span id="portentialEarnSpan">0</span> ETH</h5>
+          </div>
+        </section>
+        <div></div>
+      </form>
+      <div class="d-grid gap-2 my-4">
+        <button type="button" id="completeListingBtn" class="btn btn-lg btn-primary" width="100%">Complete Listing</button>
+      </div>
+    </div>
+    <div class="col-lg-5 col-sm-12">
+      <div class="flex-vertical-box">
+        <div class="nft-card">
+          <img id="nftImage" class="nft-card-img">
+          <div class="nft-card-body">
+            <h4 class="card-title" id="nftTitle"></h4>
+            <p class="card-text" id="nftDescription"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- page script -->
+<script>
+  const contractAddress = "<%= contractAddress %>"
+  const tokenId = "<%= tokenId %>"
+  const nftImage = document.getElementById("nftImage")
+
+  // set Type of sale
+  "round-selected"
+  const fixedPriceDiv = document.getElementById("fixedPriceDiv");
+  const fixedRadio = document.getElementById("fixedRadio");
+  const timedAuctionDiv = document.getElementById("timedAuctionDiv");
+  const auctionRadio = document.getElementById("auctionRadio");
+  const chooseMethodDiv = document.getElementById("chooseMethodDiv");
+  const endingPriceDiv = document.getElementById("endingPriceDiv");
+  const startPriceSpan = document.getElementById("startPriceSpan");
+  const highestAuctionDiv = document.getElementById("highestAuctionDiv");
+  const highestRadio = document.getElementById("highestRadio");
+  const decliningAuctionDiv = document.getElementById("decliningAuctionDiv");
+  const decliningRadio = document.getElementById("decliningRadio");
+  const listingPriceSpan = document.getElementById("listingPriceSpan");
+  const serviceFeeSpan = document.getElementById("serviceFeeSpan");
+  const creatorFeeSpan = document.getElementById("creatorFeeSpan");
+  const portentialEarnSpan = document.getElementById("portentialEarnSpan");
+  const startingPriceInput = document.getElementById("startingPriceInput");
+  const endingPriceInput = document.getElementById("endingPriceInput");
+  const completeListingBtn = document.getElementById("completeListingBtn")
+  const durationSection = document.getElementById("durationSection");
+
+
+  fixedPriceDiv.onclick = () => {
+    fixedPriceDiv.classList.add("round-selected")
+    timedAuctionDiv.classList.remove("round-selected")
+    chooseMethodDiv.classList.add("d-none");
+    durationSection.classList.add("d-none");
+
+    fixedRadio.checked = true;
+    auctionRadio.checked = false;
+
+    startPriceSpan.classList.add("d-none")
+    endingPriceDiv.classList.add("d-none");
+
+    highestAuctionDiv.click();
+  }
+  timedAuctionDiv.onclick = () => {
+    fixedPriceDiv.classList.remove("round-selected")
+    timedAuctionDiv.classList.add("round-selected")
+    chooseMethodDiv.classList.remove("d-none");
+    durationSection.classList.remove("d-none");
+
+    fixedRadio.checked = false;
+    auctionRadio.checked = true;
+
+    startPriceSpan.classList.remove("d-none")
+  }
+  highestAuctionDiv.onclick = () => {
+    highestAuctionDiv.classList.add("round-selected")
+    decliningAuctionDiv.classList.remove("round-selected")
+
+    highestRadio.checked = true;
+    decliningRadio.checked = false;
+
+    endingPriceDiv.classList.add("d-none");
+  }
+  decliningAuctionDiv.onclick = () => {
+    highestAuctionDiv.classList.remove("round-selected")
+    decliningAuctionDiv.classList.add("round-selected")
+
+    highestRadio.checked = false;
+    decliningRadio.checked = true;
+
+    endingPriceDiv.classList.remove("d-none");
+  }
+
+  // set validator of eth input
+  const inputsEth = document.getElementsByClassName("input-eth");
+  [...inputsEth].forEach(e => {
+    e.addEventListener("input", async () => {
+      const infoDiv = e.parentNode.parentNode.querySelector(".input-info");
+      const allowMarkSpan = infoDiv.querySelector(".info-allow");
+      const denyMarkSpan = infoDiv.querySelector(".info-deny");
+      const messageSpan = infoDiv.querySelector(".info-message");
+      if(validEth(e.value)){
+        // css change
+        allowMarkSpan.classList.remove("d-none")
+        denyMarkSpan.classList.add("d-none");
+        messageSpan.classList.add("font-color-allow");
+        messageSpan.classList.remove("font-color-warn");
+
+        // calc potential earning
+        let calcObj = await calcEarning();
+        listingPriceSpan.innerHTML = calcObj.listingPrice;
+        serviceFeeSpan.innerHTML = calcObj.serviceFee;
+        creatorFeeSpan.innerHTML = calcObj.creatorFee;
+
+        portentialEarnSpan.innerHTML = calcObj.portentialEarn;
+
+        // set Summary and Potential earning
+      } else {
+        allowMarkSpan.classList.add("d-none")
+        denyMarkSpan.classList.remove("d-none");
+        messageSpan.classList.remove("font-color-allow");
+        messageSpan.classList.add("font-color-warn");
+      }
+      messageSpan.innerHTML = validEthMessage(e.value)
+    })
+  })
+
+  const serviceFeePercentage = 0 / 10000;
+  const getCreatorFee = async () => {
+    return 0;
+  }
+
+  const calcEarning = async () => {
+    let listingPrice = startingPriceInput.value;
+    // let serviceFee = listingPrice * serviceFeePercentage;
+    let serviceFee = web3.utils.fromWei(await market_contract.getListingPrice(), 'ether');
+    let creatorFee = await getCreatorFee()
+    let portentialEarn = listingPrice - serviceFee - creatorFee;
+
+    return {
+      listingPrice,
+      serviceFee,
+      creatorFee,
+      portentialEarn
+    }
+  }
+  completeListingBtn.onclick = async () => {
+    // show loading bar modal
+    fn_overlay_blindLoading(true, "NFT 판매 등록중")
+
+    // calc listing price
+    let calcObj = await calcEarning()
+
+    // request listing
+    let ownerAddress = await nft_contract.ownerOf(tokenId)
+    let marketAddress = await market_contract.getAddress();
+
+    nft_contract.initNFTInstance(contractAddress);
+    let checkApproved = await nft_contract.isApprovedForAll(ownerAddress, marketAddress);
+
+    if(String(ownerAddress).toLowerCase() != String(await getAccount()).toLowerCase()) {
+      alert("해당 NFT 소유자가 아닙니다.")
+      fn_overlay_blindLoading(false);
+      return;
+    }
+
+    const successListing = async (a,b,c) => {
+      console.log("call successListing")
+      console.log(a);
+      console.log(b);
+      console.log(c);
+      // move detail page
+      // hide loading bar modal
+      fn_overlay_blindLoading(false);
+
+      // move detail page
+      console.log("move detail page")
+    }
+    const errorListing = async (a,b,c) => {
+      console.log("call errorListing")
+      console.log(a);
+      console.log(b);
+      console.log(c);
+      // alert 표시
+      alert("alert in errorListing")
+
+      // hide loading bar modal
+      fn_overlay_blindLoading(false);
+    }
+    const listingItem = async () => {
+      console.log("call listingItem")
+      let callback = {
+        value: calcObj.serviceFee,
+        receipt: ()=>{console.log("receipt end")}
+        // receipt: successListing,
+        // error: errorListing
+      }
+
+      if(fixedRadio.checked){
+        console.log("bid to market")
+        let price = web3.utils.toWei(startingPriceInput.value, 'ether');
+        await market_contract.listingMarketItem(contractAddress, tokenId, price, callback)
+      } else {
+        if(highestRadio.checked){
+          console.log("highest auction")
+          let startBid = startingPriceInput.value;
+          let targetDate = new Date(endDatePicker.value+" "+endTimePicker.value)
+          console.log(startBid)
+          console.log(targetDate)
+          // await auction_contract.addAuctionItem(contractAddress, tokenId, targetDate.getTime(), startBid)
+        } else {
+          console.log("declining auction")
+          let startBid = startingPriceInput.value;
+          let targetDate = new Date(endDatePicker.value+" "+endTimePicker.value)
+          console.log(startBid)
+          console.log(targetDate)
+          // await auction_contract.addDecliningAuctionItem(contractAddress, tokenId, targetDate.getTime(), startBid)
+        }
+      }
+    }
+
+
+    if(checkApproved){
+      await listingItem();
+    } else {
+      const delayListingItem = async () => {
+        console.log("call delayListingItem")
+        await setTimeout(async () => {}, 2000);
+        await listingItem();
+      }
+      await nft_contract.setApprovalForAll(marketAddress, true, {receipt: delayListingItem});
+
+    }
+  }
+
+  // set DatePicker
+  let minDay = new Date();
+  let sampleDay = new Date();
+  sampleDay.setDate(sampleDay.getDate() + 1);
+  let maxDay = new Date();
+  maxDay.setMonth(minDay.getMonth()+6);
+
+  // let startDatePicker = document.getElementById("startDatePicker")
+  // startDatePicker.min = getYYYYMMDDStr(minDay);
+  // startDatePicker.max = getYYYYMMDDStr(maxDay);
+  const startTimePicker = document.getElementById("startTimePicker")
+  const endDatePicker = document.getElementById("endDatePicker")
+  const endTimePicker = document.getElementById("endTimePicker")
+  const durationSpan = document.getElementById("durationSpan");
+  endDatePicker.min = getYYYYMMDDStr(minDay);
+  endDatePicker.max = getYYYYMMDDStr(maxDay);
+  endDatePicker.value = `${getYYYYMMDDStr(sampleDay)}`
+
+  const minTimeChecker = () => {
+    const [_hours, _minutes] = String(endTimePicker.value).split(":");
+    if(new Date(endDatePicker.value) <= minDay && _hours <= getHourStr(minDay) && _minutes <= getMinutesStr(minDay)){
+      alert("현재보다 이전 시간은 선택할 수 없습니다.")
+      endTimePicker.value = null;
+      durationSpan.classList.add("font-color-warn")
+    } else {
+      durationSpan.classList.remove("font-color-warn")
+    }
+    changeDurationLabel(endDatePicker, endTimePicker);
+  }
+  endDatePicker.onchange = minTimeChecker
+  endTimePicker.onchange = minTimeChecker
+  endTimePicker.value = `${getHourStr(minDay)}:${getMinutesStr(minDay)}`
+
+  const changeDurationLabel = (datePickerDom, timePickerDom) => {
+    durationSpan.innerHTML = `Now ~ ${getYYYYMMDDStr(datePickerDom.value)} ${timePickerDom.value}`
+  }
+  changeDurationLabel(endDatePicker, endTimePicker);
+
+  const timePopup = document.getElementById("timePopup");
+  const toggleTimePopup = () => {
+    timePopup.classList.toggle("d-none");
+  }
+
+  const setNFTdata = async (data) => {
+    const nftImage = document.getElementById("nftImage");
+    const nftTitle = document.getElementById("nftTitle");
+    const nftDescription = document.getElementById("nftDescription");
+    // init NFT image
+    nftImage.src = data.image;
+    nftTitle.innerHTML = data.name;
+
+    // init NFT description
+    nftDescription.innerHTML = data.description
+  }
+
+  afterInitFunction = async function () {
+    if (web3.utils.isAddress(contractAddress)) {
+      nft_contract = new NftContractWrapper(await getAccount(), contractAddress);
+      const metadataURI = await nft_contract.tokenURI(tokenId);
+      let fetchResponse = await fetch(metadataURI)
+      if (fetchResponse.ok) {
+        let nftData = await fetchResponse.json();
+        console.log(nftData)
+        setNFTdata(nftData)
+      } else {
+        console.log("Metadata load error")
+        throw `Metadata load error. \n contractAddress=${contractAddress}\n tokenId=${tokenId}`
+      }
+    } else {
+      alert(`Contract Address is not valid. contract address = ${contractAddress}`);
+    }
+  }
+</script>
+<style>
+.nft-card {
+  position: sticky;
+  top: calc(120px);
+  border-radius: 2rem;
+  overflow: hidden;
+  box-shadow: 1rem 1rem 100px #cfcfcf;
+
+}
+.nft-card-img {
+  width: 100%;
+  border-radius: 2rem 2rem 0 0 ;
+}
+.nft-card-body {
+  overflow: hidden;
+  padding: 24px;
+  border-radius: 0 0 2rem 2rem;
+}
+.card-title {
+  color: rgb(60, 60, 60);
+}
+.card-text {
+  margin-top: 1rem;
+  color: rgb(120, 120, 120);
+}
+.set-price-input {
+  /* font-size: 1.2rem !important; */
+  padding: 10px 16px;
+  border-radius: 0.75rem 0 0 0.75rem;
+  border: 2px solid rgb(230, 230, 230);
+}
+.set-price-span {
+  /* font-size: 1.2rem !important; */
+  padding: 10px 16px;
+  border-radius: 0 0.75rem 0.75rem 0;
+  border: 2px solid rgb(230, 230, 230);
+}
+.set-duration-input {
+  padding: 10px 16px;
+  border-radius: 0.75rem;
+  border: 2px solid rgb(230, 230, 230);
+  background-color: white;
+  width: 100%;
+}
+.round-selected {
+  border-color: rgb(20, 20, 20) !important;
+}
+.rounded-box-line > div > div > input {
+  cursor: pointer;
+  height: 24px;
+  min-width: 24px;
+  max-width: 24px;
+}
+.rounded-box-line {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgb(230, 230, 230);
+}
+
+</style>
