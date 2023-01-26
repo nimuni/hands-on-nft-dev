@@ -401,367 +401,6 @@ class NftContractWrapper {
       "type": "function"
     }
   ]
-  // #nft_abi = [
-  //   {
-  //     "inputs": [],
-  //     "stateMutability": "nonpayable",
-  //     "type": "constructor"
-  //   },
-  //   {
-  //     "anonymous": false,
-  //     "inputs": [
-  //       {
-  //         "indexed": true,
-  //         "internalType": "address",
-  //         "name": "owner",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "indexed": true,
-  //         "internalType": "address",
-  //         "name": "approved",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "indexed": true,
-  //         "internalType": "uint256",
-  //         "name": "tokenId",
-  //         "type": "uint256"
-  //       }
-  //     ],
-  //     "name": "Approval",
-  //     "type": "event"
-  //   },
-  //   {
-  //     "anonymous": false,
-  //     "inputs": [
-  //       {
-  //         "indexed": true,
-  //         "internalType": "address",
-  //         "name": "owner",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "indexed": true,
-  //         "internalType": "address",
-  //         "name": "operator",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "indexed": false,
-  //         "internalType": "bool",
-  //         "name": "approved",
-  //         "type": "bool"
-  //       }
-  //     ],
-  //     "name": "ApprovalForAll",
-  //     "type": "event"
-  //   },
-  //   {
-  //     "anonymous": false,
-  //     "inputs": [
-  //       {
-  //         "indexed": true,
-  //         "internalType": "address",
-  //         "name": "from",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "indexed": true,
-  //         "internalType": "address",
-  //         "name": "to",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "indexed": true,
-  //         "internalType": "uint256",
-  //         "name": "tokenId",
-  //         "type": "uint256"
-  //       }
-  //     ],
-  //     "name": "Transfer",
-  //     "type": "event"
-  //   },
-  //   {
-  //     "inputs": [
-  //       {
-  //         "internalType": "address",
-  //         "name": "to",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "internalType": "uint256",
-  //         "name": "tokenId",
-  //         "type": "uint256"
-  //       }
-  //     ],
-  //     "name": "approve",
-  //     "outputs": [],
-  //     "stateMutability": "nonpayable",
-  //     "type": "function"
-  //   },
-  //   {
-  //     "inputs": [
-  //       {
-  //         "internalType": "address",
-  //         "name": "owner",
-  //         "type": "address"
-  //       }
-  //     ],
-  //     "name": "balanceOf",
-  //     "outputs": [
-  //       {
-  //         "internalType": "uint256",
-  //         "name": "",
-  //         "type": "uint256"
-  //       }
-  //     ],
-  //     "stateMutability": "view",
-  //     "type": "function"
-  //   },
-  //   {
-  //     "inputs": [
-  //       {
-  //         "internalType": "uint256",
-  //         "name": "tokenId",
-  //         "type": "uint256"
-  //       }
-  //     ],
-  //     "name": "getApproved",
-  //     "outputs": [
-  //       {
-  //         "internalType": "address",
-  //         "name": "",
-  //         "type": "address"
-  //       }
-  //     ],
-  //     "stateMutability": "view",
-  //     "type": "function"
-  //   },
-  //   {
-  //     "inputs": [
-  //       {
-  //         "internalType": "address",
-  //         "name": "owner",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "internalType": "address",
-  //         "name": "operator",
-  //         "type": "address"
-  //       }
-  //     ],
-  //     "name": "isApprovedForAll",
-  //     "outputs": [
-  //       {
-  //         "internalType": "bool",
-  //         "name": "",
-  //         "type": "bool"
-  //       }
-  //     ],
-  //     "stateMutability": "view",
-  //     "type": "function"
-  //   },
-  //   {
-  //     "inputs": [
-  //       {
-  //         "internalType": "address",
-  //         "name": "to",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "internalType": "string",
-  //         "name": "_tokenURI",
-  //         "type": "string"
-  //       }
-  //     ],
-  //     "name": "mintToken",
-  //     "outputs": [
-  //       {
-  //         "internalType": "uint256",
-  //         "name": "",
-  //         "type": "uint256"
-  //       }
-  //     ],
-  //     "stateMutability": "nonpayable",
-  //     "type": "function"
-  //   },
-  //   {
-  //     "inputs": [],
-  //     "name": "name",
-  //     "outputs": [
-  //       {
-  //         "internalType": "string",
-  //         "name": "",
-  //         "type": "string"
-  //       }
-  //     ],
-  //     "stateMutability": "view",
-  //     "type": "function"
-  //   },
-  //   {
-  //     "inputs": [
-  //       {
-  //         "internalType": "uint256",
-  //         "name": "tokenId",
-  //         "type": "uint256"
-  //       }
-  //     ],
-  //     "name": "ownerOf",
-  //     "outputs": [
-  //       {
-  //         "internalType": "address",
-  //         "name": "",
-  //         "type": "address"
-  //       }
-  //     ],
-  //     "stateMutability": "view",
-  //     "type": "function"
-  //   },
-  //   {
-  //     "inputs": [
-  //       {
-  //         "internalType": "address",
-  //         "name": "from",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "internalType": "address",
-  //         "name": "to",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "internalType": "uint256",
-  //         "name": "tokenId",
-  //         "type": "uint256"
-  //       }
-  //     ],
-  //     "name": "safeTransferFrom",
-  //     "outputs": [],
-  //     "stateMutability": "nonpayable",
-  //     "type": "function"
-  //   },
-  //   {
-  //     "inputs": [
-  //       {
-  //         "internalType": "address",
-  //         "name": "from",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "internalType": "address",
-  //         "name": "to",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "internalType": "uint256",
-  //         "name": "tokenId",
-  //         "type": "uint256"
-  //       },
-  //       {
-  //         "internalType": "bytes",
-  //         "name": "data",
-  //         "type": "bytes"
-  //       }
-  //     ],
-  //     "name": "safeTransferFrom",
-  //     "outputs": [],
-  //     "stateMutability": "nonpayable",
-  //     "type": "function"
-  //   },
-  //   {
-  //     "inputs": [
-  //       {
-  //         "internalType": "address",
-  //         "name": "operator",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "internalType": "bool",
-  //         "name": "approved",
-  //         "type": "bool"
-  //       }
-  //     ],
-  //     "name": "setApprovalForAll",
-  //     "outputs": [],
-  //     "stateMutability": "nonpayable",
-  //     "type": "function"
-  //   },
-  //   {
-  //     "inputs": [
-  //       {
-  //         "internalType": "bytes4",
-  //         "name": "interfaceId",
-  //         "type": "bytes4"
-  //       }
-  //     ],
-  //     "name": "supportsInterface",
-  //     "outputs": [
-  //       {
-  //         "internalType": "bool",
-  //         "name": "",
-  //         "type": "bool"
-  //       }
-  //     ],
-  //     "stateMutability": "view",
-  //     "type": "function"
-  //   },
-  //   {
-  //     "inputs": [],
-  //     "name": "symbol",
-  //     "outputs": [
-  //       {
-  //         "internalType": "string",
-  //         "name": "",
-  //         "type": "string"
-  //       }
-  //     ],
-  //     "stateMutability": "view",
-  //     "type": "function"
-  //   },
-  //   {
-  //     "inputs": [
-  //       {
-  //         "internalType": "uint256",
-  //         "name": "tokenId",
-  //         "type": "uint256"
-  //       }
-  //     ],
-  //     "name": "tokenURI",
-  //     "outputs": [
-  //       {
-  //         "internalType": "string",
-  //         "name": "",
-  //         "type": "string"
-  //       }
-  //     ],
-  //     "stateMutability": "view",
-  //     "type": "function"
-  //   },
-  //   {
-  //     "inputs": [
-  //       {
-  //         "internalType": "address",
-  //         "name": "from",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "internalType": "address",
-  //         "name": "to",
-  //         "type": "address"
-  //       },
-  //       {
-  //         "internalType": "uint256",
-  //         "name": "tokenId",
-  //         "type": "uint256"
-  //       }
-  //     ],
-  //     "name": "transferFrom",
-  //     "outputs": [],
-  //     "stateMutability": "nonpayable",
-  //     "type": "function"
-  //   }
-  // ];
   #nftContractInstance;
   #defaultFromAccount;
 
@@ -771,7 +410,7 @@ class NftContractWrapper {
     this.#defaultFromAccount = _fromAddress;
   }
 
-  initNFTInstance(_nftAddress="0xF44e7Bcc4870fa0eCE41C23815887D689e7Fd6c5"){
+  initNFTInstance(_nftAddress="0x31C68d48E117C778696238818A995CeFF6D779Db"){
     this.#nftContractInstance = new web3.eth.Contract(this.#nft_abi, _nftAddress);
   }
 
@@ -925,76 +564,34 @@ class NftContractWrapper {
 
 class MarketContractWrapper {
   // #market_address = "0x1ec54e1aE7b3001A496401B946088b91A0A47411";
-  #market_address = "0x6B88E7102a55B81AD0BDc11A05d114F0738bCE58";
+  // v7
+  // #market_address = "0x6B88E7102a55B81AD0BDc11A05d114F0738bCE58";
+  // v8
+  #market_address = "0x402958d9c196565502b8aae325f6c9b252690e60";
   #market_abi = [
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_nftContractAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_offerIndex",
-          "type": "uint256"
-        }
-      ],
-      "name": "acceptOffer",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_nftContractAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_nftId",
-          "type": "uint256"
-        }
-      ],
-      "name": "buyMarketItem",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_nftContractAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_nftId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_price",
-          "type": "uint256"
-        }
-      ],
-      "name": "listingMarketItem",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
     {
       "inputs": [],
       "stateMutability": "nonpayable",
       "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "nft",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "nftId",
+          "type": "uint256"
+        }
+      ],
+      "name": "MarketItemListcancel",
+      "type": "event"
     },
     {
       "anonymous": false,
@@ -1129,16 +726,52 @@ class MarketContractWrapper {
         },
         {
           "internalType": "uint256",
-          "name": "_nftId",
+          "name": "_tokenId",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "_endTime",
+          "name": "_offerIndex",
           "type": "uint256"
         }
       ],
-      "name": "offerMarketItem",
+      "name": "acceptOffer",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_nftContractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_nftId",
+          "type": "uint256"
+        }
+      ],
+      "name": "buyMarketItem",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_nftContractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_nftId",
+          "type": "uint256"
+        }
+      ],
+      "name": "cancelListedItem",
       "outputs": [],
       "stateMutability": "payable",
       "type": "function"
@@ -1154,22 +787,49 @@ class MarketContractWrapper {
           "internalType": "uint256",
           "name": "_tokenId",
           "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_offerIndex",
-          "type": "uint256"
         }
       ],
-      "name": "withdrawOutdatedOffer",
+      "name": "getItemInfoOnMarket",
       "outputs": [
         {
-          "internalType": "bool",
+          "components": [
+            {
+              "internalType": "address",
+              "name": "nft",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "nftId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address payable",
+              "name": "seller",
+              "type": "address"
+            },
+            {
+              "internalType": "address payable",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "sold",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct NFTMarketplace.MarketItem",
           "name": "",
-          "type": "bool"
+          "type": "tuple"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -1245,19 +905,6 @@ class MarketContractWrapper {
         }
       ],
       "name": "getMarketItemsCount",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getMarketsCount",
       "outputs": [
         {
           "internalType": "uint256",
@@ -1390,6 +1037,32 @@ class MarketContractWrapper {
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "getMarkets",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getMarketsCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
@@ -1406,6 +1079,16 @@ class MarketContractWrapper {
       "outputs": [
         {
           "components": [
+            {
+              "internalType": "address",
+              "name": "nft",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "nftId",
+              "type": "uint256"
+            },
             {
               "internalType": "address",
               "name": "offerer",
@@ -1457,6 +1140,16 @@ class MarketContractWrapper {
       "outputs": [
         {
           "components": [
+            {
+              "internalType": "address",
+              "name": "nft",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "nftId",
+              "type": "uint256"
+            },
             {
               "internalType": "address",
               "name": "offerer",
@@ -1638,6 +1331,120 @@ class MarketContractWrapper {
       ],
       "stateMutability": "view",
       "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getVersion",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_nftContractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_nftId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_price",
+          "type": "uint256"
+        }
+      ],
+      "name": "listingMarketItem",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_nftContractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_nftId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_endTime",
+          "type": "uint256"
+        }
+      ],
+      "name": "offerMarketItem",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_listingPriceWei",
+          "type": "uint256"
+        }
+      ],
+      "name": "setListingPrice",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "setMarketOwner",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_nftContractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_offerIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdrawOutdatedOffer",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
     }
   ];
   #marketContractInstance;
@@ -1662,7 +1469,7 @@ class MarketContractWrapper {
   async buyMarketItem(_nftContractAddress, _nftId, option) {
     let txOptions = {
       from: this.#defaultFromAccount,
-      value: Number(option.value) // wei
+      value: option.value // wei
     }
     return this.#marketContractInstance.methods.buyMarketItem(_nftContractAddress, _nftId).send(txOptions)
             .on('sending', option.sending || _emptyFunc)
@@ -1682,6 +1489,18 @@ class MarketContractWrapper {
     console.log(_price)
     console.log(option)
     return this.#marketContractInstance.methods.listingMarketItem(_nftContractAddress, _nftId, _price).send(txOptions)
+            .on('sending', option.sending || _emptyFunc)
+            .on('sent', option.sent || _emptyFunc)
+            .on('transactionHash', option.transactionHash || _emptyFunc)
+            .on('receipt', option.receipt || _emptyFunc)
+            .on('error', option.error || _emptyFunc);
+  }
+  async cancelListedItem(_nftContractAddress, _nftId, option) {
+    let txOptions = {
+      from: this.#defaultFromAccount,
+    }
+    console.log("call cancelListedItem in wrapper")
+    return this.#marketContractInstance.methods.cancelListedItem(_nftContractAddress, _nftId, _price).send(txOptions)
             .on('sending', option.sending || _emptyFunc)
             .on('sent', option.sent || _emptyFunc)
             .on('transactionHash', option.transactionHash || _emptyFunc)
@@ -1729,10 +1548,38 @@ class MarketContractWrapper {
             .on('receipt', option.receipt || _emptyFunc)
             .on('error', option.error || _emptyFunc);
   }
+  async setListingPrice(_listingPriceWei, option) {
+    let txOptions = {
+      from: this.#defaultFromAccount,
+    }
+    return this.#marketContractInstance.methods.setListingPrice(_listingPriceWei).send(txOptions)
+            .on('sending', option.sending || _emptyFunc)
+            .on('sent', option.sent || _emptyFunc)
+            .on('transactionHash', option.transactionHash || _emptyFunc)
+            .on('receipt', option.receipt || _emptyFunc)
+            .on('error', option.error || _emptyFunc);
+  }
+  async setMarketOwner(_newOwner, option) {
+    let txOptions = {
+      from: this.#defaultFromAccount,
+    }
+    return this.#marketContractInstance.methods.setMarketOwner(_newOwner).send(txOptions)
+            .on('sending', option.sending || _emptyFunc)
+            .on('sent', option.sent || _emptyFunc)
+            .on('transactionHash', option.transactionHash || _emptyFunc)
+            .on('receipt', option.receipt || _emptyFunc)
+            .on('error', option.error || _emptyFunc);
+  }
 
   /////////////////////////////////////////////
   // Public function
   /////////////////////////////////////////////
+  async getVersion(){
+    return this.#marketContractInstance.methods.getVersion().call();
+  }
+  async getMarkets(){
+    return this.#marketContractInstance.methods.getMarkets().call();
+  }
   async getListingPrice(){
     return this.#marketContractInstance.methods.getListingPrice().call();
   }
@@ -1753,6 +1600,9 @@ class MarketContractWrapper {
   }
   async getMarketSoldItems(_nftContractAddress){
     return this.#marketContractInstance.methods.getMarketSoldItems(_nftContractAddress).call();
+  }
+  async getItemInfoOnMarket(_nftContractAddress, _tokenId){
+    return this.#marketContractInstance.methods.getItemInfoOnMarket(_nftContractAddress, _tokenId).call();
   }
   async getTotalMarketItemsCount(){
     return this.#marketContractInstance.methods.getTotalMarketItemsCount().call();

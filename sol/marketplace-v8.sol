@@ -7,8 +7,8 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract NFTMarketplace {
     using Counters for Counters.Counter;
-    
-    uint256 LISTING_PRICE = 0.0001 ether;
+    string version = "0.1.8";
+    uint256 listingPrice;
 
     // Auction Start
     address private marketOwner;
@@ -35,6 +35,8 @@ contract NFTMarketplace {
     // Market Item Offers
     // marketItemOffer[ContractAddress].marketItem[nftId].offerPrice[offerAddress]
     struct OfferDetail {
+        address nft;
+        uint256 nftId; 
         address offerer;
         uint256 price;
         uint256 remainPrice;
@@ -53,11 +55,26 @@ contract NFTMarketplace {
 
     event MarketItemListed(address nft, uint256 nftId, uint256 price, uint256 totalListedMarketItemCount);
     event MarketItemSold(address nft, uint256 nftId, uint256 price);
+    event MarketItemListcancel(address nft, uint256 nftId);
     event MarketItemOffer(address nft, uint256 nftId, uint256 index, uint256 price, uint256 endTime);
     event OfferAccept(address nft, uint256 nftId, uint256 price, address offerer);
 
     constructor(){
         marketOwner = msg.sender;
+        listingPrice = 0.0001 ether;
+    }
+
+    //////////////////////////////
+    // market function
+    //////////////////////////////
+    function setMarketOwner(address _newOwner) external  {
+        require(msg.sender == address(marketOwner),"You are not market owner");
+        require(address(_newOwner) != address(marketOwner),"New Owner are already market owner");
+        marketOwner = _newOwner;
+    }
+    function setListingPrice(uint256 _listingPriceWei) external {
+        require(msg.sender == address(marketOwner),"You are not market owner");
+        listingPrice = _listingPriceWei;
     }
 
     //////////////////////////////
@@ -65,11 +82,12 @@ contract NFTMarketplace {
     //////////////////////////////
     function listingMarketItem(address _nftContractAddress, uint256 _nftId, uint256 _price) public payable {
         require(_price > 0, "Price must be more of 0");
-        require(msg.value == LISTING_PRICE, "send value must be equal to listing price");
+        require(msg.value == listingPrice, "send value must be equal to listing price");
 
         IERC721 nft = IERC721(_nftContractAddress);
         require(msg.sender == nft.ownerOf(_nftId), "Only NFT owner can perform listing Item operation");
-        require(nft.isApprovedForAll(msg.sender, address(this)), "Market doesn't have approved to NFT");
+        // require(nft.isApprovedForAll(msg.sender, address(this)), "Market doesn't have approved to NFT");
+        require(nft.getApproved(_nftId) == address(this), "Market doesn't have approved to NFT");
 
 
         if(marketItemsOfAddress[_nftContractAddress].marketItem[_nftId].seller != address(0)){
@@ -113,12 +131,32 @@ contract NFTMarketplace {
 
         nft.transferFrom(address(this), msg.sender, _nftId);
 
-        payable (marketOwner).transfer(LISTING_PRICE);
+        payable (marketOwner).transfer(listingPrice);
         payable (seller).transfer(msg.value);
 
         marketItemsOfAddress[_nftContractAddress].sellingItemCount.decrement();
 
         emit MarketItemSold(_nftContractAddress, _nftId, msg.value);
+    }
+    function cancelListedItem(address _nftContractAddress, uint256 _nftId) public payable {
+        MarketItem storage item = marketItemsOfAddress[_nftContractAddress].marketItem[_nftId];
+
+        require(msg.sender == item.seller, "List cancel can do by seller");
+        require(!item.sold, "Item cancel just can by unsold");
+
+        IERC721 nft = IERC721(_nftContractAddress);
+
+        item.sold = true;
+        item.owner = payable (item.seller);
+        item.price = 0;
+
+        nft.transferFrom(address(this), item.seller, _nftId);
+
+        payable (marketOwner).transfer(listingPrice);
+
+        marketItemsOfAddress[_nftContractAddress].sellingItemCount.decrement();
+
+        emit MarketItemListcancel(_nftContractAddress, _nftId);
     }
 
     // offer
@@ -128,6 +166,8 @@ contract NFTMarketplace {
         offerList.totalOfferCount.increment();
         uint256 tempIndex = offerList.totalOfferCount.current();
 
+        offerList.offerDetail[tempIndex].nft = _nftContractAddress;
+        offerList.offerDetail[tempIndex].nftId = _nftId;
         offerList.offerDetail[tempIndex].offerer = msg.sender;
         offerList.offerDetail[tempIndex].price = msg.value;
         offerList.offerDetail[tempIndex].remainPrice = msg.value;
@@ -167,7 +207,8 @@ contract NFTMarketplace {
         OfferDetail storage offer = marketItemOffer[_nftContractAddress].marketItem[_tokenId].offerDetail[_offerIndex];
 
         require(offer.remainPrice > 0, "Offer has no remainPrice");
-        require(offer.endTime < block.timestamp, "offer is not ended");
+        require(address(offer.offerer) == address(msg.sender), "you are not the offerer");
+        require((offer.endTime < block.timestamp*1000) && !offer.ended, "offer is not ended");
 
         uint remainPrice = offer.remainPrice;
 
@@ -186,8 +227,11 @@ contract NFTMarketplace {
     //////////////////////////////
     // view function
     //////////////////////////////
+    function getVersion() external view returns (string memory) {
+        return version;
+    }
     function getListingPrice() public view returns (uint256) {
-        return LISTING_PRICE;
+        return listingPrice;
     }
     function getMarketsCount() public view returns (uint256){
         return marketsCount.current();
@@ -203,6 +247,10 @@ contract NFTMarketplace {
     }
     function getTotalMarketItemsCount() public view returns (uint256) {
         return _listedTotalItemCount.current();
+    }
+    function getItemInfoOnMarket(address _nftContractAddress, uint _tokenId) public view returns (MarketItem memory){
+        MarketItem memory tempItem = marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId];
+        return tempItem;
     }
     function getMarketItems(address _nftContractAddress) public view returns (MarketItem[] memory) {
         uint256 _marketItemsCount = getMarketItemsCount(_nftContractAddress);

@@ -193,19 +193,19 @@ const fn_table_getInputDataFromTableId = (tableId, buttonExist=false) => {
 // HTML overlays function
 /////////////////////////
 const fn_overlay_blindLoading = function(show, message){
-  const body = document.getElementsByTagName('body')[0];
+  const bodyDom = document.getElementsByTagName('body')[0];
   const loadingBlindDom = document.getElementById("loadingBlind");
   const loadingLabelDom = document.getElementById("loadingLabel");
 
 
   if(show){
-    body.classList.add("holding-body");
+    bodyDom.classList.add("holding-body");
     loadingBlindDom.classList.remove("d-none")
 
     loadingLabelDom.innerText = message;
     fn_overlay_blindDotAnimation(true);
   } else {
-    body.classList.remove("holding-body");
+    bodyDom.classList.remove("holding-body");
     loadingBlindDom.classList.add("d-none");
 
     loadingLabelDom.innerText = "Loading";
@@ -272,6 +272,5 @@ const getYYYYMMDDStr = (_date) => {
 }
 const getDatePickerDay = (datePickerDom) => {
   let inputDate = new Date(datePickerDom.value);
-  if(inputDate)
-  return datePickerDom
+  return inputDate
 }

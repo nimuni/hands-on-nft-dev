@@ -88,7 +88,10 @@
             </div>
             <div class="item-name">
               <h1 id="nftNameH1">NFT name</h1>
-              <div><button class="btn btn-default btn-primary" id="moveSellPageBtn">Sell NFT</button></div>
+              <div>
+                <button class="btn btn-default btn-primary d-none" id="moveSellPageBtn">Sell NFT</button>
+                <button class="btn btn-default btn-primary d-none" id="sellCancelBtn">Sell Cancel</button>
+              </div>
             </div>
             <div class="item-owner">
               Owned by <a id="nftOwnerLink">owner</a>
@@ -98,21 +101,28 @@
             <div id="viewCountsDiv" style="display:flex">
             </div>
           </div>
-          <div class="my-5">
+          <div class="my-5 d-none" id="marketItemInfoDiv">
             <div style="border-radius:10px;border:1px solid #e5e8eb;">
               <div style="padding:25px;">
                 <img src="http://hands.spurs.co.kr/image/view2.jpg">
               </div>
               <div style="border-top:1px solid #e5e8eb;padding:25px;background:#fbfdff;border-radius:0px 0px 10px 10px;">
-                <div>Current price</div>
-                <div style="margin-top:10px;"><span style="font-size:30px;font-weight:bold;color:#000">0.17 ETH</span> $200.30</div>
                 <div>
-                  <a href="#" class="btn btn-modern btn-primary btn-arrow-effect-1">
-                    Buy now <i class="fas fa-external-link-alt ms-2"></i>
-                  </a>
-                  <a href="#" class="btn btn-modern btn-primary btn-outline btn-arrow-effect-1" >
-                    Make offer <i class="fas fa-arrow-right ms-2"></i>
-                  </a>
+                  <div>Current price</div>
+                  <div class="mt-2">
+                    <span class="market-info-price">
+                      <span id="marketPriceEth">0</span> ETH
+                    </span>
+                    $ <span id="marketPriceDoller">0</span>
+                  </div>
+                  <div>
+                    <button type="button" id="buyNowBtn" class="btn btn-modern btn-primary btn-arrow-effect-1" onclick="buyNow">
+                      Buy now <i class="fas fa-external-link-alt ms-2"></i>
+                    </button>
+                    <button type="button" id="showOfferModalBtn" class="btn btn-modern btn-primary btn-outline btn-arrow-effect-1" onclick="showOfferModal()">
+                      Make offer <i class="fas fa-arrow-right ms-2"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -128,7 +138,21 @@
                 </h2>
                 <div id="collapsePrice" class="accordion-collapse collapse show" aria-labelledby="header-one" data-bs-parent="#accordionExample">
                   <div class="accordion-body">
-                    <canvas id="chart"></canvas>
+                    <div id="priceHistoryDiv" class="d-none">
+                      <canvas id="chart"></canvas>
+                    </div>
+                    <div id="noPriceHistoryDiv" class="">
+                      <div class="div-flex-vh-center font-color-1">
+                        <span class="my-4">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                            <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                          </svg>
+                        </span>
+                        <span>No events have occurred yet</span>
+                        <span class="mb-4">Check back later.</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -213,6 +237,60 @@
   </div>
 </div>
 
+
+
+<!-- modal -->
+<div class="modal-popup-back div-flex-vh-center2 d-none" id="offerModal">
+  <div class="card" style="max-width: 600px;">
+    <div class="card-text m-4">
+      <div class="div-vertical-center">
+        <div class="row">
+          <div class="col-1"></div>
+          <div class="col-10">
+            <h4>Make an Offer</h4>
+          </div>
+          <div class="col-1">
+            <button type="button" class="btn-close" id="closeModal" onclick="fn_modal_close()"></button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <h5>Price</h5>
+          <div class="input-group">
+            <input type="text" class="form-control set-price-input input-eth" placeholder="Price"  aria-describedby="basic-addon2" id="offerPriceInput"/>
+            <span class="input-group-text set-price-span" id="basic-addon2">ETH</span>
+          </div>
+          <div class="mx-3 mb-3 input-info">
+            <span class="d-none info-allow font-color-allow">
+              <i class="bi bi-check-circle"></i>
+            </span>
+            <span class="d-none info-deny font-color-warn">
+              <i class="bi bi-dash-circle"></i>
+            </span>
+            <span class="info-message font-color-warn"></span>
+          </div>
+        </div>
+        <div class="col-12 my-4">
+          <h5>Duration</h5>
+          <div class="row">
+            <div class="col-6">
+              <input type="date" id="endDatePicker" class="form-control"/>
+            </div>
+            <div class="col-6">
+              <input type="time" id="endTimePicker" class="form-control"/>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 mt-4 d-grid">
+          <button type="button" class="btn btn-primary" onclick="makeOffer()">offer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- import chartjs -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- import decimaljs to show correct decimal -->
@@ -220,23 +298,182 @@
 <!-- page script -->
 <script>
   let testtemp;
-  let contractAddress = "<%= contractAddress %>"
-  let tokenId = "<%= tokenId %>"
-  let nftImage = document.getElementById("nftImage")
-  let collapseDescription = document.getElementById("collapseDescription")
-  let contractAddressSpan = document.getElementById("contractAddressSpan");
+  const contractAddress = "<%= contractAddress %>"
+  const tokenId = "<%= tokenId %>"
+  const nftImage = document.getElementById("nftImage")
+  const collapseDescription = document.getElementById("collapseDescription")
+  const contractAddressSpan = document.getElementById("contractAddressSpan");
+  const marketPriceEth = document.getElementById("marketPriceEth");
+  const marketPriceDoller = document.getElementById("marketPriceDoller");
+  const marketItemInfoDiv = document.getElementById("marketItemInfoDiv");
+  const sellBtn = document.getElementById("moveSellPageBtn");
   let priceChart;
 
   const moveSellPage = async () => {
     console.log("call moveSellPage")
     let owner = await nft_contract.ownerOf(tokenId);
     let myaddress = await getAccount()
-    if(owner.toLowerCase()==myaddress.toLowerCase()){
+    if(compareAddress(owner,myaddress)){
       window.location.href = window.location.origin + window.location.pathname + "/sell"
     }
   }
-  let sellBtn = document.getElementById("moveSellPageBtn");
   sellBtn.addEventListener("click", moveSellPage)
+
+  const fn_modal_open = (innerDom) => {
+    const bodyDom = document.getElementsByTagName('body')[0];
+    const offerModalDom = document.getElementById("offerModal");
+
+    offerModalDom.classList.remove("d-none");
+    bodyDom.classList.add("holding-body");
+    offerModalDom.innerHTML = innerDom
+  }
+  const fn_modal_close = () => {
+    const bodyDom = document.getElementsByTagName('body')[0];
+    const offerModalDom = document.getElementById("offerModal");
+
+    offerModalDom.classList.add("d-none");
+    offerModalDom.innerHTML = ""
+    bodyDom.classList.remove("holding-body");
+  }
+  const buyNow = async () => {
+    let priceEth = marketPriceEth.innerHTML;
+    let option = {
+      value: web3.utils.toWei(priceEth, "ether"),
+      receipt: (receipt)=>{
+        if(receipt.status) {
+          console.log("구매가 완료되었습니다.")
+          alert("구매 완료")
+        } else {
+          console.log("구매가 실패되었습니다.")
+          console.log(receipt)
+          console.warn(`receipt.status=${receipt.status}`)
+          alert("구매 실패")
+        }
+        fn_overlay_blindLoading(false)
+      },
+      error: (error, receipt)=>{
+        console.log("event error")
+        console.error(error)
+        alert("구매 실패")
+        fn_overlay_blindLoading(false)
+      }
+    }
+    fn_overlay_blindLoading(true, "구매 진행중")
+    await market_contract.buyMarketItem(contractAddress, tokenId, option)
+  }
+  const showOfferModal = () => {
+    const offerModal = document.getElementById("offerModal")
+    fn_modal_open(offerModal.innerHTML);
+  }
+  const makeOffer = async () => {
+    let myAddress = await getAccount();
+    let owner = await nft_contract.ownerOf(tokenId);
+    if(compareAddress(myAddress, owner)) {
+      alert("You are nft owner. You can't do the offer")
+      fn_modal_close()
+      return ;
+    }
+    // check input valid
+    const offerPrice = document.getElementById("offerPriceInput").value;
+    const endDate = document.getElementById("endDatePicker").value;
+    const endTime = document.getElementById("endTimePicker").value;
+    const validPriceChecker = (value) => {
+      return validEth(value)
+    }
+    const validDurationChecker = (date, time) => {
+      let now = new Date();
+      let selectTimestamp = getEndTimestamp(date, time);
+
+      return now.getTime() < selectTimestamp;
+    }
+    const getEndTimestamp = (date, time) => {
+      const [_hours, _minutes] = String(time).split(":");
+
+      let selectDate = new Date(date);
+      selectDate.setHours(_hours)
+      selectDate.setMinutes(_minutes)
+
+      return selectDate.getTime()
+    }
+
+    // execute offer
+    if(validPriceChecker(offerPrice) && validDurationChecker(endDate, endTime)){
+      let option = {
+        value: web3.utils.toWei(offerPrice, "ether"),
+        receipt: (receipt)=>{
+          if(receipt.status) {
+            console.log("offer가 완료되었습니다.")
+            alert("offer 완료")
+            fn_modal_close();
+            setOffers(contractAddress, tokenId);
+          } else {
+            console.log("offer가 실패되었습니다.")
+            console.log(receipt)
+            console.warn(`receipt.status=${receipt.status}`)
+            alert("offer 실패")
+          }
+          fn_overlay_blindLoading(false)
+        },
+        error: (error, receipt)=>{
+          console.log("event error")
+          console.error(error)
+          alert("offer 실패")
+          fn_overlay_blindLoading(false)
+        }
+      }
+      fn_overlay_blindLoading(true, "NFT에 대한 offer 등록중")
+      let endTimestamp = getEndTimestamp(endDate, endTime) / 1000;
+
+      try {
+        console.log("offerMarketItem")
+        console.log(contractAddress)
+        console.log(tokenId)
+        console.log(endTimestamp)
+        console.log(option)
+        await market_contract.offerMarketItem(contractAddress, tokenId, endTimestamp, option)
+      } catch (error) {
+        console.error(error)
+        fn_overlay_blindLoading(false);
+      }
+    } else {
+      alert("Price or Duration is not valid")
+    }
+  }
+
+  const cancelSell = async () => {
+    let marketItemInfo = await market_contract.getItemInfoOnMarket(contractAddress, tokenId)
+    console.log("marketItemInfo")
+    console.log(marketItemInfo)
+    if(marketItemInfo){
+      var result = confirm("판매를 취소하시겠습니까?\n취소 시 Gas Fee가 소모됩니다.");
+      if(result){
+        let option = {
+          receipt: (receipt)=>{
+            if(receipt.status) {
+              console.log("취소가 완료되었습니다.")
+              alert("취소 완료")
+            } else {
+              console.log("취소가 실패되었습니다.")
+              console.log(receipt)
+              console.warn(`receipt.status=${receipt.status}`)
+              alert("취소 실패")
+            }
+            fn_overlay_blindLoading(false)
+          },
+          error: (error, receipt)=>{
+            console.log("error발생")
+            console.error(error)
+            alert("취소 실패")
+            fn_overlay_blindLoading(false)
+          }
+        }
+        fn_overlay_blindLoading(true, "판매 취소중입니다.")
+        await market_contract.cancelListedItem(contractAddress, tokenId, option)
+      }
+    }
+  }
+  const sellCancelBtn = document.getElementById("sellCancelBtn");
+  sellCancelBtn.addEventListener("click", cancelSell)
 
   const setNFTdata = async (data) => {
     // init NFT image
@@ -310,8 +547,6 @@
     if(dataArray){
       dataArray.forEach(async element => {
         let tempBlock = await web3.eth.getBlock(element.blockNumber);
-        console.log("tempBlock")
-        console.log(tempBlock)
 
         // time difference
         let diffObj = getTimeDiffAndUnit(new Date().getTime(), new Date(tempBlock.timestamp*1000).getTime())
@@ -328,8 +563,9 @@
     }
   }
   const setPriceHistory = (priceData) => {
-    const ctx = document.getElementById("chart");
     const oneDaySeconds = 1000*60*60*24
+    const priceHistoryDiv = document.getElementById("priceHistoryDiv")
+    const noPriceHistoryDiv = document.getElementById("noPriceHistoryDiv")
     let datasets;
     let labels;
     const removeLastZeros = (value) => {
@@ -349,82 +585,94 @@
       return removeLastZeros(result);
     }
 
-    // data sample
-    labels = [
-      new Intl.DateTimeFormat('ko-KR').format(new Date()),
-      new Intl.DateTimeFormat('ko-KR').format(new Date()-oneDaySeconds),
-      new Intl.DateTimeFormat('ko-KR').format(new Date()-oneDaySeconds*2),
-      // new Intl.DateTimeFormat('ko-KR').format(new Date()-oneDaySeconds*3),
-      // new Intl.DateTimeFormat('ko-KR').format(new Date()-oneDaySeconds*4),
-    ]
-    data = [
-      0.000000001,
-      0.0001,
-      0.0002
-    ]
-    datasets = [{
-      label: "ETH",
-      data: data,// [0.0001, 0.0002, 0.0003, 0.153, 0.1],
-      fill: false,
-      borderColor: 'rgba(0, 0, 0, 0.2)',
-      borderWidth: 1,
-      backgroundColor: '#86b7fe',
-      pointBorderColor: '#86b7fe',
-      pointBackgroundColor: '#86b7fe',
-      pointBorderWidth: 4,
-      pointRadius: 4,
-      pointHitRadius: 8,
-      pointHoverRadius: 8,
-      tension: 0
-    }]
 
-    priceChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels, // ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: datasets
-      },
-      options: {
-        scales: {
-          x: {
-            offset: true
-          },
-          y: {
-            beginAtZero: true,
-            ticks: {
-              stepSize: 0.000001,
-              callback: function(value, index, values) {
-                return `${minimizeShowFloat(value)}`
-              },
-            }
-          }
+    // PriceData가 있는 경우에만
+    if(priceData.length > 0){
+      priceHistoryDiv.classList.remove("d-none")
+      noPriceHistoryDiv.classList.add("d-none")
+
+      // data sample
+      labels = [
+        new Intl.DateTimeFormat('ko-KR').format(new Date()),
+        new Intl.DateTimeFormat('ko-KR').format(new Date()-oneDaySeconds),
+        new Intl.DateTimeFormat('ko-KR').format(new Date()-oneDaySeconds*2),
+        // new Intl.DateTimeFormat('ko-KR').format(new Date()-oneDaySeconds*3),
+        // new Intl.DateTimeFormat('ko-KR').format(new Date()-oneDaySeconds*4),
+      ]
+      data = [
+        0.000000001,
+        0.0001,
+        0.0002
+      ]
+      datasets = [{
+        label: "ETH",
+        data: data,// [0.0001, 0.0002, 0.0003, 0.153, 0.1],
+        fill: false,
+        borderColor: 'rgba(0, 0, 0, 0.2)',
+        borderWidth: 1,
+        backgroundColor: '#86b7fe',
+        pointBorderColor: '#86b7fe',
+        pointBackgroundColor: '#86b7fe',
+        pointBorderWidth: 4,
+        pointRadius: 4,
+        pointHitRadius: 8,
+        pointHoverRadius: 8,
+        tension: 0
+      }]
+
+      const ctx = document.getElementById("chart");
+      priceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels, // ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+          datasets: datasets
         },
-        plugins: {
-          title: {
-            display: true,
-            text: "Market Price"
+        options: {
+          scales: {
+            x: {
+              offset: true
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 0.000001,
+                callback: function(value, index, values) {
+                  return `${minimizeShowFloat(value)}`
+                },
+              }
+            }
           },
-          subtitle: {
-            display: true,
-            text: "시간별 거래된 금액"
-          },
-          tooltip: {
-            callbacks: {
-              title: function(context) {
-                return new Intl.DateTimeFormat('ko-KR').format(new Date(context[0].label))
-              },
-              // afterTitle: function(context) {
-              //   console.log(context)
-              //   return "123"
-              // },
-              label: function(context) {
-                return " " + removeLastZeros(maximizeShowFloat(context.raw)) + " " + context.dataset.label
-              },
+          plugins: {
+            title: {
+              display: true,
+              text: "Market Price"
+            },
+            subtitle: {
+              display: true,
+              text: "시간별 거래된 금액"
+            },
+            tooltip: {
+              callbacks: {
+                title: function(context) {
+                  return new Intl.DateTimeFormat('ko-KR').format(new Date(context[0].label))
+                },
+                // afterTitle: function(context) {
+                //   console.log(context)
+                //   return "123"
+                // },
+                label: function(context) {
+                  return " " + removeLastZeros(maximizeShowFloat(context.raw)) + " " + context.dataset.label
+                },
+              }
             }
           }
         }
-      }
-    })
+      })
+    } else {
+      priceHistoryDiv.classList.add("d-none")
+      noPriceHistoryDiv.classList.remove("d-none")
+    }
+
   }
   const setCreatorLink = async (contractAddress, tokenId, external_url) => {
     const getCreatorLink = async (contractAddress, tokenId) => {
@@ -504,7 +752,7 @@
     // init table
     fn_table_Initialize("OffersTable")
 
-    // db 조회
+    // offer history 조회
     const getOffers = async (contractAddress, tokenId) => {
       const url = "";
 
@@ -525,10 +773,8 @@
           // offerer: element.offerer,
           // endTime: element.endTime,
           // ended: element.ended
-          let diffObj = getTimeDiffAndUnit(new Date().getTime(), element.endTime)
+          let diffObj = getTimeDiffAndUnit(new Date().getTime(), element.endTime*1000)
           new Intl.RelativeTimeFormat('ko-KR').format(diffObj.diff,diffObj.unit)
-          console.log(diffObj)
-          console.log(element.endTime)
           temp.push({
             price: web3.utils.fromWei(element.price, 'ether'),
             usdPrice: "",
@@ -540,7 +786,7 @@
         });
         return temp;
       } else {
-        console.error("getOffersDBData fetchResponse not ok")
+        console.log("offersArray.length == 0")
         console.log(offersArray)
         return null;
       }
@@ -548,7 +794,6 @@
     const addOfferData = (rowData) => {
       let sort = -1
       let newRow = OffersTable.insertRow(sort);
-      console.log(rowData)
       Object.keys(rowData).forEach((value, index, array) => {
         let tempCell = newRow.insertCell(sort);
         if(index == rowData.length-1){
@@ -561,7 +806,7 @@
 
     let offersDataArray = await getOffers(contractAddress, tokenId);
 
-    if(offersDataArray.length > 0) {
+    if(offersDataArray) {
       offersDataArray.forEach(element => {
         addOfferData(element);
       });
@@ -613,7 +858,7 @@
       }
     }
     for (let index = 0; index < nftArray.length; index++) {
-      if(index < 4) addItemToMoreItems(contractAddress, nftArray[index])
+      if(index < 4) addItemToMoreItems(nftAddress, nftArray[index])
     }
   }
   const setCreatorOwner = (dataArray) => {
@@ -627,7 +872,8 @@
   }
   afterInitFunction = async function(){
     if(web3.utils.isAddress(contractAddress)){
-      nft_contract = new NftContractWrapper(await getAccount(), contractAddress);
+      const myWalletAddress = await getAccount();
+      nft_contract = new NftContractWrapper(myWalletAddress, contractAddress);
       const metadataURI = await nft_contract.tokenURI(tokenId);
       let fetchResponse = await fetch(metadataURI)
       if(fetchResponse.ok){
@@ -638,25 +884,79 @@
         setCreatorOwner(contractEventArray)
 
         // TODO. Price History 세팅 - DB에서 받아오던지 Market Contract에서 받아오던지 해야...
-        let priceData
+        let priceData = []
         setPriceHistory(priceData)
 
         // TODO. Link 세팅 from db
         setCreatorLink(contractAddress, tokenId, nftData.external_url);
 
-        // TODO. Offers 세팅 from db
-        // setOffers(contractAddress, tokenId);
+        // Offers 세팅
+        setOffers(contractAddress, tokenId);
 
         // TODO. View count 세팅 from db
         setViewCounts(contractAddress, tokenId);
 
         // More Items 세팅 from contract
         let creatorAddress = contractEventArray[0].returnValues.to
-        let creatorItems = await nft_contract.getCreatorNFTIds(creatorAddress);
-        let creatorAnotherItems = creatorItems.filter(element => element != tokenId)
-        setCreatorItem(contractAddress, creatorAnotherItems);
+        console.log(`creatorAddress=${creatorAddress}`)
 
-        setOffers(contractAddress, tokenId);
+        try {
+          // ERC721에 없는 규격.
+          let creatorItems = await nft_contract.getCreatorNFTIds(creatorAddress);
+          let creatorAnotherItems = creatorItems.filter(element => element != tokenId)
+          setCreatorItem(contractAddress, creatorAnotherItems);
+
+        } catch (error) {
+          console.log("타 컨트랙트 입니다.")
+          console.log(JSON.stringify(error))
+
+          let creatorItems = await market_contract.getTotalMarketItems();
+          setCreatorItem(contractAddress, creatorItems);
+        }
+
+
+
+        // Market 버튼 세팅
+        // Sell NFT 버튼 세팅
+        const ownerAddress = await nft_contract.ownerOf(tokenId)
+        if(compareAddress(ownerAddress, myWalletAddress)){
+          sellBtn.classList.remove("d-none")
+        }
+        // listing cancel nft 버튼 세팅 - 마켓에 올라갔는데, 주인이 자신인 경우
+        let marketItemInfo = await market_contract.getItemInfoOnMarket(contractAddress, tokenId)
+        console.log(marketItemInfo)
+        if(isNullAddress(marketItemInfo.nft)){
+          // 마켓에 안올라와 있음을 표시
+          marketItemInfoDiv.classList.add("d-none")
+        } else {
+          // 마켓 데이터 표시
+          marketItemInfoDiv.classList.remove("d-none")
+          marketPriceEth.innerHTML = web3.utils.fromWei(marketItemInfo.price, "ether");
+          // marketPriceDoller.innerHTML = getDollerPriceFromWei(marketItemInfo.price);
+
+          if(compareAddress(marketItemInfo.seller, myWalletAddress)){
+            sellCancelBtn.classList.remove("d-none");
+          }
+        }
+        // BuyNow, MakeOffer 삭제. 판매자이거나, 주인인 경우 처리 불가
+        if(compareAddress(marketItemInfo.seller, myWalletAddress)
+        || compareAddress(ownerAddress, myWalletAddress)){
+          buyNowBtn.classList.add("d-none");
+          showOfferModalBtn.classList.add("d-none");
+        } else {
+          // Auction 버튼 세팅
+          // Buy NFT 버튼 세팅 - market인 경우
+          buyNowBtn.classList.remove("d-none");
+          showOfferModalBtn.classList.remove("d-none");
+        }
+
+
+        // let auctionInfo = await auction_contract.getItemInfoOnAuction(contractAddress, tokenId)
+        // TODO. Bid NFT 버튼 세팅 - auction인 경우
+        // TODO. Auction End 버튼 세팅 - auction에서 주인이 자신인 경우 + EndTime이 지난 경우
+        // if(compareAddress(auctionInfo.seller, myWalletAddress)){
+
+        // }
 
         // Call the totalSupply
         // console.log(await nft_contract.totalSupply())
@@ -671,7 +971,6 @@
 </script>
 <style>
 .accordion{
-
   --bs-accordion-color: var(--bs-body-color);
   --bs-accordion-bg: #fff;
   --bs-accordion-transition: color 0.15s ease-in-out,background-color 0.15s ease-in-out,border-color 0.15s ease-in-out,box-shadow 0.15s ease-in-out,border-radius 0.15s ease;
@@ -695,5 +994,8 @@
 
   --bs-accordion-active-color: #000 !important;
   --bs-accordion-active-bg: #fff !important;
+}
+.market-info-price {
+  font-size:30px;font-weight:bold;color:#000
 }
 </style>

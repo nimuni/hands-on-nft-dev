@@ -2,11 +2,11 @@
   <div class="row">
     <div class="col-lg-7 col-sm-12">
       <form>
-        <section class="flex-box my-4">
-          <div class="div-vertical-center">
+        <section class="d-flex my-4">
+          <div class="div-vertical-center p-2">
             <i class="bi bi-chevron-left" style="height:100%"></i>
           </div>
-          <div class="div-vertical-center">
+          <div class="div-vertical-center p-2">
             <h2 class="m-0">
               List for sale
             </h2>
@@ -18,7 +18,7 @@
           </div>
           <div>
             <div class="rounded-box-line round-selected" id="fixedPriceDiv">
-              <div class="flex-box justify-sb">
+              <div class="d-flex justify-content-between">
                 <div class="display-block">
                   <div>
                     <span style="font-weight: bold;">Fixed price</span>
@@ -33,7 +33,7 @@
               </div>
             </div>
             <div class="rounded-box-line" id="timedAuctionDiv">
-              <div class="flex-box justify-sb">
+              <div class="d-flex justify-content-between">
                 <div class="display-block">
                   <div>
                     <span style="font-weight: bold;">Timed auction</span>
@@ -55,8 +55,8 @@
           </div>
           <div>
             <div class="rounded-box-line round-selected" id="highestAuctionDiv">
-              <div class="flex-box justify-sb">
-                <div class="display-block flex-box">
+              <div class="d-flex justify-content-between">
+                <div class="display-block d-flex">
                   <div class="div-flex-vh-center" style="margin-right: 16px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
                       <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5Z"/>
@@ -77,8 +77,8 @@
               </div>
             </div>
             <div class="rounded-box-line" id="decliningAuctionDiv">
-              <div class="flex-box justify-sb">
-                <div class="display-block flex-box">
+              <div class="d-flex justify-content-between">
+                <div class="display-block d-flex">
                   <div class="div-flex-vh-center" style="margin-right: 16px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-graph-down-arrow" viewBox="0 0 16 16">
                       <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm10 11.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-1 0v2.6l-3.613-4.417a.5.5 0 0 0-.74-.037L7.06 8.233 3.404 3.206a.5.5 0 0 0-.808.588l4 5.5a.5.5 0 0 0 .758.06l2.609-2.61L13.445 11H10.5a.5.5 0 0 0-.5.5Z"/>
@@ -150,8 +150,8 @@
           <div>
             <div class="mb-3">
               <button class="set-duration-input" type="button" data-bs-container="body" onclick="toggleTimePopup()">
-                <div class="flex-box justify-sb">
-                  <div class="flex-box">
+                <div class="d-flex justify-content-between">
+                  <div class="d-flex">
                     <div class="div-flex-vh-center" style="margin-right: 16px;">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
                         <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
@@ -174,7 +174,7 @@
                     <!-- <div class="col-12 mb-4">
                       <p>Date Range</p>
                       <button class="set-duration-input" type="button">
-                        <div class="flex-box justify-sb">
+                        <div class="d-flex justify-content-between">
                           <div>
                             <span id="selectedDateRange">1 day</span>
                           </div>
@@ -231,19 +231,19 @@
             <h5>Summary</h5>
           </div>
           <div class="pr-5">
-            <div class="flex-box justify-sb mb-2 font-color-1">
+            <div class="d-flex justify-content-between mb-2 font-color-1">
               <span>Listing price</span>
               <div>
                 <span id="listingPriceSpan">0</span> ETH
               </div>
             </div>
-            <div class="flex-box justify-sb mb-2 font-color-1">
+            <div class="d-flex justify-content-between mb-2 font-color-1">
               <span>Service fee</span>
               <div>
                 <span id="serviceFeeSpan">0</span> ETH
               </div>
             </div>
-            <div class="flex-box justify-sb mb-2 font-color-1">
+            <div class="d-flex justify-content-between mb-2 font-color-1">
               <span>Creator fee</span>
               <div>
                 <span id="creatorFeeSpan">0</span> ETH
@@ -253,7 +253,7 @@
         </section>
         <section class="my-4">
           <div class="border-line"></div>
-          <div class="flex-box justify-sb" style="margin-bottom: 16px;">
+          <div class="d-flex justify-content-between" style="margin-bottom: 16px;">
             <h5>Potential earning</h5>
             <h5><span id="portentialEarnSpan">0</span> ETH</h5>
           </div>
@@ -276,7 +276,6 @@
       </div>
     </div>
   </div>
-
 </div>
 <!-- page script -->
 <script>
@@ -416,7 +415,9 @@
     let marketAddress = await market_contract.getAddress();
 
     nft_contract.initNFTInstance(contractAddress);
-    let checkApproved = await nft_contract.isApprovedForAll(ownerAddress, marketAddress);
+    // let checkApproved = await nft_contract.isApprovedForAll(ownerAddress, marketAddress);
+    let approvedAddress = await nft_contract.getApproved(tokenId);
+    let checkApproved = compareAddress(approvedAddress, marketAddress)
 
     if(String(ownerAddress).toLowerCase() != String(await getAccount()).toLowerCase()) {
       alert("해당 NFT 소유자가 아닙니다.")
@@ -424,23 +425,21 @@
       return;
     }
 
-    const successListing = async (a,b,c) => {
+    const successListing = async (receipt) => {
       console.log("call successListing")
-      console.log(a);
-      console.log(b);
-      console.log(c);
-      // move detail page
+      console.log(receipt);
+
       // hide loading bar modal
       fn_overlay_blindLoading(false);
 
       // move detail page
       console.log("move detail page")
+      window.location.href = `${window.location.origin}/nft/${contractAddress}/${tokenId}`;
     }
-    const errorListing = async (a,b,c) => {
+    const errorListing = async (error, receipt) => {
       console.log("call errorListing")
-      console.log(a);
-      console.log(b);
-      console.log(c);
+      console.error(error);
+      console.log(receipt);
       // alert 표시
       alert("alert in errorListing")
 
@@ -451,9 +450,8 @@
       console.log("call listingItem")
       let callback = {
         value: calcObj.serviceFee,
-        receipt: ()=>{console.log("receipt end")}
-        // receipt: successListing,
-        // error: errorListing
+        receipt: successListing,
+        error: errorListing
       }
 
       if(fixedRadio.checked){
@@ -467,6 +465,7 @@
           let targetDate = new Date(endDatePicker.value+" "+endTimePicker.value)
           console.log(startBid)
           console.log(targetDate)
+          alert("준비중입니다.")
           // await auction_contract.addAuctionItem(contractAddress, tokenId, targetDate.getTime(), startBid)
         } else {
           console.log("declining auction")
@@ -474,6 +473,7 @@
           let targetDate = new Date(endDatePicker.value+" "+endTimePicker.value)
           console.log(startBid)
           console.log(targetDate)
+          alert("준비중입니다.")
           // await auction_contract.addDecliningAuctionItem(contractAddress, tokenId, targetDate.getTime(), startBid)
         }
       }
@@ -488,7 +488,25 @@
         await setTimeout(async () => {}, 2000);
         await listingItem();
       }
-      await nft_contract.setApprovalForAll(marketAddress, true, {receipt: delayListingItem});
+      let approveOption = {
+        receipt: delayListingItem,
+        error: (error) => {
+          // alert 표시
+          alert("approve error")
+          console.log(error)
+
+          // hide loading bar modal
+          fn_overlay_blindLoading(false);
+        }
+      }
+      try {
+        // await nft_contract.setApprovalForAll(marketAddress, true, option);
+        await nft_contract.approve(marketAddress, tokenId, approveOption);
+      } catch (error) {
+        console.log("error in approve")
+        console.log(error)
+        fn_overlay_blindLoading(false);
+      }
 
     }
   }

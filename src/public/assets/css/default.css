@@ -101,6 +101,11 @@ body.body-css {
   align-items: center;
   flex-direction: column;
 }
+.div-flex-vh-center2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .file-preview-div {
   background-color: #e0e0e0;
@@ -188,19 +193,12 @@ body.body-css {
 .cursor-pointer {
   cursor: pointer;
 }
-.flex-box {
-  display: flex;
-}
 .flex-vertical-box {
   display: flex;
   flex-direction: column;
 }
-.justify-sb {
-  justify-content: space-between;
-}
 .div-vertical-center {
   text-align: center;
-  padding: 10px;
   margin-top: auto;
   margin-bottom: auto;
 }
@@ -236,9 +234,25 @@ body.body-css {
 .font-color-warn {
   color: rgb(210, 70, 70);
 }
+.font-color-blue {
+  color: rgb(32, 129, 226);
+}
 .border-line {
   border-top: 1px solid rgb(138, 147, 155);
   color: rgb(138, 147, 155);
   margin-top: 3rem;
   margin-bottom: 3rem;
+}
+.ml-auto {
+  margin-left: auto;
+}
+.modal-popup-back {
+  z-index: 9999;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  overflow-y: hidden;
 }

@@ -29,6 +29,9 @@ window.onload = async function(){
   await initEventActions();
   await initEthereumEventListener();
 
+  let networkType = await web3.eth.net.getNetworkType()
+  console.log(`현재 ${networkType} 네트워크에 접속중입니다.`)
+
   afterInitFunction();
 }
 
@@ -224,4 +227,21 @@ async function uploadJson(json) {
     console.error(error);
     throw(error)
   }
+}
+
+/////////////////////////
+// Blockchain function
+/////////////////////////
+function compareAddress(addr1, addr2) {
+  const lowerAddr1 = String(addr1).toLowerCase();
+  const lowerAddr2 = String(addr2).toLowerCase();
+  return lowerAddr1 === lowerAddr2;
+}
+
+function isNullAddress(addr){
+  return addr == "0x0000000000000000000000000000000000000000"
+}
+
+function getDollerPriceFromEth(wei) {
+  return wei;
 }

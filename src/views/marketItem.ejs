@@ -1,0 +1,193 @@
+<div>
+  <div>
+    <div class="row m-0">
+      <article class="col-12 p-0">
+        <section>
+          <div class="collection-image">
+            <img width="100%" class="collection-background-img" src="http://hands.spurs.co.kr/image/view1.jpg"/>
+          </div>
+          <div class="collection-wrapper-padding mb-5">
+            <div class="d-flex collection-info-line-height">
+              <div class="collection-profile-img-div collection-profile-wrapper">
+                <div>
+                  <div class="collection-profile-inner-div">
+                    <img width="100%" height="100%" src="http://hands.spurs.co.kr/image/view1.jpg">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex collection-info-line-height div-vertical-center">
+              <div>
+                <h3>Collection name</h3>
+              </div>
+              <div class="d-flex ml-auto">
+                <div class="d-flex collection-external-url-div div-vertical-center justify-content-center" style="gap: 16px;">
+                  <button type="button" class="btn btn-outline-dark mx-1">
+                    <i class="bi bi-share-fill"></i>
+                  </button>
+                  <button type="button" class="btn btn-outline-dark mx-1">
+                    <i class="bi bi-discord"></i>
+                  </button>
+                  <button type="button" class="btn btn-outline-dark mx-1">
+                    <i class="bi bi-globe2"></i>
+                  </button>
+                  <button type="button" class="btn btn-outline-dark mx-1">
+                    <i class="bi bi-flag-fill"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex collection-info-line-height">
+              <span>By</span>&nbsp;
+              <span id="collectionCreator">creator</span>
+            </div>
+            <div class="d-flex collection-info-line-height">
+              <div class="d-flex" style="gap:4px;">
+                <span>Items</span>
+                <span class="font-weight-600" id="ItemsSpan">5,709</span>&nbsp;
+                <span>Created</span>
+                <span class="font-weight-600" id="CreatedSpan">5,709</span>&nbsp;
+                <span>Creator fee</span>
+                <span class="font-weight-600" id="CreatorFeeSpan">5,709</span>&nbsp;
+                <span>Chain</span>
+                <span class="font-weight-600" id="ChainSpan">5,709</span>&nbsp;
+              </div>
+            </div>
+            <div class="d-flex collection-info-line-height">
+              <span id="collectionDescription">collection desc</span>
+            </div>
+          </div>
+          <div class="collection-wrapper-padding mb-5">
+            <div>
+              <ul class="nav nav-tabs">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page">Items</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link">Activity</a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <div class="row">
+                <div class="col-2">
+                  <div><!-- padding 필요 -->
+                    123
+                  </div>
+                </div>
+                <div class="col-10">
+                  <div class="p-3" style="width:100%;">
+                    <div class="d-flex flex-wrap" id="marketItemGrid" style="gap: 16px">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        </div>
+      </article>
+    </div>
+  </div>
+</div>
+
+<script>
+  const contractAddress = "<%= contractAddress %>"
+  const tokenId = "<%= tokenId %>"
+
+  const marketItemGrid = document.getElementById("marketItemGrid");
+  const addGridItem = async (marketItemInfo) => {
+    let nftInfoUrl = await nft_contract.tokenURI(marketItemInfo.nftId);
+    let nftCostETH = web3.utils.fromWei(marketItemInfo.price, "ether")
+    let fetchResponse = await fetch(nftInfoUrl)
+    if(fetchResponse.ok){
+      let nftData = await fetchResponse.json();
+
+      let nftColDiv = document.createElement("div")
+      // nftColDiv.classList.add("col-2")
+      nftColDiv.innerHTML = `
+        <div class="card market-item-card cursor-pointer" style="width: 18rem;" data-nft-address="${marketItemInfo.nft}" data-token-id="${marketItemInfo.nftId}">
+          <img class="card-img-top" src="${nftData.image}" style="height:286px; object-fit:contain;">
+          <div class="card-body">
+            <div class="card-title font-color-1"><h5>${nftData.name}</h5></div>
+            <div class="card-text mt-4 font-color-1">${nftCostETH} ETH</div>
+          </div>
+        </div>
+      `
+
+      nftColDiv.addEventListener("click", ()=>{
+        window.location.href = window.location.origin + `/nft/${marketItemInfo.nft}/${marketItemInfo.nftId}`
+      })
+      marketItemGrid.append(nftColDiv)
+    } else {
+      console.error("setCreatorLink fetchResponse not ok")
+      console.log(fetchResponse)
+    }
+  }
+
+  afterInitFunction = async function () {
+    let marketItems;
+    if (contractAddress != "") {
+      if(web3.utils.isAddress(contractAddress)){
+        marketItems = await market_contract.getMarketItems(contractAddress)
+        await nft_contract.initNFTInstance(contractAddress)
+      } else {
+        alert("주소가 잘못되었습니다. 마켓 기본화면으로 이동합니다.")
+        window.location.href = window.location.origin + `/market`;
+      }
+    } else {
+      // TODO. contractAddress가 공백인 경우
+      marketItems = await market_contract.getTotalMarketItems()
+    }
+
+    if(marketItems){
+      console.log("marketItems")
+      console.log(marketItems)
+      marketItems.forEach(element => {
+        addGridItem(element)
+      });
+    }
+  }
+</script>
+<style>
+.collection-background-img {
+  object-fit: cover;
+  object-position: top;
+  max-height: 400px;
+}
+.collection-wrapper-padding {
+  padding-left: 64px;
+  padding-right: 64px;
+}
+.collection-info-line-height {
+  height: 40px;
+}
+.collection-profile-wrapper {
+  margin-top: -156px;
+}
+.collection-profile-img-div {
+  object-fit: contain;
+  width: 180px;
+  height: 180px;
+  border-radius: 16px;
+  border: 6px solid white;
+}
+.collection-profile-inner-div {
+  border-radius: 16px;
+  overflow: auto;
+}
+.test-div {
+  border: 1px solid black;
+  background-color: lightgray;
+}
+.market-item-card {
+  width: 240px;
+}
+.market-item-card > div > .card-text {
+  font-weight: 600;
+}
+.font-weight-600 {
+  font-weight: 600;
+}
+</style>

@@ -1,3 +1,118 @@
 <div>
-  market
+  <div class="row m-0">
+    <div class="wrapper">
+      <div class="col-12">
+        <h1>Explore collections</h1>
+      </div>
+      <div class="col-12">
+        <div class="d-flex flex-wrap" id="marketItemGrid" style="gap: 16px;">
+
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script>
+  const contractAddress = "<%= contractAddress %>"
+  const tokenId = "<%= tokenId %>"
+
+  const marketItemGrid = document.getElementById("marketItemGrid");
+  const addGridItem = async (collectionInfo) => {
+    let collectionDiv = document.createElement("div")
+    collectionDiv.classList.add("col-2")
+    collectionDiv.innerHTML = `
+      <div class="card collection-card cursor-pointer">
+        <img class="card-img-top collection-image" width="400" src="${collectionInfo.backgroundImg}" style="object-fit: cover;"/>
+        <div class="card-body">
+          <div class="d-flex collection-info-wrapper" style="gap: 16px;">
+            <div class="collection-logo">
+              <div class="collection-inner-wrapper">
+                <img width="100%" height="100%" src="${collectionInfo.logoImg}"/>
+              </div>
+            </div>
+            <div class="d-flex align-items-end">
+              <div class="d-flex mb-1" style="gap: 8px;">
+                <h5 class="m-0">${collectionInfo.name}</h5>
+                <span class="font-color-blue div-flex-center d-none verified-span">
+                  <i class="bi bi-patch-check-fill"></i>
+                </span>
+              </div>
+            </div>
+        </div>
+      </div>
+    `
+    if(collectionInfo.verified){
+      let verifiedSpan = collectionDiv.querySelector('.verified-span');
+      verifiedSpan.classList.remove("d-none")
+    }
+    collectionDiv.addEventListener("click", ()=>{
+      window.location.href = window.location.origin + `/market/${collectionInfo.address}`
+    })
+    marketItemGrid.append(collectionDiv)
+  }
+
+  afterInitFunction = async function () {
+    let items = await market_contract.getTotalMarketItems()
+    console.log(items)
+    // const url = "dburl" // TODO. from DB, Collection 정보 불러오기
+    // let markets = await fetch(url);
+
+    // TODO. DB데이터로 바꿔야함, hardcoding data
+    let marketItems = [
+      {
+        name:"a KID called BEAST",
+        address:"0xF44e7Bcc4870fa0eCE41C23815887D689e7Fd6c5",
+        backgroundImg:"https://i.seadn.io/gcs/files/b16c3b4b85d3dbea6831fe742f7a664a.png?auto=format&w=3840",
+        logoImg:"https://i.seadn.io/gcs/files/48e81fed9fa93c77c004f8013c6cf268.png?auto=format&w=256",
+        verified:true
+      },
+      {
+        name:"12345",
+        address:"0xF44e7Bcc4870fa0eCE41C23815887D689e7Fd6c5",
+        backgroundImg:"https://i.seadn.io/gcs/files/b16c3b4b85d3dbea6831fe742f7a664a.png?auto=format&w=3840",
+        logoImg:"https://i.seadn.io/gcs/files/48e81fed9fa93c77c004f8013c6cf268.png?auto=format&w=256",
+        verified:false
+      }
+    ]
+
+    if(marketItems){
+      marketItems.forEach(element => {
+        addGridItem(element)
+      });
+    }
+  }
+</script>
+<style>
+.collection-card {
+  width: 380px;
+  box-shadow: rgb(0 0 0 / 8%) 0px 4px 8px;
+  border: none;
+  --bs-card-inner-border-radius: 1rem;
+  --bs-card-border-radius: 1rem;
+}
+.collection-image {
+  height: 210px;
+  object-position: center center;
+}
+.collection-info-wrapper {
+  margin-top: -20px;
+}
+.collection-logo {
+  object-fit: contain;
+  width: 70px;
+  height: 70px;
+  border-radius: 16px;
+  border: 4px solid white;
+  background-color: white;
+  box-shadow: rgb(0 0 0 / 8%) 0px 5px 10px;
+}
+.collection-inner-wrapper {
+  border-radius: 12px;
+  overflow: auto;
+}
+.card-body {
+  padding: 0 16px;
+  height: 70px;
+}
+</style>

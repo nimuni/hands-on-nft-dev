@@ -54,8 +54,35 @@ class IndexController {
   public market = (req: Request, res: Response, next: NextFunction): void => {
     try {
       let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
+      ejs_params.contractAddress = req.params.contractAddress
+      ejs_params.tokenId = req.params.tokenId
+      ejs_params.layout = "./layout/wide-layout"
       console.log(ejs_params)
       res.render('market', ejs_params)
+    } catch (error) {
+      next(error);
+    }
+  };
+  public marketItem = (req: Request, res: Response, next: NextFunction): void => {
+    try {
+      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
+      ejs_params.contractAddress = req.params.contractAddress
+      ejs_params.tokenId = req.params.tokenId
+      ejs_params.layout = "./layout/wide-layout"
+      console.log(ejs_params)
+      res.render('marketItem', ejs_params)
+    } catch (error) {
+      next(error);
+    }
+  };
+  public marketListed = (req: Request, res: Response, next: NextFunction): void => {
+    try {
+      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
+      ejs_params.contractAddress = req.params.contractAddress
+      ejs_params.tokenId = req.params.tokenId
+      ejs_params.layout = "./layout/wide-layout"
+      console.log(ejs_params)
+      res.render('marketListed', ejs_params)
     } catch (error) {
       next(error);
     }

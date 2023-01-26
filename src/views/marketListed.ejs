@@ -1,0 +1,97 @@
+<div>
+  <div>
+    <div class="row m-0">
+      <article class="col-12 p-0">
+        <div class="p-3" style="width:100%;">
+          <div class="d-flex flex-wrap" id="marketItemGrid" style="gap: 16px"></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</div>
+
+<script>
+  const contractAddress = "<%= contractAddress %>"
+  const tokenId = "<%= tokenId %>"
+
+  const marketItemGrid = document.getElementById("marketItemGrid");
+  const addGridItem = async (marketItemInfo) => {
+    let nftInfoUrl = await nft_contract.tokenURI(marketItemInfo.nftId);
+    let nftCostETH = web3.utils.fromWei(marketItemInfo.price, "ether")
+    let fetchResponse = await fetch(nftInfoUrl)
+    if(fetchResponse.ok){
+      let nftData = await fetchResponse.json();
+
+      let nftColDiv = document.createElement("div")
+      // nftColDiv.classList.add("col-2")
+      nftColDiv.innerHTML = `
+        <div class="card market-item-card cursor-pointer" style="width: 18rem;" data-nft-address="${marketItemInfo.nft}" data-token-id="${marketItemInfo.nftId}">
+          <img class="card-img-top" src="${nftData.image}" style="height:286px; object-fit:contain;">
+          <div class="card-body">
+            <div class="card-title font-color-1"><h5>${nftData.name}</h5></div>
+            <div class="card-text mt-4 font-color-1">${nftCostETH} ETH</div>
+          </div>
+        </div>
+      `
+
+      nftColDiv.addEventListener("click", ()=>{
+        window.location.href = window.location.origin + `/nft/${marketItemInfo.nft}/${marketItemInfo.nftId}`
+      })
+      marketItemGrid.append(nftColDiv)
+    } else {
+      console.error("setCreatorLink fetchResponse not ok")
+      console.log(fetchResponse)
+    }
+  }
+
+  afterInitFunction = async function () {
+    let marketItems = await market_contract.getTotalMarketItems()
+
+    if(marketItems){
+      marketItems.forEach(element => {
+        addGridItem(element)
+      });
+    }
+  }
+</script>
+<style>
+.collection-background-img {
+  object-fit: cover;
+  object-position: top;
+  max-height: 400px;
+}
+.collection-wrapper-padding {
+  padding-left: 64px;
+  padding-right: 64px;
+}
+.collection-info-line-height {
+  height: 40px;
+}
+.collection-profile-wrapper {
+  margin-top: -156px;
+}
+.collection-profile-img-div {
+  object-fit: contain;
+  width: 180px;
+  height: 180px;
+  border-radius: 16px;
+  border: 6px solid white;
+}
+.collection-profile-inner-div {
+  border-radius: 16px;
+  overflow: auto;
+}
+.test-div {
+  border: 1px solid black;
+  background-color: lightgray;
+}
+.market-item-card {
+  width: 240px;
+}
+.market-item-card > div > .card-text {
+  font-weight: 600;
+}
+.font-weight-600 {
+  font-weight: 600;
+}
+</style>
