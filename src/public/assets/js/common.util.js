@@ -1,11 +1,3 @@
-const changeUrlForCors = function(url){
-  // https://forum.moralis.io/t/solved-cors-error-for-ipfs-urls-nft-marketplace/13496/11
-  let result;
-  result = url.replace("https://ipfs.moralis.io:2053", "https://gateway.moralisipfs.com")
-  console.log(result)
-  return result;
-}
-
 const openEtherscan = (type="tx", value1, value2) => {
   const baseURI = "https://etherscan.io";
   console.log(type)
@@ -29,14 +21,18 @@ const openUserInfoPage = (address) => {
 /////////////////////////
 // common util function
 /////////////////////////
-const validEth = (str) => {
-  const regex =  /^\d*(\.?\d*)$/;
-  return regex.test(str) && Number(str) > 0.000000000000000001 ? true : false;
+const UNIT_WEI_AS_ETH = 0.000000000000000001;
+const isValidDate = (date) => {
+  return date instanceof Date && !isNaN(date);
 }
-const validEthMessage = (str) => {
+const isValidEth = (str) => {
+  const regex =  /^\d*(\.?\d*)$/;
+  return regex.test(str) && Number(str) > UNIT_WEI_AS_ETH ? true : false;
+}
+const isValidEthMessage = (str) => {
   const regex =  /^\d*(\.?\d*)$/;
   if(regex.test(str)){
-    if(Number(str) > 0.000000000000000001){
+    if(Number(str) > UNIT_WEI_AS_ETH){
       return "Valid"
     } else {
       return "Input value have to bigger than 1 wei"
@@ -46,7 +42,7 @@ const validEthMessage = (str) => {
   }
 }
 
-const getTimeDiffAndUnit = function(_fromTimestamp, _toTimestamp=new Date().getTime()) {
+const getTimeDiffAndUnit = (_fromTimestamp, _toTimestamp=new Date().getTime()) => {
   const SECOND_CONDITION = 1000;
   const MINUTE_CONDITION = SECOND_CONDITION * 60;
   const HOUR_CONDITION = MINUTE_CONDITION * 60;
@@ -79,10 +75,10 @@ const getTimeDiffAndUnit = function(_fromTimestamp, _toTimestamp=new Date().getT
   }
 }
 
-const maskingString = function(str, frontCount=6, backCount=4) {
+const maskingString = (str, frontCount=6, backCount=4) => {
   if(str.length > (frontCount + backCount + 3)) {
     let originStr = str.split('');
-    originStr.forEach(function(elem, i) {
+    originStr.forEach((elem, i) => {
       if (i >= frontCount && i < (originStr.length - backCount)) {
         originStr[i] = ".";
       } else {
@@ -96,6 +92,39 @@ const maskingString = function(str, frontCount=6, backCount=4) {
     return str;
   }
 };
+
+let intervalFunctionObj = {};
+let intervalVariable;
+const intervalDuration = 1000;
+
+const initPublicInterval = (durationTime) => {
+  intervalVariable = setInterval(()=>{
+    console.log("intervalFunctionArray")
+    Object.keys(intervalFunctionObj).forEach(function(elem){
+      console.log(elem)
+      console.log(intervalFunctionObj[elem]);
+      intervalFunctionObj[elem]();
+    })
+  }, durationTime ? durationTime : intervalDuration)
+}
+const clearPublicInterval = () => {
+  clearInterval(intervalVariable);
+}
+const addFunctionToPublicInterval = (func) => {
+  intervalFunctionObj[func.name] = func;
+}
+const removeFunctionToPublicInterval = (func) => {
+  if(typeof func == 'function') {
+    delete intervalFunctionObj[func.name];
+  } else if(typeof func == 'string'){
+    delete intervalFunctionObj[func];
+  } else {
+    console.log("removeFunctionToPublicInterval error. func is not function or string")
+  }
+}
+window.addEventListener('load', async () => {
+  // initPublicInterval(intervalDuration)
+})
 
 /////////////////////////
 // common table function
@@ -125,7 +154,7 @@ const fn_table_DataClear = (tableId) => {
 const fn_table_AddRowInput = (tableId, rowData, sort=-1, buttonExist=false) => {
   let table = document.getElementById(tableId);
   let newRow = table.insertRow(sort);
-  rowData.forEach(function(value, index, array){
+  rowData.forEach((value, index, array) => {
     let tempCell = newRow.insertCell(-1);
     tempCell.innerHTML = `<input type="text" class="form-control" value="${value}"/>`;
 
@@ -140,7 +169,7 @@ const fn_table_AddRowInput = (tableId, rowData, sort=-1, buttonExist=false) => {
 const fn_table_AddRowText = (tableId, rowData, sort=-1, buttonExist=false) => {
   let table = document.getElementById(tableId);
   let newRow = table.insertRow(sort);
-  rowData.forEach(function(value, index, array){
+  rowData.forEach((value, index, array) => {
     let tempCell = newRow.insertCell(-1);
     tempCell.innerText = value;
   })
@@ -192,7 +221,7 @@ const fn_table_getInputDataFromTableId = (tableId, buttonExist=false) => {
 /////////////////////////
 // HTML overlays function
 /////////////////////////
-const fn_overlay_blindLoading = function(show, message){
+const fn_overlay_blindLoading = (show, message) => {
   const bodyDom = document.getElementsByTagName('body')[0];
   const loadingBlindDom = document.getElementById("loadingBlind");
   const loadingLabelDom = document.getElementById("loadingLabel");
@@ -213,24 +242,30 @@ const fn_overlay_blindLoading = function(show, message){
   }
 }
 let var_fn_overlayIntervalId;
-const fn_overlay_blindDotAnimation = function(show){
+const fn_overlay_blindDotAnimation = (show) => {
   const loadingDotDom = document.getElementById("loadingDot");
   const MAX_DOT_COUNT = 4;
   const DOT_STR = ".";
   let currentDotCount = 1;
   let dotStr = "."
+  const setIntervalDot = () => {
+    var_fn_overlayIntervalId = setInterval(() => {
+      if(currentDotCount < MAX_DOT_COUNT){
+        currentDotCount++
+        dotStr = DOT_STR.repeat(currentDotCount);
+      } else {
+        dotStr = DOT_STR;
+        currentDotCount = 1;
+      }
+      loadingDotDom.innerText = dotStr;
+    }, 500);
+  }
   if(show){
     if(!var_fn_overlayIntervalId){
-      var_fn_overlayIntervalId = setInterval(() => {
-        if(currentDotCount < MAX_DOT_COUNT){
-          currentDotCount++
-          dotStr = DOT_STR.repeat(currentDotCount);
-        } else {
-          dotStr = DOT_STR;
-          currentDotCount = 1;
-        }
-        loadingDotDom.innerText = dotStr;
-      }, 500);
+      setIntervalDot()
+    } else {
+      clearInterval(var_fn_overlayIntervalId);
+      setIntervalDot()
     }
   } else {
     dotStr = DOT_STR;
@@ -239,13 +274,13 @@ const fn_overlay_blindDotAnimation = function(show){
     clearInterval(var_fn_overlayIntervalId);
   }
 }
-const fn_overlay_blindLabel = function(value="Loading..."){
+const fn_overlay_blindLabel = (value="Loading...") => {
   const loadingLabelDom = document.getElementById("loadingLabel");
   loadingLabelDom.innerText = value;
 }
 
 /////////////////////////
-// common table function
+// common date function
 /////////////////////////
 const getYearStr = (_date) => {
   let day = new Date(_date);
@@ -273,4 +308,127 @@ const getYYYYMMDDStr = (_date) => {
 const getDatePickerDay = (datePickerDom) => {
   let inputDate = new Date(datePickerDom.value);
   return inputDate
+}
+
+/////////////////////////
+// IPFS function
+/////////////////////////
+const uploadFile = async (file) => {
+  console.log("call uploadFile")
+  let data = new FormData();
+  data.append('file', file);
+  data.append('user', await getAccount())
+
+  try {
+    let resultHash = await fetch('/api/IPFS/upload', {
+      method: 'POST',
+      // headers: {},
+      body: data
+    })
+    return resultHash;
+  } catch (error) {
+    console.error(error);
+    throw(error)
+  }
+}
+const uploadJson = async(json) => {
+  let data = new FormData();
+  data.append('metadata', json);
+  data.append('user', await getAccount())
+
+  try {
+    let resultHash = await fetch('/api/IPFS/upload', {
+      method: 'POST',
+      // headers: {},
+      body: data
+    })
+    return resultHash;
+  } catch (error) {
+    console.error(error);
+    throw(error)
+  }
+}
+
+/////////////////////////
+// Blockchain function
+/////////////////////////
+const compareAddress = (addr1, addr2) => {
+  const lowerAddr1 = String(addr1).toLowerCase();
+  const lowerAddr2 = String(addr2).toLowerCase();
+  return lowerAddr1 === lowerAddr2;
+}
+
+const isNullAddress = (addr) => {
+  return addr == "0x0000000000000000000000000000000000000000"
+}
+
+const getDollerPriceFromEth = (wei) => {
+  // TODO api를 이용해서 거래소 가격을 불러와서 달러가격리턴
+  // common.util에 있는 것이 아니라, 거래소관련 util.js에 있어야할듯
+  console.log("call getDollerPriceFromEth. 제작필요.")
+  return wei;
+}
+
+const getDateFromBlocktime = (blockTimestamp) => {
+  return new Date(blockTimestamp * 1000);
+}
+
+const isApproved = (targetAddress) => {
+  return 1;
+}
+
+const convertFromBlockTime = (blockTimestamp) => {
+  return blockTimestamp * 1000
+}
+const convertToBlockTime = (timestamp) => {
+  return timestamp / 1000
+}
+
+/////////////////////////
+// upbit api function
+/////////////////////////
+const getCurrentMarketPriceObj = async (marketType="KRW-ETH") => {
+  // [{
+  //   "market": "KRW-ETH",
+  //   "trade_date": "20230223",
+  //   "trade_time": "010854",
+  //   "trade_date_kst": "20230223",
+  //   "trade_time_kst": "100854",
+  //   "trade_timestamp": 1677114534682,
+  //   "opening_price": 2151000,
+  //   "high_price": 2158000,
+  //   "low_price": 2141000,
+  //   "trade_price": 2150000,
+  //   "prev_closing_price": 2151000.00000000,
+  //   "change": "FALL",
+  //   "change_price": 1000.00000000,
+  //   "change_rate": 0.0004649000,
+  //   "signed_change_price": -1000.00000000,
+  //   "signed_change_rate": -0.0004649000,
+  //   "trade_volume": 0.00376145,
+  //   "acc_trade_price": 3102659094.18251000,
+  //   "acc_trade_price_24h": 46831095742.14156000,
+  //   "acc_trade_volume": 1444.07839701,
+  //   "acc_trade_volume_24h": 21968.90669392,
+  //   "highest_52_week_price": 4348000.00000000,
+  //   "highest_52_week_date": "2022-04-03",
+  //   "lowest_52_week_price": 1201500.00000000,
+  //   "lowest_52_week_date": "2022-06-18",
+  //   "timestamp": 1677114534719
+  // }]
+  const upbitPriceUri = `https://api.upbit.com/v1/ticker?markets=${marketType}`;
+  try {
+    let fetchResponse = await fetch(upbitPriceUri);
+    if(fetchResponse.ok){
+      let result = await fetchResponse.json();
+      let priceDataObj = result[0];
+      return { trade_price: priceDataObj.trade_price };
+    } else {
+      console.error("getCurrentMarketPrice fetchResponse not ok")
+      console.log(fetchResponse);
+      return null;
+    }
+  } catch (error) {
+    return null;
+  }
 }

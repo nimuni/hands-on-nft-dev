@@ -12,10 +12,8 @@ let auction_contract, auction_address, auction_abi;
  * Header div
  */
 let afterInitFunction = function(){};
-window.onload = async function(){
-  // Moralis init
-  // await Moralis.start({serverUrl:MORALIS_SERVER_URL, appId:MORALIS_APP_ID})
-
+let afterAccountsChange = function(){};
+window.addEventListener('load', async () => {
   // web3 injection
   await initWeb3();
 
@@ -33,7 +31,27 @@ window.onload = async function(){
   console.log(`현재 ${networkType} 네트워크에 접속중입니다.`)
 
   afterInitFunction();
-}
+})
+// window.onload = async function(){
+
+//   // web3 injection
+//   await initWeb3();
+
+//   // contract init
+//   await initContract();
+
+//   // connect wallet button change
+//   await changeConnectButtonLabel();
+
+//   // button event listener setting
+//   await initEventActions();
+//   await initEthereumEventListener();
+
+//   let networkType = await web3.eth.net.getNetworkType()
+//   console.log(`현재 ${networkType} 네트워크에 접속중입니다.`)
+
+//   afterInitFunction();
+// }
 
 async function initWeb3() {
   if(!web3){
@@ -62,9 +80,16 @@ async function initWeb3() {
 }
 
 async function initContract() {
-  nft_contract = new NftContractWrapper(await getAccount());
-  market_contract = new MarketContractWrapper(await getAccount());
-  auction_contract = new AuctionContractWrapper(await getAccount());
+  // nft_contract = new NftContractWrapper(await getAccount());
+  // market_contract = new MarketContractWrapper(await getAccount());
+  // auction_contract = new AuctionContractWrapper(await getAccount());
+  let myWalletAddress = await getAccount();
+  nft_contract = new NftContractWrapperV2();
+  nft_contract.setDefaultFromAccount(myWalletAddress);
+  market_contract = new MarketContractWrapperV2();
+  market_contract.setDefaultFromAccount(myWalletAddress);
+  auction_contract = new AuctionContractWrapperV2();
+  auction_contract.setDefaultFromAccount(myWalletAddress);
 
   net_env = "goerli" // "mainnet"
 }
@@ -127,6 +152,8 @@ async function initEventActions() {
 async function initEthereumEventListener() {
   ethereum.on('accountsChanged', (accounts) => {
     console.log("accountsChanged")
+    changeConnectButtonLabel();
+    afterAccountsChange();
   })
   ethereum.on('chainChanged', (chainId) => {
     console.log("chainChanged")
@@ -190,58 +217,3 @@ async function sampleTransaction(params) {
   return txHash
 }
 
-/////////////////////////
-// IPFS function
-/////////////////////////
-async function uploadFile(file) {
-  console.log("call uploadFile")
-  let data = new FormData();
-  data.append('file', file);
-  data.append('user', await getAccount())
-
-  try {
-    let resultHash = await fetch('/api/IPFS/upload', {
-      method: 'POST',
-      // headers: {},
-      body: data
-    })
-    return resultHash;
-  } catch (error) {
-    console.error(error);
-    throw(error)
-  }
-}
-async function uploadJson(json) {
-  let data = new FormData();
-  data.append('metadata', json);
-  data.append('user', await getAccount())
-
-  try {
-    let resultHash = await fetch('/api/IPFS/upload', {
-      method: 'POST',
-      // headers: {},
-      body: data
-    })
-    return resultHash;
-  } catch (error) {
-    console.error(error);
-    throw(error)
-  }
-}
-
-/////////////////////////
-// Blockchain function
-/////////////////////////
-function compareAddress(addr1, addr2) {
-  const lowerAddr1 = String(addr1).toLowerCase();
-  const lowerAddr2 = String(addr2).toLowerCase();
-  return lowerAddr1 === lowerAddr2;
-}
-
-function isNullAddress(addr){
-  return addr == "0x0000000000000000000000000000000000000000"
-}
-
-function getDollerPriceFromEth(wei) {
-  return wei;
-}

@@ -145,10 +145,12 @@
     let propertiesObj = fn_table_getInputDataFromTableId("input-propertiesTable", true);
     let properties = [];
     for(let i=0; i<propertiesObj.data.length; i++){
-      let tempProperty = {};
-      tempProperty["trait_type"] = propertiesObj.data[i][0];
-      tempProperty["value"] = propertiesObj.data[i][1];
-      properties.push(tempProperty)
+      if(propertiesObj.data[i][0] != "" && propertiesObj.data[i][1] != ""){
+        let tempProperty = {};
+        tempProperty["trait_type"] = propertiesObj.data[i][0];
+        tempProperty["value"] = propertiesObj.data[i][1];
+        properties.push(tempProperty)
+      }
     }
     resultMetadataObject.attributes = properties;
     console.log("Metadata =")
@@ -180,52 +182,7 @@
 
   async function mintToken(to, uri) {
     console.log("call mintToken");
-    console.log(`uri= ${uri}`);
 
-    // let result = await nft_contract.methods.mintToken(to, uri)
-    /* nft_contract.methods.mintToken(to, uri).send({from: await getAccount()})
-      .on('sending', function(payload){
-        console.log("event sending")
-        console.log(payload)
-      })
-      .on('sent', function(payload){
-        console.log("event sent")
-        console.log(payload)
-        fn_overlay_blindLoading(true, "블록체인에 NFT 민팅 전송")
-      })
-      .on('transactionHash', function(transactionHash){
-        console.log("event transactionHash")
-        console.log(transactionHash)
-      })
-      .on('receipt', function(receipt){
-        console.log("event receipt")
-        console.log(receipt)
-        if(receipt.status) {
-          console.log("처리가 완료되었습니다.")
-          console.log(receipt)
-          console.log(receipt.status)
-          console.log(`nft address= ${receipt.events.Transfer.address}`)
-          console.log(`tokenId= ${receipt.events.Transfer.returnValues.tokenId}`)
-
-          // TODO
-          // NFT 상세 페이지로 이동
-        } else {
-          console.log("처리가 실패되었습니다.")
-        }
-        fn_overlay_blindLoading(false)
-      })
-      .on('confirmation', function(confirmation, receipt, latestBlockHash){
-        // 24회까지 마지막 블록 해시가 표기됨
-        // console.log("event confirmation")
-        // console.log(confirmation)
-        // console.log(receipt)
-        // console.log(latestBlockHash)
-      })
-      .on('error', function(error){
-        console.log("event error")
-        console.log(error)
-      })
-    */
     let option = {
       sending: (payload)=>{
         console.log("event sending")

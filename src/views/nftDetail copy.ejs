@@ -202,18 +202,16 @@
                 </h2>
                 <div id="collapseOffers" class="accordion-collapse collapse show" aria-labelledby="header-one" data-bs-parent="#accordionExample">
                   <div class="accordion-body">
-                    <div class="offer-table-wrapper scroll-bar">
-                      <table class="table" id="OffersTable">
-                        <tr>
-                          <th>Price(ETH)</th>
-                          <th>KRW Price</th>
-                          <th>Floor Difference</th>
-                          <th>Expiration</th>
-                          <th>From</th>
-                          <th><!-- Button셀 -->　</th>
-                        </tr>
-                      </table>
-                    </div>
+                    <table class="table" id="OffersTable">
+                      <tr>
+                        <th>Price(ETH)</th>
+                        <th>KRW Price</th>
+                        <th>Floor Difference</th>
+                        <th>Expiration</th>
+                        <th>From</th>
+                        <th><!-- Button셀 -->　</th>
+                      </tr>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -234,16 +232,14 @@
             </h2>
             <div id="collapseActivity" class="accordion-collapse collapse show" aria-labelledby="header-one" data-bs-parent="#accordionExample">
               <div class="accordion-body">
-                <div class="activity-table-wrapper scroll-bar">
-                  <table class="table" id="itemActivityTable">
-                    <tr>
-                      <th>Event</th>
-                      <th>From</th>
-                      <th>To</th>
-                      <th>Date</th>
-                    </tr>
-                  </table>
-                </div>
+                <table class="table" id="itemActivityTable">
+                  <tr>
+                    <th>Event</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Date</th>
+                  </tr>
+                </table>
               </div>
             </div>
           </div>
@@ -805,8 +801,6 @@
     }
   }
   const setPriceHistory = async (marketAuctionEvents) => {
-    console.log("call setPriceHistory")
-    console.log(marketAuctionEvents)
     const priceHistoryDiv = document.getElementById("priceHistoryDiv")
     const noPriceHistoryDiv = document.getElementById("noPriceHistoryDiv")
     const oneDaySeconds = 1000*60*60*24
@@ -839,19 +833,12 @@
         promiseArray.push(
           new Promise(async (resolve, reject) => {
             let blockData = await web3.eth.getBlock(element.blockNumber)
-            switch (element.event) {
-              case "MarketItemSold":
-                resolve({type:"Market", price:element.returnValues.price, date: new Date(blockData.timestamp*1000)})
-                break;
-              case "OfferAccept":
-                resolve({type:"Offer", price:element.returnValues.price, date: new Date(blockData.timestamp*1000)})
-                break;
-              case "AuctionEnded":
-                resolve({type:"Auction", price:element.returnValues.highestBid, date: new Date(blockData.timestamp*1000)})
-                break;
-              default:
-                reject("no matching event in price chart");
-                break;
+            if(element.returnValues?.price){
+              resolve({type:"market", price:element.returnValues.price, date: new Date(blockData.timestamp*1000)})
+            } else if(element.returnValues?.highestBid){
+              resolve({type:"auction", price:element.returnValues.highestBid, date: new Date(blockData.timestamp*1000)})
+            } else {
+              reject("no price, highest bid")
             }
           })
         )
@@ -902,7 +889,7 @@
             y: {
               beginAtZero: true,
               ticks: {
-                // stepSize: 0.001,
+                stepSize: 0.001,
                 callback: function(value, index, values) {
                   return `${minimizeShowFloat(value)}`
                 },
@@ -1014,43 +1001,8 @@
     viewCountsDiv.append(viewDiv);
     viewCountsDiv.append(likeDiv);
   }
-  const setApprove = (targetContract) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        fn_overlay_blindLoading(true, "NFT 권한 이양 중")
-        const approveOption = {
-          receipt: ()=>{
-            console.log("approve success")
-            fn_overlay_blindLoading(false)
-            resolve()
-          },
-          error: (error) => {
-            console.log("approve error")
-            console.log(error)
-            fn_overlay_blindLoading(false);
-            reject(error)
-          }
-        }
-        await nft_contract.approve(targetContract, tokenId, approveOption);
-      } catch (error) {
-        console.log("approve error")
-        console.log(error)
-        fn_overlay_blindLoading(false);
-        reject(error)
-      }
-    })
-  }
   const acceptOffer = async (offerIndex) => {
     console.log(`call acceptOffer ${offerIndex}`)
-    // 권한 이양
-    fn_overlay_blindLoading(true, "NFT 권한 확인 중")
-    approveAddress = market_contract.getAddress();
-    getApproved = await nft_contract.getApproved(tokenId)
-    if(!compareAddress(approveAddress, getApproved)) {
-      console.log(`getApproved=${getApproved}`)
-      await setApprove(approveAddress)
-    }
-    // offer 수락
     let findedOffer = offersDataArray.find(element => element.offerIndex == offerIndex)
     let option = {
       value: web3.utils.toWei(findedOffer.price, "ether"),
@@ -1080,6 +1032,7 @@
   const withdrawOffer = async (offerIndex) => {
     console.log(`call withdrawOffer ${offerIndex}`)
     let findedOffer = offersDataArray.find(element => element.offerIndex == offerIndex)
+
     let option = {
       receipt: (receipt)=>{
         if(receipt.status) {
@@ -1223,10 +1176,10 @@
 
 
     offersDataArray = await getOffers(contractAddress, tokenId);
+    offersDataArray.sort((a,b)=>{
+      return a.targetTime > b.targetTime ? -1 : 1;
+    })
     if(offersDataArray) {
-      offersDataArray.sort((a,b)=>{
-        return a.targetTime > b.targetTime ? -1 : 1;
-      })
       offersDataArray.forEach((element, index, array) => {
         addOfferData(element);
       });
@@ -1411,7 +1364,7 @@
   const loadNFTInfo = async function(){
     if(web3.utils.isAddress(contractAddress)){
       const myWalletAddress = await getAccount();
-      nft_contract = new NftContractWrapperV2(contractAddress, myWalletAddress);
+      nft_contract = new NftContractWrapper(myWalletAddress, contractAddress);
       const metadataURI = await nft_contract.tokenURI(tokenId);
       let fetchResponse = await fetch(metadataURI)
       if(fetchResponse.ok){
@@ -1429,14 +1382,9 @@
 
         // Price History 세팅
         let itemSoldEvents = []
-        let marketSolds = await market_contract.getPastEvents({eventName:"MarketItemSold", tokenId:Number(tokenId)});
-        console.log(1111111111)
-        console.log(`tokenId=${tokenId} ${typeof tokenId}`)
-        console.log(marketSolds)
+        let marketSolds = await market_contract.getPastEvents({eventName:"MarketItemSold"});
         itemSoldEvents.push(...marketSolds)
-        let marketOfferAccept = await market_contract.getPastEvents({eventName:"OfferAccept", nftId:Number(tokenId)});
-        itemSoldEvents.push(...marketOfferAccept)
-        let auctionEnded = await auction_contract.getPastEvents({eventName:"AuctionEnded", tokenId:Number(tokenId)});
+        let auctionEnded = await auction_contract.getPastEvents({eventName:"AuctionEnded"});
         itemSoldEvents.push(...auctionEnded)
         setPriceHistory(itemSoldEvents)
 
@@ -1564,15 +1512,5 @@
 .auction-limit-time-label {
   font-size: 1rem;
   color: #444444;
-}
-.offer-table-wrapper {
-  width: 100%;
-  height: 300px;
-  overflow: auto;
-}
-.activity-table-wrapper {
-  width: 100%;
-  height: 500px;
-  overflow: auto;
 }
 </style>

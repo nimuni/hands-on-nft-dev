@@ -131,7 +131,7 @@
     if (contractAddress != "") {
       if(web3.utils.isAddress(contractAddress)){
         marketItems = await market_contract.getMarketItems(contractAddress)
-        await nft_contract.initNFTInstance(contractAddress)
+        await nft_contract.initInstance(contractAddress)
       } else {
         alert("주소가 잘못되었습니다. 마켓 기본화면으로 이동합니다.")
         window.location.href = window.location.origin + `/market`;

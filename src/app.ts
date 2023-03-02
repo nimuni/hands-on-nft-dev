@@ -91,7 +91,6 @@ class App {
     //   directives: {
     //     "script-src": ["'self'", "https://cdn.jsdelivr.net", "https://unpkg.com"],
     //     "script-src-elem": ["'self'", "https://cdn.jsdelivr.net", "https://unpkg.com"],
-    //     "connect-src": ["'self'", 'https://sbp5aslmofyj.usemoralis.com:2053/server'],
     //     "style-src": ["'self'", "https://cdn.jsdelivr.net"]
     //   }
     // }));
