@@ -1,0 +1,600 @@
+<div>
+  <!-- Web3 js -->
+  <div class="content-wrapper">
+    <span class="title">web3.js</span>
+    <div>
+      <span class="sub-title">web3.eth.getAccounts()</span>
+      <span class="method-content">현재 메타마스크에 로그인된 지갑 주소 반환.</span>
+      <xmp class="show-code">
+        await web3.eth.getAccounts()
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">contract.estimateGasFee(methodName, ...args)</span>
+      <span class="method-content">블록체인 함수의 Gas Fee 계산</span>
+      <span class="method-content">nft_contract, market_contract, auction_contract과 같이<br>OwnableContractWrapper 상속받은 모든 wrapper에서 사용가능</span>
+      <xmp class="show-code">
+        // ETH 가격으로 보고싶으면 web3.utils.fromWei(estimatedWeiCost)
+
+        let estimatedWeiCost = await nft_contract.estimateGasFee("mintToken",
+                                                                 "0xAddF4475192878D52774e8270a477C1a3e808eaa",
+                                                                 "tokenURLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
+      </xmp>
+    </div>
+  </div>
+
+  <!-- Web3 js -->
+  <div class="content-wrapper">
+    <span class="title">Contract 공통 BasicContractWrapper </span>
+    <div>
+      <span class="sub-title">initInstance(newAddress)</span>
+      <span class="method-content">새 Address로 만들어진 Contract 주소 초기화.</span>
+      <xmp class="show-code">
+        // newAddress: address
+
+        nft_contract.initInstance(newAddress)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">getInstance()</span>
+      <span class="method-content">만들어진 Contract 클래스의 Instance를 반환한다.</span>
+      <xmp class="show-code">
+        nft_contract.getInstance()
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">getDefaultFromAccount()</span>
+      <span class="method-content">현재 기본 From address를 얻는다.</span>
+      <xmp class="show-code">
+        nft_contract.getDefaultFromAccount()
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">setDefaultFromAccount(walletAddress)</span>
+      <span class="method-content">기본 From address를 설정한다. 기본적으로 로그인되면 해당 주소로 호출.</span>
+      <xmp class="show-code">
+        // walletAddress: address
+
+        nft_contract.setDefaultFromAccount(walletAddress)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">getAddress()</span>
+      <span class="method-content">Contract 인스턴스의 address를 반환한다.</span>
+      <xmp class="show-code">
+        nft_contract.getAddress()
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">setAddress(address)</span>
+      <span class="method-content">Contract 인스턴스의 address를 설정한다. initInstance를 호출시 기본적으로 호출됨.</span>
+      <xmp class="show-code">
+        // address: address
+        nft_contract.setAddress(address)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">getABI()</span>
+      <span class="method-content">선언된 Contract 함수의 ABI를 반환한다.</span>
+      <xmp class="show-code">
+        nft_contract.getABI()
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">setABI()</span>
+      <span class="method-content">Contract 함수를 변경하기 위해 initInstance전에 ABI를 설정한다.</span>
+      <xmp class="show-code">
+        nft_contract.setABI()
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">getPastEvents({eventName, fromBlock, toBlock, tokenId, nftId, offerIndex, callback})</span>
+      <span class="method-content">contract의 이벤트를 조회한다. 이벤트 명과 indexed된 변수로 검색할 수 있다.</span>
+      <xmp class="show-code">
+        nft_contract.getPastEvents({eventName, fromBlock, toBlock, callback})
+      </xmp>
+    </div>
+  </div>
+
+  <!-- OwnableContractWrapper -->
+  <div class="admin-wrapper content-wrapper">
+    <span class="title">관리자용 Contract 함수</span>
+    <span class="method-content">nft_contract, market_contract, auction_contract과 같이<br>OwnableContractWrapper 상속받은 모든 wrapper에서 사용가능</span>
+    <div>
+      <span class="sub-title">onlyGrant()</span>
+      <span class="method-content">권한받은 사용자만 사용할 수 있는 상황인지, onlyGrant 변수값을 얻어옴</span>
+      <xmp class="show-code">
+        await nft_contract.onlyGrant()
+        await market_contract.onlyGrant()
+        await auction_contract.onlyGrant()
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">MINTER_ROLE()</span>
+      <span class="method-content">민트 가능 권한의 상수값을 얻어옴</span>
+      <xmp class="show-code">
+        await nft_contract.MINTER_ROLE()
+        await market_contract.MINTER_ROLE()
+        await auction_contract.MINTER_ROLE()
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">MARKET_LISTER_ROLE()</span>
+      <span class="method-content">마켓 리스팅 권한의 상수값을 얻어옴</span>
+      <xmp class="show-code">
+        await nft_contract.MARKET_LISTER_ROLE()
+        await market_contract.MARKET_LISTER_ROLE()
+        await auction_contract.MARKET_LISTER_ROLE()
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">AUCTION_LISTER_ROLE()</span>
+      <span class="method-content">옥션 리스팅 권한의 상수값을 얻어옴</span>
+      <xmp class="show-code">
+        await nft_contract.AUCTION_LISTER_ROLE()
+        await market_contract.AUCTION_LISTER_ROLE()
+        await auction_contract.AUCTION_LISTER_ROLE()
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">ADMIN_ROLE()</span>
+      <span class="method-content">관리자 권한의 상수값을 얻어옴</span>
+      <xmp class="show-code">
+        await nft_contract.ADMIN_ROLE()
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">setOnlyGrant(value, option)</span>
+      <span class="method-content">권한받은 사용자만 사용할 수 있게 설정(true/false)</span>
+      <xmp class="show-code">
+        // value: boolean
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await nft_contract.setOnlyGrant(value, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">grantRole(_role, _account, option)</span>
+      <span class="method-content">사용자에게 권한부여</span>
+      <span class="precondition-content">onlyGrant==true 인 경우 MINTER_ROLE 보유자만 민트 가능</span>
+      <xmp class="show-code">
+        // _role: 상기 기술된 권한 상수값
+        // _account: address
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await nft_contract.grantRole(_role, _account, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">revokeRole(_role, _account, option)</span>
+      <span class="method-content">사용자에게 권한부여해제. 관리자 권한 부여 시 관리자를 여러명 두는 경우는 상관없으나, 관리자가 한명인 경우 기존 관리자의 모든 권한 해제가 필요</span>
+      <span class="precondition-content">onlyGrant==true 인 경우 MINTER_ROLE 보유자만 민트 가능</span>
+      <xmp class="show-code">
+        // _role: 상기 기술된 권한 상수값
+        // _account: address
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await nft_contract.revokeRole(_role, _account, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">roles(roles, address)</span>
+      <span class="method-content">사용자에게 권한부여 되어있는지 확인</span>
+      <xmp class="show-code">
+        // _role: 상기 기술된 권한 상수값
+        // _address: address
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await nft_contract.roles(roles, address)
+      </xmp>
+    </div>
+  </div>
+
+  <!-- NFT Contract -->
+  <div class="content-wrapper">
+    <span class="title">nft_contract</span>
+    <div>
+      <span class="sub-title">approve(_to, _tokenId, option)</span>
+      <span class="method-content">_to에게 tokenId를 컨트롤 할 수 있는 권한을 준다.</span>
+      <xmp class="show-code">
+        // _to: address
+        // _tokenId: string
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await nft_contract.approve(_to, _tokenId, option);
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">mintToken(_to, _tokenURI, option)</span>
+      <span class="method-content">_to에게 tokenId를 컨트롤 할 수 있는 권한을 준다.</span>
+      <span class="precondition-content">onlyGrant==true 인 경우 MINTER_ROLE 보유자만 민트 가능</span>
+      <xmp class="show-code">
+        // _to: address
+        // _tokenId: string
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await nft_contract.mstringToken(_to, _tokenId, option);
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">balanceOf(_owner)</span>
+      <span class="method-content">_owner가 가지고있는 NFT 수 반환</span>
+      <xmp class="show-code">
+        // _owner: address
+
+        await nft_contract.balanceOf(_owner);
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">getApproved(_tokenId)</span>
+      <span class="method-content">_tokenId의 컨트롤이 허용된 주소 반환</span>
+      <xmp class="show-code">
+        // _tokenId: string
+
+        await nft_contract.getApproved(_tokenId)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">ownerOf(_tokenId)</span>
+      <span class="method-content">_tokenId의 소유자 주소 반환</span>
+      <xmp class="show-code">
+        // _tokenId: string
+
+        await nft_contract.ownerOf(_tokenId)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">tokenURI(_tokenId)</span>
+      <span class="method-content">_tokenId의 저장된 IPFS주소 반환</span>
+      <xmp class="show-code">
+        // _tokenId: string
+
+        await nft_contract.tokenURI(_tokenId)
+      </xmp>
+    </div>
+  </div>
+
+  <!-- Market Contract -->
+  <div class="content-wrapper">
+    <span class="title">market_contract</span>
+    <div>
+      <span class="sub-title">buyMarketItem(_nftContractAddress, _nftId, option)</span>
+      <span class="method-content">마켓에 등록되어있는 NFT를 구매한다.</span>
+      <xmp class="show-code">
+        // _nftContractAddress: 등록된 NFT address
+        // _nftId: string
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        //전송하는 Eth금액(단위 wei로 변환하여 진행)
+        // priceEth: float. 예를들면 0.1 Eth를 아래 함수를 통해 wei 단위로 바꾸어 진행한다.
+        option.value = web3.utils.toWei(priceEth, "ether"),
+
+        await market_contract.buyMarketItem(_nftContractAddress, _nftId, option);
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">listingMarketItem(_nftContractAddress, _nftId, _price, option)</span>
+      <span class="method-content">마켓에 NFT를 등록한다.</span>
+      <span class="precondition-content">onlyGrant==true 인 경우 MARKET_LISTER_ROLE 보유자만 민트 가능</span>
+      <xmp class="show-code">
+        // _nftContractAddress: NFT address
+        // _nftId: string
+        // _price: string (wei 단위로 등록한다.)
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await market_contract.listingMarketItem(_nftContractAddress, _nftId, _price, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">cancelListedItem(_nftContractAddress, _nftId, option)</span>
+      <span class="method-content">마켓에 등록된 NFT를 등록취소한다.</span>
+      <span class="precondition-content">onlyGrant==true 인 경우 MARKET_LISTER_ROLE 보유자만 민트 가능</span>
+      <xmp class="show-code">
+        // _nftContractAddress: NFT address
+        // _nftId: string
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await market_contract.cancelListedItem(_nftContractAddress, _nftId, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">Event MarketItemListed 조회</span>
+      <span class="method-content">
+        market_contract의 이벤트를 조회하여, 마켓에 등록된 NFT들의 등록 기록을 불러온다.<br>
+
+        MarketItemListed(address indexed nft, uint256 indexed tokenId, uint256 price, uint256 totalListedMarketItemCount);<br>
+        indexed라는 명칭이 붙은 nft, tokenId를 필터하여 조회할 수 있다.
+      </span>
+      <xmp class="show-code">
+        // getPastEvents 호출 시, 넘겨주는 object에 필터값을 넣을 수 있다.
+        // 다음 예시는 contract_address와 tokenId값으로 과거 이벤트 내역을 불러오는 함수이다.
+
+        await market_contract.getPastEvents({eventName: "MarketItemListed", nft:contract_address, tokenId: tokenId});
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">Event MarketItemSold 조회</span>
+      <span class="method-content">
+        market_contract의 이벤트를 조회하여, 마켓에 등록된 NFT들의 판매완료 기록을 불러온다.<br>
+
+        MarketItemSold(address indexed nft, uint256 indexed tokenId, uint256 price);
+        indexed라는 명칭이 붙은 nft, tokenId를 필터하여 조회할 수 있다.
+      </span>
+      <xmp class="show-code">
+        // getPastEvents 호출 시, 넘겨주는 object에 필터값을 넣을 수 있다.
+        // 다음 예시는 contract_address와 tokenId값으로 과거 이벤트 내역을 불러오는 함수이다.
+
+        await market_contract.getPastEvents({eventName: "MarketItemSold", nft:contract_address, tokenId: tokenId});
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">Event MarketItemListcancel 조회</span>
+      <span class="method-content">
+        market_contract의 이벤트를 조회하여, 마켓에 등록된 NFT들의 판매취소 기록을 불러온다.<br>
+
+        MarketItemListcancel(address indexed nft, uint256 indexed tokenId);
+        indexed라는 명칭이 붙은 nft, tokenId를 필터하여 조회할 수 있다.
+      </span>
+      <xmp class="show-code">
+        // getPastEvents 호출 시, 넘겨주는 object에 필터값을 넣을 수 있다.
+        // 다음 예시는 contract_address와 tokenId값으로 과거 이벤트 내역을 불러오는 함수이다.
+
+        await market_contract.getPastEvents({eventName: "MarketItemListcancel", nft:contract_address, tokenId: tokenId});
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">offerMarketItem(_nftContractAddress, _nftId, _endTime, option)</span>
+      <span class="method-content">마켓에 판매진행중이지 않은 NFT에 가격 제안을 한다.</span>
+      <xmp class="show-code">
+        // _nftContractAddress: NFT address
+        // _nftId: string
+        // _endTime: datetime. ★블록체인 시간은 new Date().getTime()의 1000분의1임. 1000으로 나누어 주어야 함.
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await market_contract.offerMarketItem(_nftContractAddress, _nftId, _endTime, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">acceptOffer(_nftContractAddress, _tokenId, _offerIndex, option)</span>
+      <span class="method-content">마켓에 판매진행중이지 않은 NFT에 가격 제안을 한다.</span>
+      <xmp class="show-code">
+        // _nftContractAddress: NFT address
+        // _nftId: string
+        // _offerIndex: string. 등록되어 있는 offer의 index번호. 한 NFT에 여러 offer가 들어올 수 있다.
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await market_contract.acceptOffer(_nftContractAddress, _tokenId, _offerIndex, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">Event offerList 조회</span>
+      <span class="method-content">
+        market_contract의 이벤트를 조회하여, 해당 NFT의 offer 기록을 불러온다.<br>
+        event OfferItem(address indexed nft, uint256 indexed tokenId, uint256 indexed offerIndex, address offerer, uint256 price, uint256 endTime);<br>
+        indexed라는 명칭이 붙은 nft, tokenId, offerIndex를 필터하여 조회할 수 있다.
+      </span>
+      <xmp class="show-code">
+        // getPastEvents 호출 시, 넘겨주는 object에 필터값을 넣을 수 있다.
+        // 다음 예시는 contract_address와 tokenId값으로 과거 이벤트 내역을 불러오는 함수이다.
+
+        await market_contract.getPastEvents({eventName: "MarketItemOffer", nft:contract_address, tokenId: tokenId});
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">withdrawOutdatedOffer(_nftContractAddress, _tokenId, _offerIndex, option)</span>
+      <span class="method-content">만료된 Offer에 입금되어있는 제안금액을 회수한다.</span>
+      <xmp class="show-code">
+        // _nftContractAddress: NFT address
+        // _tokenId: string
+        // _offerIndex: string. 등록되어 있는 offer의 index번호. 한 NFT에 여러 offer가 들어올 수 있다.
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await market_contract.withdrawOutdatedOffer(_nftContractAddress, _tokenId, _offerIndex, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">setListingPrice(_listingPriceWei, option)</span>
+      <span class="method-content">Market NFT 마켓 등록비를 변경한다.</span>
+      <span class="precondition-content">onlyGrant==true 인 경우 ADMIN_ROLE 보유자만 민트 가능</span>
+      <xmp class="show-code">
+        // _listingPriceWei: string (wei 단위로 등록한다.)
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await market_contract.setListingPrice(_listingPriceWei, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">setMarketOwner(_newOwner, option)</span>
+      <span class="method-content">Market NFT 마켓 주인을 변경한다.</span>
+      <span class="precondition-content">onlyGrant==true 인 경우 ADMIN_ROLE 보유자만 민트 가능</span>
+      <xmp class="show-code">
+        // _newOwner: address
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await market_contract.setMarketOwner(_newOwner, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">getMarketInfo(_nftContractAddress, _tokenId)</span>
+      <span class="method-content">Market NFT 마켓 등록 정보를 조회한다</span>
+      <xmp class="show-code">
+        // _nftContractAddress: NFT address
+        // _tokenId: string
+
+        await market_contract.getMarketInfo(_nftContractAddress, _tokenId)
+      </xmp>
+    </div>
+  </div>
+
+  <!-- Auction Contract -->
+  <div class="content-wrapper">
+    <span class="title">auction_contract</span>
+    <div>
+      <span class="sub-title">addAuctionItem(_nft, _tokenId, _startAt, _endAt, _startBid, option)</span>
+      <span class="method-content">Auction에 경매할 NFT를 등록한다.</span>
+      <xmp class="show-code">
+        // _nft: NFT address
+        // _tokenId: string
+        // _startAt: datetime. ★블록체인 시간은 new Date().getTime()의 1000분의1임. 1000으로 나누어 주어야 함.
+        // _endAt: datetime. ★블록체인 시간은 new Date().getTime()의 1000분의1임. 1000으로 나누어 주어야 함.
+        // _startBid: string (wei 단위로 등록한다.) 초기 경매 시작값
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+        option.value = web3.utils.toWei(priceEth, "ether") // Auction 등록비(listingPrice) wei단위로 등록
+
+        await auction_contract.addAuctionItem(_nft, _tokenId, _startAt, _endAt, _startBid, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">bidAuctionItem(_nft, _tokenId, option)</span>
+      <span class="method-content">Auction에 등록되어있는 NFT에 경매가를 등록한다.</span>
+      <xmp class="show-code">
+        // _nft: NFT address
+        // _tokenId: string
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+        option.value = web3.utils.toWei(priceEth, "ether") // 최고가 전송. wei로 전송해야 함.
+
+        await auction_contract.bidAuctionItem(_nft, _tokenId, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">withdrawFromAuction(_nft, _tokenId, _count, option)</span>
+      <span class="method-content">Auction에 등록되어있는 NFT에 등록한 경매제안금액을 회수한다.</span>
+      <xmp class="show-code">
+        // _nft: NFT address
+        // _tokenId: string
+        // _count: string // 같은 NFT가 경매등록된 번호. (같은 매물이 여러번 등록될 수 있으므로)
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await auction_contract.withdrawFromAuction(_nft, _tokenId, _count, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">endAuctionItem(_nft, _tokenId, option)</span>
+      <span class="method-content">Auction에 등록되어있는 경매를 끝낸다.</span>
+      <xmp class="show-code">
+        // _nft: NFT address
+        // _tokenId: string
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await auction_contract.endAuctionItem(_nft, _tokenId, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">setListingPrice(_listingPriceWei, option)</span>
+      <span class="method-content">Auction 등록비를 변경한다.</span>
+      <span class="precondition-content">onlyGrant==true 인 경우 ADMIN_ROLE 보유자만 민트 가능</span>
+      <xmp class="show-code">
+        // _listingPriceWei: string (wei 단위로 등록한다.)
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await auction_contract.setListingPrice(_listingPriceWei, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">setAuctionOwner(_newOwner, option)</span>
+      <span class="method-content">Auction 주인을 변경한다.</span>
+      <span class="precondition-content">onlyGrant==true 인 경우 ADMIN_ROLE 보유자만 민트 가능</span>
+      <xmp class="show-code">
+        // _newOwner: address
+        // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
+
+        await auction_contract.setAuctionOwner(_newOwner, option)
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">Event AuctionAdded 조회</span>
+      <span class="method-content">
+        auction_contract의 이벤트를 조회하여, 해당 NFT의 Auction 등록 기록을 불러온다.<br>
+        event AuctionAdded(address indexed nft, uint256 indexed tokenId, uint256 indexed auctionCount, uint256 startAt, uint256 endAt, uint256 startBid);
+        indexed라는 명칭이 붙은 nft, tokenId, auctionCount를 필터하여 조회할 수 있다.
+      </span>
+      <xmp class="show-code">
+        // getPastEvents 호출 시, 넘겨주는 object에 필터값을 넣을 수 있다.
+        // 다음 예시는 contract_address와 tokenId값으로 과거 이벤트 내역을 불러오는 함수이다.
+
+        await auction_contract.getPastEvents({eventName: "AuctionAdded", nft:contract_address, tokenId: tokenId});
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">Event AuctionBided 조회</span>
+      <span class="method-content">
+        auction_contract의 이벤트를 조회하여, 해당 NFT의 Auction Bid 등록 기록을 불러온다.<br>
+        event AuctionBided(address indexed nft, uint256 indexed tokenId, uint256 indexed auctionCount, address bidder, uint256 bid);
+        indexed라는 명칭이 붙은 nft, tokenId, auctionCount를 필터하여 조회할 수 있다.
+      </span>
+      <xmp class="show-code">
+        // getPastEvents 호출 시, 넘겨주는 object에 필터값을 넣을 수 있다.
+        // 다음 예시는 contract_address와 tokenId값으로 과거 이벤트 내역을 불러오는 함수이다.
+
+        await auction_contract.getPastEvents({eventName: "AuctionBided", nft:contract_address, tokenId: tokenId});
+      </xmp>
+    </div>
+    <div>
+      <span class="sub-title">Event AuctionEnded 조회</span>
+      <span class="method-content">
+        auction_contract의 이벤트를 조회하여, 해당 NFT의 Auction 종료 기록을 불러온다.<br>
+        event AuctionEnded(address indexed nft, uint256 indexed tokenId, uint256 indexed auctionCount, address highestBidder, uint256 highestBid);
+        indexed라는 명칭이 붙은 nft, tokenId, auctionCount를 필터하여 조회할 수 있다.
+      </span>
+      <xmp class="show-code">
+        // getPastEvents 호출 시, 넘겨주는 object에 필터값을 넣을 수 있다.
+        // 다음 예시는 contract_address와 tokenId값으로 과거 이벤트 내역을 불러오는 함수이다.
+
+        await auction_contract.getPastEvents({eventName: "AuctionEnded", nft:contract_address, tokenId: tokenId, auctionCount:auctionCount});
+      </xmp>
+    </div>
+  </div>
+</div>
+<style>
+  .show-code {
+    border: 1px solid black;
+  }
+  .content-wrapper {
+    margin-bottom: 80px;
+  }
+  .admin-wrapper {
+    background-color: beige;
+  }
+  .title {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .sub-title {
+    display: block;
+    font-size: 1.2rem;
+    color:rgb(0, 0, 0);
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .method-content {
+    display: block;
+    font-size: 1rem;
+    color: gray;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .precondition-content {
+    color:crimson;
+    font-weight: 600;
+  }
+</style>
+<script>
+  let myAddress, marketAddress, auctionAddress, nftAddress;
+  let contractAddress
+  let tokenId
+  afterInitFunction = async function(){
+    // init variable
+    myAddress = await getAccount();
+    nftAddress = nft_contract.getAddress();
+    marketAddress = market_contract.getAddress();
+    auctionAddress = auction_contract.getAddress();
+  }
+  afterAccountsChange = async function(){
+    window.location.reload()
+  }
+</script>
+

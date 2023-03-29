@@ -122,9 +122,9 @@ const removeFunctionToPublicInterval = (func) => {
     console.log("removeFunctionToPublicInterval error. func is not function or string")
   }
 }
-window.addEventListener('load', async () => {
-  // initPublicInterval(intervalDuration)
-})
+function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
 
 /////////////////////////
 // common table function
@@ -361,6 +361,13 @@ const compareAddress = (addr1, addr2) => {
 const isNullAddress = (addr) => {
   return addr == "0x0000000000000000000000000000000000000000"
 }
+const isAddress = (addr) => {
+  console.log("call isAddress")
+  console.log(addr)
+  console.log(web3.utils.isAddress(addr))
+  return web3.utils.isAddress(addr)
+}
+const NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 const getDollerPriceFromEth = (wei) => {
   // TODO api를 이용해서 거래소 가격을 불러와서 달러가격리턴

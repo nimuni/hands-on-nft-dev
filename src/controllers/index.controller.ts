@@ -104,40 +104,11 @@ class IndexController {
       next(error);
     }
   };
-  public testLayout = (req: Request, res: Response, next: NextFunction): void => {
-    console.log("call testLayout")
+  public contractSample = (req: Request, res: Response, next: NextFunction): void => {
     try {
       let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
-      res.render('test-view', ejs_params)
-    } catch (error) {
-      next(error);
-    }
-  };
-  public testLayout2 = (req: Request, res: Response, next: NextFunction): void => {
-    console.log("call testLayout")
-    try {
-      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
-      ejs_params.layout = "./layout/sidebar-layout"
-      res.render('test-view', ejs_params)
-    } catch (error) {
-      next(error);
-    }
-  };
-  public mintTest = (req: Request, res: Response, next: NextFunction): void => {
-    console.log("call mintTest")
-    try {
-      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
-      res.render('mintTest', ejs_params)
-    } catch (error) {
-      next(error);
-    }
-  };
-  public contractTest = (req: Request, res: Response, next: NextFunction): void => {
-    console.log("call contractTest")
-    try {
-      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
-      ejs_params.contractAddress = req.query.contractAddress;
-      res.render('contractTest', ejs_params)
+      console.log(ejs_params)
+      res.render('contractSample', ejs_params)
     } catch (error) {
       next(error);
     }

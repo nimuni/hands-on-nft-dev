@@ -207,7 +207,6 @@
           console.log(`nft address= ${receipt.events.Transfer.address}`)
           console.log(`tokenId= ${receipt.events.Transfer.returnValues.tokenId}`)
 
-          // TODO
           // NFT 상세 페이지로 이동
           setTimeout(() => {
             window.location.href = `../nft/${receipt.events.Transfer.address}/${receipt.events.Transfer.returnValues.tokenId}`;

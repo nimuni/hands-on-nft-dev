@@ -2,13 +2,13 @@
 pragma solidity ^0.8.13;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "./AccessControl-v1.sol";
 
-contract NFTMarketplace {
+contract NFTMarketplace is AccessControl {
     using Counters for Counters.Counter;
-    string version = "0.1.8";
-    uint256 listingPrice;
+    string public version = "0.1.9";
+    uint256 public listingPrice;
 
     // Auction Start
     address private marketOwner;
@@ -33,7 +33,7 @@ contract NFTMarketplace {
     Counters.Counter private _listedTotalItemCount;
 
     // Market Item Offers
-    // marketItemOffer[ContractAddress].marㅓetItem[tokenId].offerPrice[offerAddress]
+    // offerItem[ContractAddress].marㅓetItem[tokenId].offerPrice[offerAddress]
     struct OfferDetail {
         address nft;
         uint256 tokenId;
@@ -50,14 +50,14 @@ contract NFTMarketplace {
     struct MarketOfferWrapper {
         mapping(uint256 => OfferList) marketItem;
     }
-    mapping(address => MarketOfferWrapper) private marketItemOffer;
+    mapping(address => MarketOfferWrapper) private offerItem;
 
 
-    event MarketItemListed(address nft, uint256 tokenId, uint256 price, uint256 totalListedMarketItemCount);
-    event MarketItemSold(address nft, uint256 tokenId, uint256 price);
-    event MarketItemListcancel(address nft, uint256 tokenId);
-    event MarketItemOffer(address nft, uint256 tokenId, uint256 index, uint256 price, uint256 endTime);
-    event OfferAccept(address nft, uint256 tokenId, uint256 price, address offerer);
+    event MarketItemListed(address indexed nft, uint256 indexed tokenId, uint256 price, uint256 totalListedMarketItemCount);
+    event MarketItemSold(address indexed nft, uint256 indexed tokenId, uint256 price);
+    event MarketItemListcancel(address indexed nft, uint256 indexed tokenId);
+    event OfferItem(address indexed nft, uint256 indexed tokenId, uint256 indexed offerIndex, address offerer, uint256 price, uint256 endTime);
+    event OfferAccept(address indexed nft, uint256 indexed tokenId, uint256 indexed offerIndex, uint256 price);
 
     constructor(){
         marketOwner = msg.sender;
@@ -67,20 +67,31 @@ contract NFTMarketplace {
     //////////////////////////////
     // market function
     //////////////////////////////
-    function setMarketOwner(address _newOwner) external  {
+    function setMarketOwner(address _newOwner) external onlyRole(ADMIN_ROLE) {
         require(msg.sender == address(marketOwner),"You are not market owner");
         require(address(_newOwner) != address(marketOwner),"New Owner are already market owner");
+
+        grantRole(ADMIN_ROLE, marketOwner);
+        grantRole(MINTER_ROLE, marketOwner);
+        grantRole(MARKET_LISTER_ROLE, marketOwner);
+        grantRole(AUCTION_LISTER_ROLE, marketOwner);
+
         marketOwner = _newOwner;
+
+        revokeRole(ADMIN_ROLE, msg.sender);
+        revokeRole(MINTER_ROLE, msg.sender);
+        revokeRole(MARKET_LISTER_ROLE, msg.sender);
+        revokeRole(AUCTION_LISTER_ROLE, msg.sender);
     }
-    function setListingPrice(uint256 _listingPriceWei) external {
+    function setListingPrice(uint256 _listingPriceWei) external onlyRole(ADMIN_ROLE){
         require(msg.sender == address(marketOwner),"You are not market owner");
         listingPrice = _listingPriceWei;
     }
 
     //////////////////////////////
-    // function
+    // listing function
     //////////////////////////////
-    function listingMarketItem(address _nftContractAddress, uint256 _tokenId, uint256 _price) public payable {
+    function listingMarketItem(address _nftContractAddress, uint256 _tokenId, uint256 _price) public payable onlyRole(MARKET_LISTER_ROLE){
         require(_price > 0, "Price must be more of 0");
         require(msg.value == listingPrice, "send value must be equal to listing price");
 
@@ -138,7 +149,7 @@ contract NFTMarketplace {
 
         emit MarketItemSold(_nftContractAddress, _tokenId, msg.value);
     }
-    function cancelListedItem(address _nftContractAddress, uint256 _tokenId) public payable {
+    function cancelListedItem(address _nftContractAddress, uint256 _tokenId) public payable onlyRole(MARKET_LISTER_ROLE) {
         MarketItem storage item = marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId];
 
         require(msg.sender == item.seller, "List cancel can do by seller");
@@ -159,10 +170,12 @@ contract NFTMarketplace {
         emit MarketItemListcancel(_nftContractAddress, _tokenId);
     }
 
-    // offer
+    //////////////////////////////
+    // offer function
+    //////////////////////////////
     function offerMarketItem(address _nftContractAddress, uint256 _tokenId, uint256 _endTime) public payable {
         require(msg.value > 0, "Please submit the correct price");
-        OfferList storage offerList = marketItemOffer[_nftContractAddress].marketItem[_tokenId];
+        OfferList storage offerList = offerItem[_nftContractAddress].marketItem[_tokenId];
         offerList.totalOfferCount.increment();
         uint256 tempIndex = offerList.totalOfferCount.current();
 
@@ -174,10 +187,10 @@ contract NFTMarketplace {
         offerList.offerDetail[tempIndex].endTime = _endTime;
         offerList.offerDetail[tempIndex].ended = false;
 
-        emit MarketItemOffer(_nftContractAddress, _tokenId, tempIndex, msg.value, _endTime);
+        emit OfferItem(_nftContractAddress, _tokenId, tempIndex, msg.sender, msg.value, _endTime);
     }
     function acceptOffer(address _nftContractAddress, uint _tokenId, uint256 _offerIndex) public payable {
-        OfferDetail storage offer = marketItemOffer[_nftContractAddress].marketItem[_tokenId].offerDetail[_offerIndex];
+        OfferDetail storage offer = offerItem[_nftContractAddress].marketItem[_tokenId].offerDetail[_offerIndex];
 
         require(offer.endTime > block.timestamp, "offer is invalid");
         require(!offer.ended, "Offer is already ended");
@@ -200,13 +213,13 @@ contract NFTMarketplace {
             offer.ended = true;
             offer.endTime = 0;
 
-            emit OfferAccept(_nftContractAddress, _tokenId, _tempPrice, offer.offerer);
+            emit OfferAccept(_nftContractAddress, _tokenId, _offerIndex, _tempPrice);
         } else {
             offer.remainPrice = _tempPrice;
         }
     }
     function withdrawOutdatedOffer(address _nftContractAddress, uint _tokenId, uint256 _offerIndex) external returns (bool) {
-        OfferDetail storage offer = marketItemOffer[_nftContractAddress].marketItem[_tokenId].offerDetail[_offerIndex];
+        OfferDetail storage offer = offerItem[_nftContractAddress].marketItem[_tokenId].offerDetail[_offerIndex];
 
         require(offer.remainPrice > 0, "Offer has no remainPrice");
         require(address(offer.offerer) == address(msg.sender), "you are not the offerer");
@@ -229,12 +242,6 @@ contract NFTMarketplace {
     //////////////////////////////
     // view function
     //////////////////////////////
-    function getVersion() external view returns (string memory) {
-        return version;
-    }
-    function getListingPrice() public view returns (uint256) {
-        return listingPrice;
-    }
     function getMarketsCount() public view returns (uint256){
         return marketsCount.current();
     }
@@ -254,175 +261,9 @@ contract NFTMarketplace {
         MarketItem memory tempItem = marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId];
         return tempItem;
     }
-    function getMarketItems(address _nftContractAddress) public view returns (MarketItem[] memory) {
-        uint256 _marketItemsCount = getMarketItemsCount(_nftContractAddress);
-
-        MarketItem[] memory searchedItems = new MarketItem[](_marketItemsCount);
-        uint256 currentIndex = 0;
-
-        for(uint i = 0; i < _marketItemsCount; i++) {
-            uint currentId = i + 1;
-            MarketItem memory tempItem = marketItemsOfAddress[_nftContractAddress].marketItem[currentId];
-            searchedItems[currentIndex] = tempItem;
-            currentIndex++;
-        }
-
-        return searchedItems;
+    function getOfferDetail(address _nftContractAddress, uint256 _tokenId, uint256 _offerIndex) public view returns (OfferDetail memory){
+        OfferDetail storage offerDetail = offerItem[_nftContractAddress].marketItem[_tokenId].offerDetail[_offerIndex];
+        return offerDetail;
     }
-    function getMarketSellingItems(address _nftContractAddress) public view returns (MarketItem[] memory) {
-        uint256 _marketItemsCount = getMarketItemsCount(_nftContractAddress);
-        uint256 _marketSellingItemsCount = getMarketSellingItemsCount(_nftContractAddress);
-
-        MarketItem[] memory searchedItems = new MarketItem[](_marketSellingItemsCount);
-        uint256 currentIndex = 0;
-
-        for(uint i = 0; i < _marketItemsCount; i++) {
-            uint currentId = i + 1;
-            MarketItem memory tempItem = marketItemsOfAddress[_nftContractAddress].marketItem[currentId];
-            if(!tempItem.sold){
-                searchedItems[currentIndex] = tempItem;
-                currentIndex++;
-            }
-        }
-
-        return searchedItems;
-    }
-    function getMarketSoldItems(address _nftContractAddress) public view returns (MarketItem[] memory) {
-        uint256 _marketItemsCount = getMarketItemsCount(_nftContractAddress);
-        uint256 _marketSoldItemsCount = getMarketItemsCount(_nftContractAddress) - getMarketSellingItemsCount(_nftContractAddress);
-
-        MarketItem[] memory searchedItems = new MarketItem[](_marketSoldItemsCount);
-        uint256 currentIndex = 0;
-
-        for(uint i = 0; i < _marketItemsCount; i++) {
-            uint currentId = i + 1;
-            MarketItem memory tempItem = marketItemsOfAddress[_nftContractAddress].marketItem[currentId];
-            if(tempItem.sold){
-                searchedItems[currentIndex] = tempItem;
-                currentIndex++;
-            }
-        }
-
-        return searchedItems;
-    }
-    function getTotalMarketItems() public view returns (MarketItem[] memory) {
-        uint256 _totalCount = getTotalMarketItemsCount();
-        uint256 _marketsCount = getMarketsCount();
-
-        MarketItem[] memory searchedItems = new MarketItem[](_totalCount);
-        uint256 currentIndex = 0;
-
-        for(uint i = 0; i < _marketsCount; i++){
-            address _nftContractAddress = nftContractAddress[i];
-            uint256 _marketItemsCount = getMarketItemsCount(_nftContractAddress);
-
-            for(uint j = 0; j < _marketItemsCount; j++) {
-                uint currentId = j + 1;
-                MarketItem memory tempItem = marketItemsOfAddress[_nftContractAddress].marketItem[currentId];
-                searchedItems[currentIndex] = tempItem;
-                currentIndex++;
-            }
-        }
-
-        return searchedItems;
-    }
-    function getTotalMarketSellingItems() public view returns (MarketItem[] memory) {
-        uint256 _marketsCount = getMarketsCount();
-        uint256 _sellingItemsCount = 0;
-
-        for(uint i = 0; i < _marketsCount; i++){
-            address _nftContractAddress = nftContractAddress[i];
-            _sellingItemsCount += getMarketSellingItemsCount(_nftContractAddress);
-        }
-
-        MarketItem[] memory searchedItems = new MarketItem[](_sellingItemsCount);
-        uint256 currentIndex = 0;
-
-        for(uint i = 0; i < _marketsCount; i++){
-            address _nftContractAddress = nftContractAddress[i];
-            uint256 _marketItemsCount = getMarketItemsCount(_nftContractAddress);
-
-            for(uint j = 0; j < _marketItemsCount; j++) {
-                uint currentId = j + 1;
-                MarketItem memory tempItem = marketItemsOfAddress[_nftContractAddress].marketItem[currentId];
-                if(!tempItem.sold){
-                    searchedItems[currentIndex] = tempItem;
-                    currentIndex++;
-                }
-            }
-        }
-
-        return searchedItems;
-    }
-    function getTotalMarketSoldItems() public view returns (MarketItem[] memory) {
-        uint256 _marketsCount = getMarketsCount();
-        uint256 _soldItemsCount = 0;
-
-        for(uint i = 0; i < _marketsCount; i++){
-            address _nftContractAddress = nftContractAddress[i];
-            _soldItemsCount += (getMarketItemsCount(_nftContractAddress) - getMarketSellingItemsCount(_nftContractAddress));
-        }
-
-        MarketItem[] memory searchedItems = new MarketItem[](_soldItemsCount);
-        uint256 currentIndex = 0;
-
-        for(uint i = 0; i < _marketsCount; i++){
-            address _nftContractAddress = nftContractAddress[i];
-            uint256 _marketItemsCount = getMarketItemsCount(_nftContractAddress);
-
-            for(uint j = 0; j < _marketItemsCount; j++) {
-                uint currentId = j + 1;
-                MarketItem memory tempItem = marketItemsOfAddress[_nftContractAddress].marketItem[currentId];
-                if(tempItem.sold){
-                    searchedItems[currentIndex] = tempItem;
-                    currentIndex++;
-                }
-            }
-        }
-
-        return searchedItems;
-    }
-    function getOfferList(address _nftContractAddress, uint _tokenId) public view returns (OfferDetail[] memory) {
-        OfferList storage offer = marketItemOffer[_nftContractAddress].marketItem[_tokenId];
-
-        uint256 _offerTotalCount = offer.totalOfferCount.current();
-
-        OfferDetail[] memory searchedItems = new OfferDetail[](_offerTotalCount);
-        uint256 currentIndex = 0;
-
-        for(uint i = 0; i < _offerTotalCount; i++) {
-            uint currentId = i + 1;
-            OfferDetail memory tempItem = offer.offerDetail[currentId];
-            searchedItems[currentIndex] = tempItem;
-            currentIndex++;
-        }
-
-        return searchedItems;
-    }
-    function getMyOutdatedOffers(address _nftContractAddress, uint _tokenId) public view returns (OfferDetail[] memory) {
-        OfferList storage offer = marketItemOffer[_nftContractAddress].marketItem[_tokenId];
-        uint256 _offerTotalCount = offer.totalOfferCount.current();
-        uint256 _myOffersCount = 0;
-
-        for(uint i = 0; i < _offerTotalCount; i++) {
-            uint currentId = i + 1;
-            if(offer.offerDetail[currentId].offerer == msg.sender){
-                _myOffersCount++;
-            }
-        }
-
-        OfferDetail[] memory searchedItems = new OfferDetail[](_myOffersCount);
-        uint256 currentIndex = 0;
-
-        for(uint i = 0; i < _offerTotalCount; i++) {
-            uint currentId = i + 1;
-            if(offer.offerDetail[currentId].offerer == msg.sender){
-                OfferDetail memory tempItem = offer.offerDetail[currentId];
-                searchedItems[currentIndex] = tempItem;
-                currentIndex++;
-            }
-        }
-        return searchedItems;
-    }
+    
 }
-

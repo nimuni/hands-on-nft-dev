@@ -33,14 +33,7 @@ class IndexRoute implements Routes {
     // this.router.get(this.path+`/resources/Dev-docs`, this.indexController.Dev-docs);
     this.router.get(this.path+`/create`, this.indexController.create);
 
-
-
-
-    // this.router.get(this.path+`/test`, this.indexController.test);
-    this.router.get(this.path+`/testLayout`, this.indexController.testLayout);
-    this.router.get(this.path+`/testLayout2`, this.indexController.testLayout2);
-    this.router.get(this.path+`/mintTest`, this.indexController.mintTest);
-    this.router.get(this.path+`/contractTest`, this.indexController.contractTest);
+    this.router.get(this.path+`/contractSample`, this.indexController.contractSample);
   }
 }
 

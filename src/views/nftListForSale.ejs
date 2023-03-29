@@ -412,9 +412,9 @@
     // let serviceFee = listingPrice * serviceFeePercentage;
     let serviceFee;
     if(getListingType() == "fixedMarket"){
-      serviceFee = web3.utils.fromWei(await market_contract.getListingPrice(), 'ether');
+      serviceFee = web3.utils.fromWei(await market_contract.listingPrice(), 'ether');
     } else {
-      serviceFee = web3.utils.fromWei(await auction_contract.getListingPrice(), 'ether');
+      serviceFee = web3.utils.fromWei(await auction_contract.listingPrice(), 'ether');
     }
     let creatorFee = await getCreatorFee()
     let portentialEarn = listingPrice - serviceFee - creatorFee;
@@ -487,85 +487,85 @@
   const listingItem = async () => {
     fn_overlay_blindLoading(true, "입력 값 체크 중");
     // 1. 입력값 유효성 체크
-    if(!validCheck(getListingType())) {
-      alert("유효하지 않은 값 입력")
+    if(!await validCheck(getListingType())) {
+      alert("유효하지 않은 값 입력");
       fn_overlay_blindLoading(false);
-    };
-
-
-    let approveAddress, getApproved, listingPrice;
-    let startPrice, endPrice, startAt, endAt;
-    let calcObj = await calcEarning();
-    let option = {
-      value: calcObj.serviceFee,
-      receipt: successListing,
-      error: errorListing
-    }
-    try {
-      switch (getListingType()) {
-        case "fixedMarket":
-          // 2. 권한 부여
-          fn_overlay_blindLoading(true, "NFT 권한 확인 중")
-          approveAddress = market_contract.getAddress();
-          getApproved = await nft_contract.getApproved(tokenId)
-          if(!compareAddress(approveAddress, getApproved)) {
-            console.log(`getApproved=${getApproved}`)
-            await setApprove(approveAddress)
-          }
-
-          // 3. 아이템 등록
-          listingPrice = await market_contract.getListingPrice()
-          fn_overlay_blindLoading(true, "마켓 등록 중");
-          startPrice = web3.utils.toWei(startingPriceInput.value, 'ether');
-          await market_contract.listingMarketItem(contractAddress, tokenId, startPrice, option)
-          break;
-        case "highestAuction":
-          // 2. 권한 부여
-          fn_overlay_blindLoading(true, "NFT 권한 확인 중")
-          approveAddress = auction_contract.getAddress();
-          getApproved = await nft_contract.getApproved(tokenId)
-          if(!compareAddress(approveAddress, getApproved)) {
-            console.log(`getApproved=${getApproved}`)
-            await setApprove(approveAddress)
-          }
-
-          // 3. 아이템 등록
-          listingPrice = await market_contract.getListingPrice()
-          fn_overlay_blindLoading(true, "옥션 등록 중");
-          startPrice = web3.utils.toWei(startingPriceInput.value, 'ether');
-          startAt = new Date(startDatePicker.value+" "+startTimePicker.value).getTime() / 1000;
-          endAt = new Date(endDatePicker.value+" "+endTimePicker.value).getTime() / 1000;
-          await auction_contract.addAuctionItem(contractAddress, tokenId, startAt, endAt, startPrice, option)
-          break;
-        case "decliningAuction":
-          // 2. 권한 부여
-          fn_overlay_blindLoading(true, "NFT 권한 확인 중")
-          approveAddress = auction_contract.getAddress();
-          getApproved = await nft_contract.getApproved(tokenId)
-          if(!compareAddress(approveAddress, getApproved)) {
-            console.log(`getApproved=${getApproved}`)
-            await setApprove(approveAddress)
-          }
-
-          // 3. 아이템 등록
-          listingPrice = await market_contract.getListingPrice()
-          fn_overlay_blindLoading(true, "옥션 등록 중");
-          startPrice = web3.utils.toWei(startingPriceInput.value, 'ether');
-          endPrice = web3.utils.toWei(endingPriceInput.value, 'ether');
-          startAt = new Date(startDatePicker.value+" "+startTimePicker.value).getTime() / 1000;
-          endAt = new Date(endDatePicker.value+" "+endTimePicker.value).getTime() / 1000;
-          alert("준비중입니다.")
-          // TODO. addDeclineAuctionItem 함수 만들고 적용
-          // await auction_contract.addDeclineAuctionItem(contractAddress, tokenId, _startAt, _endAt, startPrice, option)
-          break;
-        default:
-          break;
+    } else {
+      let approveAddress, getApproved, listingPrice;
+      let startPrice, endPrice, startAt, endAt;
+      let calcObj = await calcEarning();
+      let option = {
+        value: calcObj.serviceFee,
+        receipt: successListing,
+        error: errorListing
       }
-    } catch (error) {
-      fn_overlay_blindLoading(false);
-      console.log("에러 발생 in listingItem")
-      console.log(error)
-      alert("등록 실패")
+      try {
+        switch (getListingType()) {
+          case "fixedMarket":
+            // 2. 권한 부여
+            fn_overlay_blindLoading(true, "NFT 권한 확인 중")
+            approveAddress = market_contract.getAddress();
+            getApproved = await nft_contract.getApproved(tokenId)
+            if(!compareAddress(approveAddress, getApproved)) {
+              console.log(`getApproved=${getApproved}`)
+              await setApprove(approveAddress)
+              await sleep(1000)
+            }
+
+            // 3. 아이템 등록
+            listingPrice = await market_contract.listingPrice()
+            fn_overlay_blindLoading(true, "마켓 등록 중");
+            startPrice = web3.utils.toWei(startingPriceInput.value, 'ether');
+            await market_contract.listingMarketItem(contractAddress, tokenId, startPrice, option)
+            break;
+          case "highestAuction":
+            // 2. 권한 부여
+            fn_overlay_blindLoading(true, "NFT 권한 확인 중")
+            approveAddress = auction_contract.getAddress();
+            getApproved = await nft_contract.getApproved(tokenId)
+            if(!compareAddress(approveAddress, getApproved)) {
+              console.log(`getApproved=${getApproved}`)
+              await setApprove(approveAddress)
+            }
+
+            // 3. 아이템 등록
+            listingPrice = await market_contract.listingPrice()
+            fn_overlay_blindLoading(true, "옥션 등록 중");
+            startPrice = web3.utils.toWei(startingPriceInput.value, 'ether');
+            startAt = new Date(startDatePicker.value+" "+startTimePicker.value).getTime() / 1000;
+            endAt = new Date(endDatePicker.value+" "+endTimePicker.value).getTime() / 1000;
+            await auction_contract.addAuctionItem(contractAddress, tokenId, startAt, endAt, startPrice, option)
+            break;
+          case "decliningAuction":
+            // 2. 권한 부여
+            fn_overlay_blindLoading(true, "NFT 권한 확인 중")
+            approveAddress = auction_contract.getAddress();
+            getApproved = await nft_contract.getApproved(tokenId)
+            if(!compareAddress(approveAddress, getApproved)) {
+              console.log(`getApproved=${getApproved}`)
+              await setApprove(approveAddress)
+            }
+
+            // 3. 아이템 등록
+            listingPrice = await market_contract.listingPrice()
+            fn_overlay_blindLoading(true, "옥션 등록 중");
+            startPrice = web3.utils.toWei(startingPriceInput.value, 'ether');
+            endPrice = web3.utils.toWei(endingPriceInput.value, 'ether');
+            startAt = new Date(startDatePicker.value+" "+startTimePicker.value).getTime() / 1000;
+            endAt = new Date(endDatePicker.value+" "+endTimePicker.value).getTime() / 1000;
+            alert("준비중입니다.")
+            // TODO. addDeclineAuctionItem 함수 만들고 적용
+            // await auction_contract.addDeclineAuctionItem(contractAddress, tokenId, _startAt, _endAt, startPrice, option)
+            break;
+          default:
+            break;
+        }
+      } catch (error) {
+        fn_overlay_blindLoading(false);
+        console.log("에러 발생 in listingItem")
+        console.log(error)
+        alert("등록 실패")
+      }
     }
   }
   const validCheck = async (type) => {
@@ -575,6 +575,8 @@
     const ownerAddress = await nft_contract.ownerOf(tokenId);
     const myAddress = await getAccount();
     if(!compareAddress(ownerAddress, myAddress)){
+      console.log(ownerAddress)
+      console.log(myAddress)
       alert("해당 NFT 소유자가 아닙니다.")
       return false;
     }
@@ -615,7 +617,11 @@
   // set DatePicker
   let minDay = new Date();
   let sampleDay = new Date();
-  sampleDay.setDate(sampleDay.getDate() + 1);
+  // sampleDay.setDate(sampleDay.getDate() + 1);
+  console.log(sampleDay)
+  sampleDay.setMinutes(sampleDay.getMinutes() + 10); // 테스트용. 잘못설정해서 자꾸 하루 뒤로함. 임시10분
+  console.log(sampleDay)
+
   let maxDay = new Date();
   maxDay.setMonth(minDay.getMonth()+6);
 
@@ -624,7 +630,7 @@
   const startTimePicker = document.getElementById("startTimePicker")
   startDatePicker.min = getYYYYMMDDStr(minDay);
   startDatePicker.max = getYYYYMMDDStr(maxDay);
-  startDatePicker.value = `${getYYYYMMDDStr(sampleDay)}`
+  startDatePicker.value = `${getYYYYMMDDStr(minDay)}`
   const endDatePicker = document.getElementById("endDatePicker")
   const endTimePicker = document.getElementById("endTimePicker")
   endDatePicker.min = getYYYYMMDDStr(minDay);
@@ -652,7 +658,7 @@
   startTimePicker.value = `${getHourStr(minDay)}:${getMinutesStr(minDay)}`
   endDatePicker.onchange = ()=>{minTimeChecker(endDatePicker, endTimePicker)}
   endTimePicker.onchange = ()=>{minTimeChecker(endDatePicker, endTimePicker)}
-  endTimePicker.value = `${getHourStr(minDay)}:${getMinutesStr(minDay)}`
+  endTimePicker.value = `${getHourStr(sampleDay)}:${getMinutesStr(sampleDay)}`
 
 
   changeDurationLabel();
@@ -676,12 +682,11 @@
 
   afterInitFunction = async function () {
     if (web3.utils.isAddress(contractAddress)) {
-      nft_contract = new NftContractWrapper(await getAccount(), contractAddress);
+      nft_contract = new NftContractWrapper(contractAddress, await getAccount());
       const metadataURI = await nft_contract.tokenURI(tokenId);
       let fetchResponse = await fetch(metadataURI)
       if (fetchResponse.ok) {
         let nftData = await fetchResponse.json();
-        console.log(nftData)
         setNFTdata(nftData)
       } else {
         console.log("Metadata load error")

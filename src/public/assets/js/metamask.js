@@ -27,9 +27,6 @@ window.addEventListener('load', async () => {
   await initEventActions();
   await initEthereumEventListener();
 
-  let networkType = await web3.eth.net.getNetworkType()
-  console.log(`현재 ${networkType} 네트워크에 접속중입니다.`)
-
   afterInitFunction();
 })
 // window.onload = async function(){
@@ -61,6 +58,9 @@ async function initWeb3() {
       let accounts = await web3.eth.getAccounts();
       console.log(`현재 로그인된 계정\n${accounts[0]}`)
       web3.eth.defaultAccount = accounts[0]
+
+      let networkType = await web3.eth.net.getNetworkType()
+      console.log(`현재 ${networkType} 네트워크에 접속중입니다.`)
     } else if(typeof ethereum !== 'undefined'){
       web3 = new Web3(ethereum.curruntProvider);
     } else {
@@ -84,14 +84,16 @@ async function initContract() {
   // market_contract = new MarketContractWrapper(await getAccount());
   // auction_contract = new AuctionContractWrapper(await getAccount());
   let myWalletAddress = await getAccount();
-  nft_contract = new NftContractWrapperV2();
+
+  nft_contract = new NftContractWrapper();
   nft_contract.setDefaultFromAccount(myWalletAddress);
-  market_contract = new MarketContractWrapperV2();
+  market_contract = new MarketContractWrapper();
   market_contract.setDefaultFromAccount(myWalletAddress);
-  auction_contract = new AuctionContractWrapperV2();
+  auction_contract = new AuctionContractWrapper();
   auction_contract.setDefaultFromAccount(myWalletAddress);
 
   net_env = "goerli" // "mainnet"
+  // net_env = await web3.eth.net.getNetworkType()
 }
 
 function isInstalledMetamask() {
@@ -135,7 +137,7 @@ async function initEventActions() {
       await changeConnectButtonLabel()
     } catch (error) {
       console.error("error in connectWalletBtn.addEventListener click")
-      alert(error)
+      console.log(error)
     }
   })
 

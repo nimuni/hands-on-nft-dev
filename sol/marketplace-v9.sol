@@ -4,11 +4,12 @@ pragma solidity ^0.8.13;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract NFTMarketplace {
     using Counters for Counters.Counter;
-    
-    uint256 LISTING_PRICE = 0.0001 ether;
+    string version = "0.1.8";
+    uint256 listingPrice;
 
     // Auction Start
     address private marketOwner;
@@ -16,7 +17,7 @@ contract NFTMarketplace {
     // Market Item
     struct MarketItem {
         address nft;
-        uint256 nftId;
+        uint256 tokenId;
         address payable seller;
         address payable owner;
         uint256 price;
@@ -33,8 +34,10 @@ contract NFTMarketplace {
     Counters.Counter private _listedTotalItemCount;
 
     // Market Item Offers
-    // marketItemOffer[ContractAddress].marketItem[nftId].offerPrice[offerAddress]
+    // marketItemOffer[ContractAddress].marㅓetItem[tokenId].offerPrice[offerAddress]
     struct OfferDetail {
+        address nft;
+        uint256 tokenId;
         address offerer;
         uint256 price;
         uint256 remainPrice;
@@ -49,57 +52,73 @@ contract NFTMarketplace {
         mapping(uint256 => OfferList) marketItem;
     }
     mapping(address => MarketOfferWrapper) private marketItemOffer;
-    
 
-    event MarketItemListed(address nft, uint256 nftId, uint256 price, uint256 totalListedMarketItemCount);
-    event MarketItemSold(address nft, uint256 nftId, uint256 price);
-    event MarketItemOffer(address nft, uint256 nftId, uint256 index, uint256 price, uint256 endTime);
-    event OfferAccept(address nft, uint256 nftId, uint256 price, address offerer);
+
+    event MarketItemListed(address indexed nft, uint256 indexed tokenId, uint256 price, uint256 totalListedMarketItemCount);
+    event MarketItemSold(address indexed nft, uint256 indexed tokenId, uint256 price);
+    event MarketItemListcancel(address indexed nft, uint256 indexed tokenId);
+    event MarketItemOffer(address indexed nft, uint256 indexed tokenId, uint256 indexed index, uint256 price, uint256 endTime);
+    event OfferAccept(address indexed nft, uint256 indexed tokenId, uint256 price, address offerer);
 
     constructor(){
         marketOwner = msg.sender;
+        listingPrice = 0.0001 ether;
+    }
+
+    //////////////////////////////
+    // market function
+    //////////////////////////////
+    function setMarketOwner(address _newOwner) external  {
+        require(msg.sender == address(marketOwner),"You are not market owner");
+        require(address(_newOwner) != address(marketOwner),"New Owner are already market owner");
+        marketOwner = _newOwner;
+    }
+    function setListingPrice(uint256 _listingPriceWei) external {
+        require(msg.sender == address(marketOwner),"You are not market owner");
+        listingPrice = _listingPriceWei;
     }
 
     //////////////////////////////
     // function
     //////////////////////////////
-    function listingMarketItem(address _nftContractAddress, uint256 _nftId, uint256 _price) public payable {
+    function listingMarketItem(address _nftContractAddress, uint256 _tokenId, uint256 _price) public payable {
         require(_price > 0, "Price must be more of 0");
-        require(msg.value == LISTING_PRICE, "send value must be equal to listing price");
+        require(msg.value == listingPrice, "send value must be equal to listing price");
 
         IERC721 nft = IERC721(_nftContractAddress);
-        require(msg.sender == nft.ownerOf(_nftId), "Only NFT owner can perform listing Item operation");
-        require(nft.isApprovedForAll(msg.sender, address(this)), "Market doesn't have approved to NFT");
+        require(msg.sender == nft.ownerOf(_tokenId), "Only NFT owner can perform listing Item operation");
+        // require(nft.isApprovedForAll(msg.sender, address(this)), "Market doesn't have approved to NFT");
+        require(nft.getApproved(_tokenId) == address(this), "Market doesn't have approved to NFT");
 
 
-        if(marketItemsOfAddress[_nftContractAddress].marketItem[_nftId].seller != address(0)){
-            // item re-listing 
-            marketItemsOfAddress[_nftContractAddress].marketItem[_nftId].sold = false;
-            marketItemsOfAddress[_nftContractAddress].marketItem[_nftId].price = _price;
-            marketItemsOfAddress[_nftContractAddress].marketItem[_nftId].seller = payable(msg.sender);
-            marketItemsOfAddress[_nftContractAddress].marketItem[_nftId].owner = payable(address(this));
+        if(marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId].seller != address(0)){
+            // item re-listing
+            marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId].sold = false;
+            marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId].price = _price;
+            marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId].seller = payable(msg.sender);
+            marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId].owner = payable(address(this));
 
-            nft.transferFrom(msg.sender, address(this), _nftId);
+            nft.transferFrom(msg.sender, address(this), _tokenId);
         } else {
             // new Item listing
-            MarketItem memory item = MarketItem(_nftContractAddress, _nftId, payable(msg.sender), payable(address(this)), _price, false);
+            MarketItem memory item = MarketItem(_nftContractAddress, _tokenId, payable(msg.sender), payable(address(this)), _price, false);
 
             if(getMarketItemsCount(_nftContractAddress) == 0){
                 marketsCount.increment();
                 nftContractAddress.push(_nftContractAddress);
             }
-            marketItemsOfAddress[_nftContractAddress].marketItem[_nftId] = item;
-            nft.transferFrom(msg.sender, address(this), _nftId);
+            marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId] = item;
+            nft.transferFrom(msg.sender, address(this), _tokenId);
             marketItemsOfAddress[_nftContractAddress].listedItemCount.increment();
             _listedTotalItemCount.increment();
         }
         marketItemsOfAddress[_nftContractAddress].sellingItemCount.increment();
-        
-        emit MarketItemListed(_nftContractAddress, _nftId, _price, getTotalMarketItemsCount());
+
+        emit MarketItemListed(_nftContractAddress, _tokenId, _price, getTotalMarketItemsCount());
     }
-    function buyMarketItem(address _nftContractAddress, uint256 _nftId) public payable {
-        uint price = marketItemsOfAddress[_nftContractAddress].marketItem[_nftId].price;
-        address seller = marketItemsOfAddress[_nftContractAddress].marketItem[_nftId].seller;
+    function buyMarketItem(address _nftContractAddress, uint256 _tokenId) public payable {
+        uint price = marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId].price;
+        address seller = marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId].seller;
         uint _marketSellingCount = getMarketSellingItemsCount(_nftContractAddress);
 
         require(msg.value == price, "Please submit the asking price in order to complete the purchase");
@@ -107,34 +126,56 @@ contract NFTMarketplace {
 
         IERC721 nft = IERC721(_nftContractAddress);
 
-        marketItemsOfAddress[_nftContractAddress].marketItem[_nftId].owner = payable (msg.sender);
-        marketItemsOfAddress[_nftContractAddress].marketItem[_nftId].sold = true;
-        marketItemsOfAddress[_nftContractAddress].marketItem[_nftId].seller = payable (address(0));
+        marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId].owner = payable (msg.sender);
+        marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId].sold = true;
+        marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId].seller = payable (address(0));
 
-        nft.transferFrom(address(this), msg.sender, _nftId);
+        nft.transferFrom(address(this), msg.sender, _tokenId);
 
-        payable (marketOwner).transfer(LISTING_PRICE);
+        payable (marketOwner).transfer(listingPrice);
         payable (seller).transfer(msg.value);
 
         marketItemsOfAddress[_nftContractAddress].sellingItemCount.decrement();
 
-        emit MarketItemSold(_nftContractAddress, _nftId, msg.value);
+        emit MarketItemSold(_nftContractAddress, _tokenId, msg.value);
+    }
+    function cancelListedItem(address _nftContractAddress, uint256 _tokenId) public payable {
+        MarketItem storage item = marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId];
+
+        require(msg.sender == item.seller, "List cancel can do by seller");
+        require(!item.sold, "Item cancel just can by unsold");
+
+        IERC721 nft = IERC721(_nftContractAddress);
+
+        item.sold = true;
+        item.owner = payable (item.seller);
+        item.price = 0;
+
+        nft.transferFrom(address(this), item.seller, _tokenId);
+
+        payable (marketOwner).transfer(listingPrice);
+
+        marketItemsOfAddress[_nftContractAddress].sellingItemCount.decrement();
+
+        emit MarketItemListcancel(_nftContractAddress, _tokenId);
     }
 
     // offer
-    function offerMarketItem(address _nftContractAddress, uint256 _nftId, uint256 _endTime) public payable {
+    function offerMarketItem(address _nftContractAddress, uint256 _tokenId, uint256 _endTime) public payable {
         require(msg.value > 0, "Please submit the correct price");
-        OfferList storage offerList = marketItemOffer[_nftContractAddress].marketItem[_nftId];
+        OfferList storage offerList = marketItemOffer[_nftContractAddress].marketItem[_tokenId];
         offerList.totalOfferCount.increment();
         uint256 tempIndex = offerList.totalOfferCount.current();
 
+        offerList.offerDetail[tempIndex].nft = _nftContractAddress;
+        offerList.offerDetail[tempIndex].tokenId = _tokenId;
         offerList.offerDetail[tempIndex].offerer = msg.sender;
         offerList.offerDetail[tempIndex].price = msg.value;
         offerList.offerDetail[tempIndex].remainPrice = msg.value;
         offerList.offerDetail[tempIndex].endTime = _endTime;
         offerList.offerDetail[tempIndex].ended = false;
 
-        emit MarketItemOffer(_nftContractAddress, _nftId, tempIndex, msg.value, _endTime);
+        emit MarketItemOffer(_nftContractAddress, _tokenId, tempIndex, msg.value, _endTime);
     }
     function acceptOffer(address _nftContractAddress, uint _tokenId, uint256 _offerIndex) public payable {
         OfferDetail storage offer = marketItemOffer[_nftContractAddress].marketItem[_tokenId].offerDetail[_offerIndex];
@@ -144,6 +185,8 @@ contract NFTMarketplace {
         require(offer.remainPrice > 0, "Offer has invalid remainPrice");
 
         IERC721 nft = IERC721(_nftContractAddress);
+
+        require(nft.getApproved(_tokenId) == address(this), "Market doesn't have approved to NFT");
 
         uint256 _tempPrice = offer.remainPrice;
         offer.remainPrice = 0;
@@ -167,7 +210,8 @@ contract NFTMarketplace {
         OfferDetail storage offer = marketItemOffer[_nftContractAddress].marketItem[_tokenId].offerDetail[_offerIndex];
 
         require(offer.remainPrice > 0, "Offer has no remainPrice");
-        require(offer.endTime < block.timestamp, "offer is not ended");
+        require(address(offer.offerer) == address(msg.sender), "you are not the offerer");
+        require((offer.endTime < block.timestamp*1000) && !offer.ended, "offer is not ended");
 
         uint remainPrice = offer.remainPrice;
 
@@ -186,8 +230,11 @@ contract NFTMarketplace {
     //////////////////////////////
     // view function
     //////////////////////////////
+    function getVersion() external view returns (string memory) {
+        return version;
+    }
     function getListingPrice() public view returns (uint256) {
-        return LISTING_PRICE;
+        return listingPrice;
     }
     function getMarketsCount() public view returns (uint256){
         return marketsCount.current();
@@ -203,6 +250,10 @@ contract NFTMarketplace {
     }
     function getTotalMarketItemsCount() public view returns (uint256) {
         return _listedTotalItemCount.current();
+    }
+    function getMarketInfo(address _nftContractAddress, uint _tokenId) public view returns (MarketItem memory){
+        MarketItem memory tempItem = marketItemsOfAddress[_nftContractAddress].marketItem[_tokenId];
+        return tempItem;
     }
     function getMarketItems(address _nftContractAddress) public view returns (MarketItem[] memory) {
         uint256 _marketItemsCount = getMarketItemsCount(_nftContractAddress);
