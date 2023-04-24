@@ -28,13 +28,24 @@ class IndexController {
       next(error);
     }
   };
-  public nftDetail = (req: Request, res: Response, next: NextFunction): void => {
+  public erc721Detail = (req: Request, res: Response, next: NextFunction): void => {
     try {
       let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
       ejs_params.contractAddress = req.params.contractAddress
       ejs_params.tokenId = req.params.tokenId
       console.log(ejs_params)
-      res.render('nftDetail', ejs_params)
+      res.render('erc721Detail', ejs_params)
+    } catch (error) {
+      next(error);
+    }
+  };
+  public erc1155Detail = (req: Request, res: Response, next: NextFunction): void => {
+    try {
+      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
+      ejs_params.contractAddress = req.params.contractAddress
+      ejs_params.tokenId = req.params.tokenId
+      console.log(ejs_params)
+      res.render('erc1155Detail', ejs_params)
     } catch (error) {
       next(error);
     }
@@ -55,7 +66,7 @@ class IndexController {
       let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
       ejs_params.contractAddress = req.params.contractAddress
       ejs_params.tokenId = req.params.tokenId
-      ejs_params.layout = "./layout/wide-layout"
+      // ejs_params.layout = "./layout/wide-layout"
       console.log(ejs_params)
       res.render('market', ejs_params)
     } catch (error) {
@@ -100,6 +111,15 @@ class IndexController {
       let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
       console.log(ejs_params)
       res.render('create', ejs_params)
+    } catch (error) {
+      next(error);
+    }
+  };
+  public create1155 = (req: Request, res: Response, next: NextFunction): void => {
+    try {
+      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
+      console.log(ejs_params)
+      res.render('create1155', ejs_params)
     } catch (error) {
       next(error);
     }

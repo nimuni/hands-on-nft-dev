@@ -110,7 +110,7 @@
             </div>
             <div>
               <div class="input-group">
-                <input type="text" id="startingPriceInput" class="form-control set-price-input input-eth" placeholder="Amount" aria-label="Amount" aria-describedby="basic-addon2">
+                <input type="text" id="startingPriceInput" class="form-control set-price-input input-eth" placeholder="Price of Token ex)0.001" aria-label="Amount" aria-describedby="basic-addon2">
                 <span class="input-group-text set-price-span" id="basic-addon2">ETH</span>
               </div>
               <div class="mx-3 mb-3 input-info">
@@ -142,14 +142,40 @@
               <span class="info-message font-color-warn"></span>
             </div>
           </div>
+          <div id="minIncrementDiv" class="d-none">
+            <div class="my-2">
+              <span>min Increment</span>
+            </div>
+            <div class="input-group">
+              <input type="text" id="minIncrementInput" class="form-control set-price-input input-eth" placeholder="Amount" aria-label="Amount" aria-describedby="basic-addon3">
+              <span class="input-group-text set-price-span" id="basic-addon3">ETH</span>
+            </div>
+            <div class="mx-3 mb-3 input-info">
+              <span class="d-none info-allow font-color-allow">
+                <i class="bi bi-check-circle"></i>
+              </span>
+              <span class="d-none info-deny font-color-warn">
+                <i class="bi bi-dash-circle"></i>
+              </span>
+              <span class="info-message font-color-warn"></span>
+            </div>
+          </div>
+          <div id="amountDiv" class="d-none">
+            <div class="my-2">
+              <span>Amount to sale <span id="amountOfTokenSpan">123</span></span>
+              <div class="input-group">
+                <input id="amountInput" type="number" class="form-control" min="1" value="1" numberOnly >
+              </div>
+            </div>
+          </div>
         </section>
-        <section class="my-4 d-none" id="durationSection">
+        <section class="my-4" id="durationSection">
           <div style="margin-bottom: 16px;">
             <h5>Set a duration</h5>
           </div>
           <div>
             <div class="mb-3">
-              <button class="set-duration-input" type="button" data-bs-container="body" onclick="toggleTimePopup()">
+              <button class="set-duration-input" type="button" data-bs-container="body" onclick="showTimePopup()">
                 <div class="d-flex justify-content-between">
                   <div class="d-flex">
                     <div class="div-flex-vh-center" style="margin-right: 16px;">
@@ -168,73 +194,6 @@
                   </div>
                 </div>
               </button>
-              <div class="card d-none" id="timePopup">
-                <div class="card-body">
-                  <div class="row">
-                    <!-- <div class="col-12 mb-4">
-                      <p>Date Range</p>
-                      <button class="set-duration-input" type="button">
-                        <div class="d-flex justify-content-between">
-                          <div>
-                            <span id="selectedDateRange">1 day</span>
-                          </div>
-                          <div class="div-flex-vh-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
-                              <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                            </svg>
-                          </div>
-                        </div>
-                      </button>
-                    </div> -->
-                    <div class="col-12 mb-4">
-                      <div class="row">
-                        <!-- <div class="col">
-                          <p>Starting</p>
-                        </div>
-                        <div class="col-1">
-                          <div style="margin-top: 40px;">
-                            <span></span>
-                          </div>
-                          <div style="height: 38px;">
-                            <div class="div-flex-vh-center">
-                              -
-                            </div>
-                          </div>
-                        </div> -->
-                        <div class="col-6">
-                          <div class="row">
-                            <div class="col-12">
-                              <p>Starting</p>
-                            </div>
-                            <div class="col-6">
-                              <input type="date" id="startDatePicker" class="form-control"/>
-                            </div>
-                            <div class="col-6">
-                              <input type="time" id="startTimePicker" class="form-control"/>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="row">
-                            <div class="col-12">
-                              <p>Ending</p>
-                            </div>
-                            <div class="col-6">
-                              <input type="date" id="endDatePicker" class="form-control"/>
-                            </div>
-                            <div class="col-6">
-                              <input type="time" id="endTimePicker" class="form-control"/>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-12">
-                      <button type="button" class="btn btn-primary" onclick="toggleTimePopup()">Confirm</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </section>
@@ -250,15 +209,9 @@
               </div>
             </div>
             <div class="d-flex justify-content-between mb-2 font-color-1">
-              <span>Service fee</span>
+              <span>Fee Price</span>
               <div>
-                <span id="serviceFeeSpan">0</span> ETH
-              </div>
-            </div>
-            <div class="d-flex justify-content-between mb-2 font-color-1">
-              <span>Creator fee</span>
-              <div>
-                <span id="creatorFeeSpan">0</span> ETH
+                <span id="feePriceSpan">0</span> ETH
               </div>
             </div>
           </div>
@@ -289,19 +242,92 @@
     </div>
   </div>
 </div>
+<dialog id="timePopup" class="dialogStyle">
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <!-- <div class="col-12 mb-4">
+          <p>Date Range</p>
+          <button class="set-duration-input" type="button">
+            <div class="d-flex justify-content-between">
+              <div>
+                <span id="selectedDateRange">1 day</span>
+              </div>
+              <div class="div-flex-vh-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                </svg>
+              </div>
+            </div>
+          </button>
+        </div> -->
+        <div class="col-12 mb-4">
+          <div class="row">
+            <!-- <div class="col">
+              <p>Starting</p>
+            </div>
+            <div class="col-1">
+              <div style="margin-top: 40px;">
+                <span></span>
+              </div>
+              <div style="height: 38px;">
+                <div class="div-flex-vh-center">
+                  -
+                </div>
+              </div>
+            </div> -->
+            <div class="col-6">
+              <div class="row">
+                <div class="col-12">
+                  <p>Starting</p>
+                </div>
+                <div class="col-6">
+                  <input type="date" id="startDatePicker" class="form-control"/>
+                </div>
+                <div class="col-6">
+                  <input type="time" id="startTimePicker" class="form-control"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="row">
+                <div class="col-12">
+                  <p>Ending</p>
+                </div>
+                <div class="col-6">
+                  <input type="date" id="endDatePicker" class="form-control"/>
+                </div>
+                <div class="col-6">
+                  <input type="time" id="endTimePicker" class="form-control"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <button type="button" class="btn btn-primary" onclick="closeTimePopup()">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
+<!-- import decimaljs to show correct decimal -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/10.4.3/decimal.min.js"></script>
 <!-- page script -->
 <script>
-  const contractAddress = "<%= contractAddress %>"
-  const tokenId = "<%= tokenId %>"
-  const nftImage = document.getElementById("nftImage")
+  const contractAddress = "<%= contractAddress %>";
+  const tokenId = "<%= tokenId %>";
+  const nftImage = document.getElementById("nftImage");
+  let contractTypeObj;
+  let marketServiceFeePercentage, auctionServiceFeePercentage;
 
   // set Type of sale
-  "round-selected"
   const fixedPriceDiv = document.getElementById("fixedPriceDiv");
   const fixedRadio = document.getElementById("fixedRadio");
   const timedAuctionDiv = document.getElementById("timedAuctionDiv");
   const auctionRadio = document.getElementById("auctionRadio");
   const chooseMethodDiv = document.getElementById("chooseMethodDiv");
+  const minIncrementDiv = document.getElementById("minIncrementDiv");
   const endingPriceDiv = document.getElementById("endingPriceDiv");
   const startPriceSpan = document.getElementById("startPriceSpan");
   const highestAuctionDiv = document.getElementById("highestAuctionDiv");
@@ -309,20 +335,22 @@
   const decliningAuctionDiv = document.getElementById("decliningAuctionDiv");
   const decliningRadio = document.getElementById("decliningRadio");
   const listingPriceSpan = document.getElementById("listingPriceSpan");
-  const serviceFeeSpan = document.getElementById("serviceFeeSpan");
+  const feePriceSpan = document.getElementById("feePriceSpan");
   const creatorFeeSpan = document.getElementById("creatorFeeSpan");
   const portentialEarnSpan = document.getElementById("portentialEarnSpan");
   const startingPriceInput = document.getElementById("startingPriceInput");
   const endingPriceInput = document.getElementById("endingPriceInput");
   const completeListingBtn = document.getElementById("completeListingBtn")
   const durationSection = document.getElementById("durationSection");
+  const amountDiv = document.getElementById("amountDiv")
+  const amountInput = document.getElementById("amountInput")
 
 
   fixedPriceDiv.onclick = () => {
     fixedPriceDiv.classList.add("round-selected")
     timedAuctionDiv.classList.remove("round-selected")
     chooseMethodDiv.classList.add("d-none");
-    durationSection.classList.add("d-none");
+    minIncrementDiv.classList.add("d-none");
 
     fixedRadio.checked = true;
     auctionRadio.checked = false;
@@ -336,7 +364,7 @@
     fixedPriceDiv.classList.remove("round-selected")
     timedAuctionDiv.classList.add("round-selected")
     chooseMethodDiv.classList.remove("d-none");
-    durationSection.classList.remove("d-none");
+    minIncrementDiv.classList.remove("d-none");
 
     fixedRadio.checked = false;
     auctionRadio.checked = true;
@@ -386,8 +414,7 @@
         // calc potential earning
         let calcObj = await calcEarning();
         listingPriceSpan.innerHTML = calcObj.listingPrice;
-        serviceFeeSpan.innerHTML = calcObj.serviceFee;
-        creatorFeeSpan.innerHTML = calcObj.creatorFee;
+        feePriceSpan.innerHTML = calcObj.feePrice;
 
         portentialEarnSpan.innerHTML = calcObj.portentialEarn;
 
@@ -402,27 +429,23 @@
     })
   })
 
-  const serviceFeePercentage = 0 / 10000;
-  const getCreatorFee = async () => {
-    return 0;
-  }
-
   const calcEarning = async () => {
     let listingPrice = startingPriceInput.value;
-    // let serviceFee = listingPrice * serviceFeePercentage;
-    let serviceFee;
+    if(listingPrice == "") listingPrice = "0";
+
+    let serviceFeePercentage;
     if(getListingType() == "fixedMarket"){
-      serviceFee = web3.utils.fromWei(await market_contract.listingPrice(), 'ether');
+      serviceFeePercentage = marketServiceFeePercentage;
     } else {
-      serviceFee = web3.utils.fromWei(await auction_contract.listingPrice(), 'ether');
+      serviceFeePercentage = auctionServiceFeePercentage;
     }
-    let creatorFee = await getCreatorFee()
-    let portentialEarn = listingPrice - serviceFee - creatorFee;
+    const feePrice = fn_multiply(listingPrice, String(serviceFeePercentage/100));
+    // const portentialEarn = Number(listingPrice) - Number(feePrice)
+    const portentialEarn = new Decimal(listingPrice).minus(feePrice).toString();
 
     return {
       listingPrice,
-      serviceFee,
-      creatorFee,
+      feePrice,
       portentialEarn
     }
   }
@@ -430,25 +453,38 @@
     return new Promise(async (resolve, reject) => {
       fn_overlay_blindLoading(true, "NFT 권한 이양 중")
       try {
-        let approveOption = {
-          receipt: ()=>{
-            console.log("approve success")
-            fn_overlay_blindLoading(false)
-            resolve()
-          },
-          error: (error) => {
-            console.log("approve error")
-            console.log(error)
-            fn_overlay_blindLoading(false);
-            reject(error)
-          }
+        const successCallback = () => {
+          fn_overlay_blindLoading(false)
+          resolve()
         }
-        await nft_contract.approve(targetContract, tokenId, approveOption);
+        const errorCallback = () => {
+          fn_overlay_blindLoading(false);
+          reject(error)
+        }
+        let approveOption = getDefaultMethodOptionCallback("setApprove", successCallback, errorCallback)
+        // let approveOption = {
+        //   receipt: ()=>{
+        //     console.log("approve success")
+        //     fn_overlay_blindLoading(false)
+        //     resolve()
+        //   },
+        //   error: (error) => {
+        //     console.log("approve error")
+        //     console.log(error)
+        //     fn_overlay_blindLoading(false);
+        //     reject(error)
+        //   }
+        // }
+
+        if(contractTypeObj.isERC721){
+          await erc721_contract.setApprovalForAll(targetContract, true, approveOption);
+        } else {
+          await erc1155_contract.setApprovalForAll(targetContract, true, approveOption);
+        }
       } catch (error) {
         console.log("approve error")
         console.log(error)
-        fn_overlay_blindLoading(false);
-        reject(error)
+        errorCallback();
       }
     })
   }
@@ -461,7 +497,7 @@
 
     // move detail page
     console.log("move detail page")
-    window.location.href = `${window.location.origin}/nft/${contractAddress}/${tokenId}`;
+    moveDetailPage();
   }
   const errorListing = async (error, receipt) => {
     console.log("call errorListing")
@@ -491,59 +527,79 @@
       alert("유효하지 않은 값 입력");
       fn_overlay_blindLoading(false);
     } else {
-      let approveAddress, getApproved, listingPrice;
+      let approveAddress, isApprovedForAll, listingPrice;
       let startPrice, endPrice, startAt, endAt;
       let calcObj = await calcEarning();
       let option = {
-        value: calcObj.serviceFee,
         receipt: successListing,
         error: errorListing
       }
+
+      startAt = new Date(startDatePicker.value+" "+startTimePicker.value).getTime() / 1000;
+      endAt = new Date(endDatePicker.value+" "+endTimePicker.value).getTime() / 1000;
       try {
         switch (getListingType()) {
           case "fixedMarket":
             // 2. 권한 부여
             fn_overlay_blindLoading(true, "NFT 권한 확인 중")
             approveAddress = market_contract.getAddress();
-            getApproved = await nft_contract.getApproved(tokenId)
-            if(!compareAddress(approveAddress, getApproved)) {
-              console.log(`getApproved=${getApproved}`)
+            if(contractTypeObj.isERC721){
+              isApprovedForAll = await erc721_contract.isApprovedForAll(myWalletAddress, approveAddress)
+            } else {
+              isApprovedForAll = await erc1155_contract.isApprovedForAll(myWalletAddress, approveAddress)
+            }
+            if(!isApprovedForAll) {
+              console.log(`isApprovedForAll=${isApprovedForAll}`)
               await setApprove(approveAddress)
-              await sleep(1000)
+              await sleep(1000) // 가끔 완료되고도 체크할때 시간이 조금 걸리는 경우가 있어서 1초 추가대기
             }
 
             // 3. 아이템 등록
-            listingPrice = await market_contract.listingPrice()
             fn_overlay_blindLoading(true, "마켓 등록 중");
             startPrice = web3.utils.toWei(startingPriceInput.value, 'ether');
-            await market_contract.listingMarketItem(contractAddress, tokenId, startPrice, option)
+            if(contractTypeObj.isERC721) {
+              await market_contract.createMarketData(contractAddress, tokenId, 721, 1, startPrice, startAt, endAt, option)
+            } else {
+              let amountOfToken = Number(amountInput.value);
+              await market_contract.createMarketData(contractAddress, tokenId, 1155, amountOfToken, startPrice, startAt, endAt, option)
+            }
             break;
           case "highestAuction":
             // 2. 권한 부여
             fn_overlay_blindLoading(true, "NFT 권한 확인 중")
             approveAddress = auction_contract.getAddress();
-            getApproved = await nft_contract.getApproved(tokenId)
-            if(!compareAddress(approveAddress, getApproved)) {
-              console.log(`getApproved=${getApproved}`)
+            if(contractTypeObj.isERC721){
+              isApprovedForAll = await erc721_contract.isApprovedForAll(myWalletAddress, approveAddress)
+            } else {
+              isApprovedForAll = await erc1155_contract.isApprovedForAll(myWalletAddress, approveAddress)
+            }
+            if(!isApprovedForAll) {
+              console.log(`isApprovedForAll=${isApprovedForAll}`)
               await setApprove(approveAddress)
+              await sleep(1000) // 가끔 완료되고도 체크할때 시간이 조금 걸리는 경우가 있어서 1초 추가대기
             }
 
             // 3. 아이템 등록
-            listingPrice = await market_contract.listingPrice()
             fn_overlay_blindLoading(true, "옥션 등록 중");
             startPrice = web3.utils.toWei(startingPriceInput.value, 'ether');
-            startAt = new Date(startDatePicker.value+" "+startTimePicker.value).getTime() / 1000;
-            endAt = new Date(endDatePicker.value+" "+endTimePicker.value).getTime() / 1000;
-            await auction_contract.addAuctionItem(contractAddress, tokenId, startAt, endAt, startPrice, option)
+            const tokenType = contractTypeObj.isERC721 ? 721 : 1155;
+            const amountOfToken = Number(amountInput.value);
+            const minIncrement = web3.utils.toWei(minIncrementInput.value);
+            await auction_contract.createAuctionSales(contractAddress, tokenId, tokenType, amountOfToken, startPrice, minIncrement, startAt, endAt, option)
             break;
           case "decliningAuction":
             // 2. 권한 부여
             fn_overlay_blindLoading(true, "NFT 권한 확인 중")
             approveAddress = auction_contract.getAddress();
-            getApproved = await nft_contract.getApproved(tokenId)
-            if(!compareAddress(approveAddress, getApproved)) {
-              console.log(`getApproved=${getApproved}`)
+            if(contractTypeObj.isERC721){
+              isApprovedForAll = await erc721_contract.isApprovedForAll(myWalletAddress, approveAddress)
+            } else {
+              isApprovedForAll = await erc1155_contract.isApprovedForAll(myWalletAddress, approveAddress)
+            }
+            if(!isApprovedForAll) {
+              console.log(`isApprovedForAll=${isApprovedForAll}`)
               await setApprove(approveAddress)
+              await sleep(1000) // 가끔 완료되고도 체크할때 시간이 조금 걸리는 경우가 있어서 1초 추가대기
             }
 
             // 3. 아이템 등록
@@ -572,28 +628,51 @@
     // type = "fixedMarket" "highestAuction" "decliningAuction"
     // owner check
     console.log(`call validCheck type=${type}`)
-    const ownerAddress = await nft_contract.ownerOf(tokenId);
-    const myAddress = await getAccount();
-    if(!compareAddress(ownerAddress, myAddress)){
-      console.log(ownerAddress)
-      console.log(myAddress)
-      alert("해당 NFT 소유자가 아닙니다.")
-      return false;
+    let ownerOf
+    if(contractTypeObj.isERC721){
+      const ownerAddress = await erc721_contract.ownerOf(tokenId);
+
+      if(!compareAddress(ownerAddress, myWalletAddress)){
+        console.log(ownerAddress)
+        console.log(myWalletAddress)
+        alert("해당 NFT 소유자가 아닙니다.")
+        return false;
+      }
+    } else {
+      const count = await erc1155_contract.balanceOf(myWalletAddress, tokenId);
+      if(count == 0){
+        alert("해당 NFT 소유자가 아닙니다.")
+        return false;
+      }
     }
 
     // input value setting for check
     let startPrice, endPrice, startDate, endDate;
     let isValidStartPrice, isValidStartDate, isValidEndDate, isValidEndPrice;
     switch (type) {
+      case "FixedMarket":
+        // price check
+        startPrice = web3.utils.toWei(startingPriceInput.value, 'ether');
+        isValidStartPrice = isValidEth(startPrice)
+
+        startDate = new Date(startDatePicker.value+" "+startTimePicker.value)
+        isValidStartDate = isValidDate(startDate)
+
+        endDate = new Date(endDatePicker.value+" "+endTimePicker.value)
+        isValidEndDate = isValidDate(endDate)
       case "decliningAuction":
         // price check
         endPrice = web3.utils.toWei(endingPriceInput.value, 'ether');
         isValidEndPrice = isValidEth(endPrice)
       case "highestAuction":
         // start, end time check
+        startPrice = web3.utils.toWei(startingPriceInput.value, 'ether');
+        isValidStartPrice = isValidEth(startPrice)
+
         startDate = new Date(startDatePicker.value+" "+startTimePicker.value)
-        endDate = new Date(endDatePicker.value+" "+endTimePicker.value)
         isValidStartDate = isValidDate(startDate)
+
+        endDate = new Date(endDatePicker.value+" "+endTimePicker.value)
         isValidEndDate = isValidDate(endDate)
       default: // case FixedMarket
         // ending price check
@@ -602,6 +681,8 @@
         break;
     }
     switch (type) {
+      case "FixedMarket":
+        return isValidStartDate && isValidEndDate && isValidStartPrice;
       case "decliningAuction":
         return isValidEndPrice && isValidStartDate && isValidEndDate && isValidStartPrice;
       case "highestAuction":
@@ -664,8 +745,16 @@
   changeDurationLabel();
 
   const timePopup = document.getElementById("timePopup");
-  const toggleTimePopup = () => {
-    timePopup.classList.toggle("d-none");
+  timePopup.addEventListener('click', (event) => {
+  if (event.target.nodeName === 'DIALOG') {
+    closeTimePopup();
+  }
+});
+  const showTimePopup = () => {
+    timePopup.show();
+  }
+  const closeTimePopup = () => {
+    timePopup.close();
   }
 
   const setNFTdata = async (data) => {
@@ -679,19 +768,61 @@
     // init NFT description
     nftDescription.innerHTML = data.description
   }
+  const getMetadata = async () => {
+    let metadataURI
+    if(contractTypeObj.isERC721){
+      metadataURI = await erc721_contract.tokenURI(tokenId);
+    } else {
+      metadataURI = await erc1155_contract.uri(tokenId);
+    }
+
+    let fetchResponse = await fetch(metadataURI)
+    if(fetchResponse.ok){
+      return await fetchResponse.json();
+    } else {
+      console.log("Metadata load error")
+      throw `Metadata load error. \n contractAddress=${contractAddress}\n tokenId=${tokenId}`
+    }
+  }
+
+  const moveDetailPage = () => {
+    window.location.href = `${window.location.origin}/nft/${contractAddress}/${tokenId}`;
+  }
 
   afterInitFunction = async function () {
+    let metadataURI;
+
     if (web3.utils.isAddress(contractAddress)) {
-      nft_contract = new NftContractWrapper(contractAddress, await getAccount());
-      const metadataURI = await nft_contract.tokenURI(tokenId);
-      let fetchResponse = await fetch(metadataURI)
-      if (fetchResponse.ok) {
-        let nftData = await fetchResponse.json();
-        setNFTdata(nftData)
+      erc721_contract = await contractClassDecorator(BasicERC721ContractWrapper, contractAddress, ERC721_CONTRACT_ABI);
+      erc1155_contract = await contractClassDecorator(BasicERC1155ContractWrapper, contractAddress, ERC1155_CONTRACT_ABI);
+      contractTypeObj = await getContractTypeObj(erc721_contract);
+
+      marketServiceFeePercentage = await market_contract.marketFee();
+      auctionServiceFeePercentage = await auction_contract.auctionFee();
+
+      if(contractTypeObj.isERC721){
+        metadataURI = await erc721_contract.tokenURI(tokenId);
+        amountDiv.classList.add("d-none");
+
+        const owner = await erc721_contract.ownerOf(tokenId);
+        if(!compareAddress(owner, myWalletAddress)) {
+          alert("NFT를 소유하고 있지 않습니다.")
+          moveDetailPage();
+        }
       } else {
-        console.log("Metadata load error")
-        throw `Metadata load error. \n contractAddress=${contractAddress}\n tokenId=${tokenId}`
+        metadataURI = await erc1155_contract.uri(tokenId);
+        const count = await erc1155_contract.balanceOf(myWalletAddress, tokenId)
+        amountOfTokenSpan.innerHTML = `보유중=${count}`;
+        if(count == 0) {
+          alert("NFT를 소유하고 있지 않습니다.")
+          moveDetailPage();
+        }
+        amountDiv.classList.remove("d-none");
+        amountInput.max=count;
       }
+
+      const metadata = await getMetadata();
+      setNFTdata(metadata)
     } else {
       alert(`Contract Address is not valid. contract address = ${contractAddress}`);
     }
@@ -760,6 +891,17 @@
   border-width: 2px;
   border-style: solid;
   border-color: rgb(230, 230, 230);
+}
+
+.dialogStyle {
+  position: absolute;
+  z-index: 1;
+  top: 40vh;
+}
+dialog {
+  border: 2px solid rgb(80, 140, 230);
+  border-radius: 15px;
+  background-color: white;
 }
 
 </style>

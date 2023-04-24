@@ -1,3 +1,15 @@
 <div>
   explore
 </div>
+
+<script>
+  let myAddress, marketAddress, auctionAddress, erc721Address, erc1155Address;
+
+  afterInitFunction = async function(){
+    // init variable
+    marketAddress = market_contract.getAddress();
+    auctionAddress = auction_contract.getAddress();
+    erc721Address = erc721_contract.getAddress();
+    erc1155Address = erc721_contract.getAddress();
+  }
+</script>

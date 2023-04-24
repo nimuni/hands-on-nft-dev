@@ -16,7 +16,7 @@
 
   const marketItemGrid = document.getElementById("marketItemGrid");
   const addGridItem = async (marketItemInfo) => {
-    let nftInfoUrl = await nft_contract.tokenURI(marketItemInfo.nftId);
+    let nftInfoUrl = await erc721_contract.tokenURI(marketItemInfo.nftId);
     let nftCostETH = web3.utils.fromWei(marketItemInfo.price, "ether")
     let fetchResponse = await fetch(nftInfoUrl)
     if(fetchResponse.ok){

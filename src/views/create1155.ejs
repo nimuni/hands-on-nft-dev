@@ -46,6 +46,11 @@
               </div>
             </div>
 
+            <h5>Amount</h5>
+            <div class="input-group mb-3">
+              <input id="input-amount" type="number" class="form-control" min="1" numberOnly >
+            </div>
+
             <h5>Properties</h5>
             <div class="input-group mb-3">
               <table class="table" id="input-propertiesTable">
@@ -93,10 +98,26 @@
 </div>
 
 <script>
+  const nftType = "erc1155";
+  const nameDom = document.getElementById("input-name");
+  const externalLinkDom = document.getElementById("input-externalLink");
+  const descriptionDom = document.getElementById("input-description");
+  const amountDom = document.getElementById("input-amount");
+  const collectionDom = document.getElementById("input-collection");
+  const uploadAndMintBtn = document.getElementById("upload");
+  const fileUploadDivCollectionArray = document.getElementsByClassName("div-file-upload")
+  const fileUploadDivArray = [...fileUploadDivCollectionArray];
+  let myWalletAddress;
+
+  afterInitFunction = async () => {
+    // wallet address setting
+    myWalletAddress = await getAccount();
+
+    // erc1155_contract = new NftContract1155Wrapper(defaultContractAddressObj[networkId].erc1155, myWalletAddress);
+    erc1155_contract = await contractClassDecorator(BasicERC1155ContractWrapper, defaultContractAddressObj[networkId].erc1155, ERC1155_CONTRACT_ABI);
+  }
+
   // file input and preview image
-  let nftType = "erc721";
-  let fileUploadDivCollectionArray = document.getElementsByClassName("div-file-upload")
-  let fileUploadDivArray = [...fileUploadDivCollectionArray];
   fileUploadDivArray.forEach(element => {
     element.addEventListener("click", () => {
       element.children.inputFileUpload.click()
@@ -108,45 +129,41 @@
     })
   });
 
+  amountDom.addEventListener("blur", e => {
+    // 숫자빼고 삭제
+    amountDom.value = amountDom.value.replace(/[^0-9]/g, "");
+  })
+
   // upload button
-  let uploadAndMintBtn = document.getElementById("upload");
   uploadAndMintBtn.addEventListener("click", async e => {
     fn_overlay_blindLoading(true, "NFT 생성중")
-    console.log("click uploadAndMintBtn");
     let resultMetadataObject = {};
-    let nameDom = document.getElementById("input-name");
     resultMetadataObject.name = nameDom.value;
-    let externalLinkDom = document.getElementById("input-externalLink");
     resultMetadataObject.external_url = externalLinkDom.value;
-    let descriptionDom = document.getElementById("input-description");
     resultMetadataObject.description = descriptionDom.value;
-    let collectionDom = document.getElementById("input-collection");
 
-    fn_overlay_blindLoading(true, "IPFS에 이미지 업로드중")
-    console.log("Image file upload")
     // file upload to IPFS
+    fn_overlay_blindLoading(true, "IPFS에 이미지 업로드중")
     let imageFileDom = document.getElementById("input-imageFile");
     try {
       let fetchResponse = await uploadFile(imageFileDom.files[0])
       if(fetchResponse.ok){
-        console.log("Image file upload ok")
         let fetchResponseObj = await fetchResponse.json();
-        console.log(fetchResponseObj)
         if(fetchResponseObj.data.baseUri){
           resultMetadataObject.image = fetchResponseObj.data.baseUri + fetchResponseObj.data.uri;
         } else {
           resultMetadataObject.image = fetchResponseObj.data.uri
         }
       } else {
-        console.log("Image file error")
+        console.log("Image file upload error")
         throw "ipfs upload eror occured."
       }
     } catch (error) {
       console.error(error);
     }
 
-    fn_overlay_blindLoading(true, "속성값 지정중")
     // make properties obj array
+    fn_overlay_blindLoading(true, "속성값 지정중")
     let propertiesObj = fn_table_getInputDataFromTableId("input-propertiesTable", true);
     let properties = [];
     for(let i=0; i<propertiesObj.data.length; i++){
@@ -158,11 +175,9 @@
       }
     }
     resultMetadataObject.attributes = properties;
-    console.log("Metadata =")
-    console.log(resultMetadataObject)
 
+    // upload Metadata to IPFS
     fn_overlay_blindLoading(true, "IPFS에 메타데이터 업로드중")
-    let erc721IpfsMetadataUrl
     let erc1155IpfsMetadataBaseUri, erc1155IpfsMetadataUri;
     // upload json metadata to IPFS
     try {
@@ -171,12 +186,7 @@
         console.log("Metadata file upload ok")
         let fetchResponseObj = await fetchResponse.json();
         console.log(fetchResponseObj)
-        if(fetchResponseObj.data.baseUri){
-          erc721IpfsMetadataUrl = fetchResponseObj.data.baseUri + fetchResponseObj.data.uri;
-        } else {
-          erc721IpfsMetadataUrl = fetchResponseObj.data.uri
-        }
-        erc1155IpfsMetadataBaseUri = fetchResponseObj.data.baseUri;
+        erc1155IpfsMetadataBaseUri = fetchResponseObj.data.baseUri ? fetchResponseObj.data.baseUri : "";
         erc1155IpfsMetadataUri = fetchResponseObj.data.uri;
       } else {
         console.log("Metadata file error")
@@ -185,106 +195,32 @@
     } catch (error) {
       console.error(error);
     }
-    console.log("mint시 사용될 uri=")
-    console.log(erc721IpfsMetadataUrl)
 
     fn_overlay_blindLoading(true, "블록체인에 NFT 민팅중")
-    if(nftType == "erc721"){
-      await erc721MintToken(await getAccount(), erc721IpfsMetadataUrl);
-    } else if(nftType == "erc1155") {
-      await erc1155MintToken(await getAccount(), erc1155IpfsMetadataBaseUri, erc1155IpfsMetadataUri);
-    } else {
-      alert(`정의되지않은 nftType(${nftType}) 입니다.`)
-    }
+    await erc1155MintToken(await getAccount(), erc1155IpfsMetadataBaseUri, erc1155IpfsMetadataUri);
   })
 
-  async function erc721MintToken(to, uri) {
-    console.log("call erc721MintToken");
-
-    let option = {
-      sending: (payload)=>{
-        console.log("event sending")
-        console.log(payload)
-      },
-      sent: (payload)=>{
-        console.log("event sent")
-        console.log(payload)
-        fn_overlay_blindLoading(true, "블록체인에 NFT 민팅 전송")
-      },
-      transactionHash: (transactionHash)=>{
-        console.log("event transactionHash")
-        console.log(transactionHash)
-      },
-      receipt: (receipt)=>{
-        console.log("event receipt")
-        console.log(receipt)
-        if(receipt.status) {
-          console.log("처리가 완료되었습니다.")
-          console.log(receipt)
-          console.log(receipt.status)
-          console.log(`nft address= ${receipt.events.Transfer.address}`)
-          console.log(`tokenId= ${receipt.events.Transfer.returnValues.tokenId}`)
-
-          // NFT 상세 페이지로 이동
-          setTimeout(() => {
-            window.location.href = `../erc721/nft/${receipt.events.Transfer.address}/${receipt.events.Transfer.returnValues.tokenId}`;
-          }, 2000);
-        } else {
-          console.log("처리가 실패되었습니다.")
-        }
-        fn_overlay_blindLoading(false)
-      },
-      error: (error, receipt)=>{
-        console.log("event error")
-        console.log(error)
-      }
-    }
-    let result = erc721_contract.mintToken(to, uri, option)
-    return result
-  }
   async function erc1155MintToken(to, baseUri, uri) {
     console.log("call erc1155MintToken");
+    console.log(to)
+    console.log(baseUri)
+    console.log(uri)
 
-    let option = {
-      sending: (payload)=>{
-        console.log("event sending")
-        console.log(payload)
-      },
-      sent: (payload)=>{
-        console.log("event sent")
-        console.log(payload)
-        fn_overlay_blindLoading(true, "블록체인에 NFT 민팅 전송")
-      },
-      transactionHash: (transactionHash)=>{
-        console.log("event transactionHash")
-        console.log(transactionHash)
-      },
-      receipt: (receipt)=>{
-        console.log("event receipt")
-        console.log(receipt)
-        if(receipt.status) {
-          console.log("처리가 완료되었습니다.")
-          console.log(receipt)
-          console.log(receipt.status)
-          console.log(`nft address= ${receipt.events.Transfer.address}`)
-          console.log(`tokenId= ${receipt.events.Transfer.returnValues.tokenId}`)
-
-          // NFT 상세 페이지로 이동
-          setTimeout(() => {
-            window.location.href = `../nft/${receipt.events.Transfer.address}/${receipt.events.Transfer.returnValues.tokenId}`;
-          }, 2000);
-        } else {
-          console.log("처리가 실패되었습니다.")
-        }
-        fn_overlay_blindLoading(false)
-      },
-      error: (error, receipt)=>{
-        console.log("event error")
-        console.log(error)
-      }
+    const successCallback = (receipt) => {
+      // NFT 상세 페이지로 이동
+      setTimeout(() => {
+        window.location.href = `../erc1155/nft/${receipt.events.MintToken.address}/${receipt.events.MintToken.returnValues.tokenId}`;
+      }, 2000);
     }
+    const errorCallback = (error, receipt) => {
+      fn_overlay_blindLoading(false)
+    }
+
+    let option = getDefaultMethodOptionCallback("민팅", successCallback, errorCallback)
+
+
     // TODO. erc1155용 mintToken 호출
-    // let result = erc721_contract.mintToken(to, uri, option)
+    let result = erc1155_contract.mint(to, 1, uri, option)
     return result
   }
 </script>

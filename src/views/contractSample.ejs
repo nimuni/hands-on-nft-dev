@@ -12,11 +12,11 @@
     <div>
       <span class="sub-title">contract.estimateGasFee(methodName, ...args)</span>
       <span class="method-content">블록체인 함수의 Gas Fee 계산</span>
-      <span class="method-content">nft_contract, market_contract, auction_contract과 같이<br>OwnableContractWrapper 상속받은 모든 wrapper에서 사용가능</span>
+      <span class="method-content">erc721_contract, market_contract, auction_contract과 같이<br>OwnableContractWrapper 상속받은 모든 wrapper에서 사용가능</span>
       <xmp class="show-code">
         // ETH 가격으로 보고싶으면 web3.utils.fromWei(estimatedWeiCost)
 
-        let estimatedWeiCost = await nft_contract.estimateGasFee("mintToken",
+        let estimatedWeiCost = await erc721_contract.estimateGasFee("mintToken",
                                                                  "0xAddF4475192878D52774e8270a477C1a3e808eaa",
                                                                  "tokenURLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
       </xmp>
@@ -32,21 +32,21 @@
       <xmp class="show-code">
         // newAddress: address
 
-        nft_contract.initInstance(newAddress)
+        erc721_contract.initInstance(newAddress)
       </xmp>
     </div>
     <div>
       <span class="sub-title">getInstance()</span>
       <span class="method-content">만들어진 Contract 클래스의 Instance를 반환한다.</span>
       <xmp class="show-code">
-        nft_contract.getInstance()
+        erc721_contract.getInstance()
       </xmp>
     </div>
     <div>
       <span class="sub-title">getDefaultFromAccount()</span>
       <span class="method-content">현재 기본 From address를 얻는다.</span>
       <xmp class="show-code">
-        nft_contract.getDefaultFromAccount()
+        erc721_contract.getDefaultFromAccount()
       </xmp>
     </div>
     <div>
@@ -55,14 +55,14 @@
       <xmp class="show-code">
         // walletAddress: address
 
-        nft_contract.setDefaultFromAccount(walletAddress)
+        erc721_contract.setDefaultFromAccount(walletAddress)
       </xmp>
     </div>
     <div>
       <span class="sub-title">getAddress()</span>
       <span class="method-content">Contract 인스턴스의 address를 반환한다.</span>
       <xmp class="show-code">
-        nft_contract.getAddress()
+        erc721_contract.getAddress()
       </xmp>
     </div>
     <div>
@@ -70,28 +70,28 @@
       <span class="method-content">Contract 인스턴스의 address를 설정한다. initInstance를 호출시 기본적으로 호출됨.</span>
       <xmp class="show-code">
         // address: address
-        nft_contract.setAddress(address)
+        erc721_contract.setAddress(address)
       </xmp>
     </div>
     <div>
       <span class="sub-title">getABI()</span>
       <span class="method-content">선언된 Contract 함수의 ABI를 반환한다.</span>
       <xmp class="show-code">
-        nft_contract.getABI()
+        erc721_contract.getABI()
       </xmp>
     </div>
     <div>
       <span class="sub-title">setABI()</span>
       <span class="method-content">Contract 함수를 변경하기 위해 initInstance전에 ABI를 설정한다.</span>
       <xmp class="show-code">
-        nft_contract.setABI()
+        erc721_contract.setABI()
       </xmp>
     </div>
     <div>
       <span class="sub-title">getPastEvents({eventName, fromBlock, toBlock, tokenId, nftId, offerIndex, callback})</span>
       <span class="method-content">contract의 이벤트를 조회한다. 이벤트 명과 indexed된 변수로 검색할 수 있다.</span>
       <xmp class="show-code">
-        nft_contract.getPastEvents({eventName, fromBlock, toBlock, callback})
+        erc721_contract.getPastEvents({eventName, fromBlock, toBlock, callback})
       </xmp>
     </div>
   </div>
@@ -99,12 +99,12 @@
   <!-- OwnableContractWrapper -->
   <div class="admin-wrapper content-wrapper">
     <span class="title">관리자용 Contract 함수</span>
-    <span class="method-content">nft_contract, market_contract, auction_contract과 같이<br>OwnableContractWrapper 상속받은 모든 wrapper에서 사용가능</span>
+    <span class="method-content">erc721_contract, market_contract, auction_contract과 같이<br>OwnableContractWrapper 상속받은 모든 wrapper에서 사용가능</span>
     <div>
       <span class="sub-title">onlyGrant()</span>
       <span class="method-content">권한받은 사용자만 사용할 수 있는 상황인지, onlyGrant 변수값을 얻어옴</span>
       <xmp class="show-code">
-        await nft_contract.onlyGrant()
+        await erc721_contract.onlyGrant()
         await market_contract.onlyGrant()
         await auction_contract.onlyGrant()
       </xmp>
@@ -113,7 +113,7 @@
       <span class="sub-title">MINTER_ROLE()</span>
       <span class="method-content">민트 가능 권한의 상수값을 얻어옴</span>
       <xmp class="show-code">
-        await nft_contract.MINTER_ROLE()
+        await erc721_contract.MINTER_ROLE()
         await market_contract.MINTER_ROLE()
         await auction_contract.MINTER_ROLE()
       </xmp>
@@ -122,7 +122,7 @@
       <span class="sub-title">MARKET_LISTER_ROLE()</span>
       <span class="method-content">마켓 리스팅 권한의 상수값을 얻어옴</span>
       <xmp class="show-code">
-        await nft_contract.MARKET_LISTER_ROLE()
+        await erc721_contract.MARKET_LISTER_ROLE()
         await market_contract.MARKET_LISTER_ROLE()
         await auction_contract.MARKET_LISTER_ROLE()
       </xmp>
@@ -131,7 +131,7 @@
       <span class="sub-title">AUCTION_LISTER_ROLE()</span>
       <span class="method-content">옥션 리스팅 권한의 상수값을 얻어옴</span>
       <xmp class="show-code">
-        await nft_contract.AUCTION_LISTER_ROLE()
+        await erc721_contract.AUCTION_LISTER_ROLE()
         await market_contract.AUCTION_LISTER_ROLE()
         await auction_contract.AUCTION_LISTER_ROLE()
       </xmp>
@@ -140,7 +140,7 @@
       <span class="sub-title">ADMIN_ROLE()</span>
       <span class="method-content">관리자 권한의 상수값을 얻어옴</span>
       <xmp class="show-code">
-        await nft_contract.ADMIN_ROLE()
+        await erc721_contract.ADMIN_ROLE()
       </xmp>
     </div>
     <div>
@@ -150,7 +150,7 @@
         // value: boolean
         // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
 
-        await nft_contract.setOnlyGrant(value, option)
+        await erc721_contract.setOnlyGrant(value, option)
       </xmp>
     </div>
     <div>
@@ -162,7 +162,7 @@
         // _account: address
         // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
 
-        await nft_contract.grantRole(_role, _account, option)
+        await erc721_contract.grantRole(_role, _account, option)
       </xmp>
     </div>
     <div>
@@ -174,7 +174,7 @@
         // _account: address
         // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
 
-        await nft_contract.revokeRole(_role, _account, option)
+        await erc721_contract.revokeRole(_role, _account, option)
       </xmp>
     </div>
     <div>
@@ -185,14 +185,14 @@
         // _address: address
         // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
 
-        await nft_contract.roles(roles, address)
+        await erc721_contract.roles(roles, address)
       </xmp>
     </div>
   </div>
 
   <!-- NFT Contract -->
   <div class="content-wrapper">
-    <span class="title">nft_contract</span>
+    <span class="title">erc721_contract</span>
     <div>
       <span class="sub-title">approve(_to, _tokenId, option)</span>
       <span class="method-content">_to에게 tokenId를 컨트롤 할 수 있는 권한을 준다.</span>
@@ -201,7 +201,7 @@
         // _tokenId: string
         // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
 
-        await nft_contract.approve(_to, _tokenId, option);
+        await erc721_contract.approve(_to, _tokenId, option);
       </xmp>
     </div>
     <div>
@@ -213,7 +213,7 @@
         // _tokenId: string
         // option: 트랜잭션 오브젝트. 자세한 내용은 ContractWrapper.js 참고
 
-        await nft_contract.mstringToken(_to, _tokenId, option);
+        await erc721_contract.mstringToken(_to, _tokenId, option);
       </xmp>
     </div>
     <div>
@@ -222,7 +222,7 @@
       <xmp class="show-code">
         // _owner: address
 
-        await nft_contract.balanceOf(_owner);
+        await erc721_contract.balanceOf(_owner);
       </xmp>
     </div>
     <div>
@@ -231,7 +231,7 @@
       <xmp class="show-code">
         // _tokenId: string
 
-        await nft_contract.getApproved(_tokenId)
+        await erc721_contract.getApproved(_tokenId)
       </xmp>
     </div>
     <div>
@@ -240,7 +240,7 @@
       <xmp class="show-code">
         // _tokenId: string
 
-        await nft_contract.ownerOf(_tokenId)
+        await erc721_contract.ownerOf(_tokenId)
       </xmp>
     </div>
     <div>
@@ -249,7 +249,7 @@
       <xmp class="show-code">
         // _tokenId: string
 
-        await nft_contract.tokenURI(_tokenId)
+        await erc721_contract.tokenURI(_tokenId)
       </xmp>
     </div>
   </div>
@@ -583,18 +583,16 @@
   }
 </style>
 <script>
-  let myAddress, marketAddress, auctionAddress, nftAddress;
+  let myAddress, marketAddress, auctionAddress, erc721Address, erc1155Address;
   let contractAddress
   let tokenId
   afterInitFunction = async function(){
     // init variable
     myAddress = await getAccount();
-    nftAddress = nft_contract.getAddress();
+    erc721Address = erc721_contract.getAddress();
+    erc1155Address = erc1155_contract.getAddress();
     marketAddress = market_contract.getAddress();
     auctionAddress = auction_contract.getAddress();
-  }
-  afterAccountsChange = async function(){
-    window.location.reload()
   }
 </script>
 

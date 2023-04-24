@@ -2,17 +2,24 @@ const default_contrack_type = "ethereum";
 const default_contrack_chain = 'goerli';
 
 const { ethereum } = window;
-let web3, installed, contract, contractWrapper, net_env, transactionBaseAddress;
-let nft_contract, nft_address, nft_abi;
+let web3, installed, contract, contractWrapper, transactionBaseAddress;
+let myWalletAddress;
+let networkType, networkId, networkname;
+let erc721_contract, erc721_address, erc721_abi;
+let erc1155_contract, erc1155_address, erc1155_abi
 let market_contract, market_address, market_abi;
 let auction_contract, auction_address, auction_abi;
+
+
 
 /**
  * Metamask and web3 initialize
  * Header div
  */
-let afterInitFunction = function(){};
-let afterAccountsChange = function(){};
+let afterInitFunction = async function(){};
+let afterAccountsChange = function(){
+  window.location.reload()
+};
 window.addEventListener('load', async () => {
   // web3 injection
   await initWeb3();
@@ -27,40 +34,36 @@ window.addEventListener('load', async () => {
   await initEventActions();
   await initEthereumEventListener();
 
-  afterInitFunction();
+  await afterInitFunction();
 })
-// window.onload = async function(){
-
-//   // web3 injection
-//   await initWeb3();
-
-//   // contract init
-//   await initContract();
-
-//   // connect wallet button change
-//   await changeConnectButtonLabel();
-
-//   // button event listener setting
-//   await initEventActions();
-//   await initEthereumEventListener();
-
-//   let networkType = await web3.eth.net.getNetworkType()
-//   console.log(`현재 ${networkType} 네트워크에 접속중입니다.`)
-
-//   afterInitFunction();
-// }
 
 async function initWeb3() {
   if(!web3){
     if(ethereum){
       web3 = new Web3(ethereum);
 
-      let accounts = await web3.eth.getAccounts();
-      console.log(`현재 로그인된 계정\n${accounts[0]}`)
-      web3.eth.defaultAccount = accounts[0]
+      myWalletAddress = await getAccount();
 
-      let networkType = await web3.eth.net.getNetworkType()
-      console.log(`현재 ${networkType} 네트워크에 접속중입니다.`)
+      console.log(`현재 로그인된 계정\n${myWalletAddress}`)
+      web3.eth.defaultAccount = myWalletAddress
+
+      networkType = await web3.eth.net.getNetworkType();
+      networkId = await web3.eth.net.getId();
+      switch (networkId) {
+        case MAIN_NET_ID:
+          networkname="메인넷"
+          break;
+        case GOERLI_NET_ID:
+          networkname="Goerli테스트넷"
+          break;
+        case SEPOLIA_NET_ID:
+          networkname="Sepolia테스트넷"
+          break;
+        default:
+          break;
+      }
+      console.log(`현재 ${networkname}에 접속중입니다.`)
+      console.log(`networkType = ${networkType}\nnetworkId= ${networkId}`)
     } else if(typeof ethereum !== 'undefined'){
       web3 = new Web3(ethereum.curruntProvider);
     } else {
@@ -80,20 +83,27 @@ async function initWeb3() {
 }
 
 async function initContract() {
-  // nft_contract = new NftContractWrapper(await getAccount());
-  // market_contract = new MarketContractWrapper(await getAccount());
-  // auction_contract = new AuctionContractWrapper(await getAccount());
-  let myWalletAddress = await getAccount();
+  try {
+    // erc721_contract = new NftContract721Wrapper();
+    // erc1155_contract = new NftContract1155Wrapper();
+    erc721_contract = await contractClassDecorator(BasicERC721ContractWrapper, defaultContractAddressObj[networkId].erc721, ERC721_CONTRACT_ABI);
+    erc1155_contract = await contractClassDecorator(BasicERC1155ContractWrapper, defaultContractAddressObj[networkId].erc1155, ERC1155_CONTRACT_ABI);
 
-  nft_contract = new NftContractWrapper();
-  nft_contract.setDefaultFromAccount(myWalletAddress);
-  market_contract = new MarketContractWrapper();
-  market_contract.setDefaultFromAccount(myWalletAddress);
-  auction_contract = new AuctionContractWrapper();
-  auction_contract.setDefaultFromAccount(myWalletAddress);
+    if(networkId == MAIN_NET_ID || networkId == GOERLI_NET_ID || networkId == SEPOLIA_NET_ID){
 
-  net_env = "goerli" // "mainnet"
-  // net_env = await web3.eth.net.getNetworkType()
+      // market_contract = new MarketContractWrapper();
+      // auction_contract = new AuctionContractWrapper();
+      market_contract = await contractClassDecorator(BasicMarketContractWrapper, defaultContractAddressObj[networkId].market, MARKET_CONTRACT_ABI);
+      auction_contract = await contractClassDecorator(BasicAuctionContractWrapper, defaultContractAddressObj[networkId].auction, AUCTION_CONTRACT_ABI);
+    } else {
+      alert("goerli, sepolia, main 네트워크 연결 필요")
+      console.log(`market_contract,auction_contract 연결되지 않음. goerli 네트워크 연결 필요`)
+    }
+  } catch (error) {
+    console.log("error initContract in metamask.js")
+    console.log(error)
+  }
+
 }
 
 function isInstalledMetamask() {
@@ -120,8 +130,7 @@ async function changeConnectButtonLabel() {
   if(await isMetaMaskConnected()){
     connectWalletBtn.classList.add("d-none");
     movePersonalPageBtn.classList.remove("d-none");
-    let account = await getAccount()
-    movePersonalPageBtn.innerText = account.toLowerCase();
+    movePersonalPageBtn.innerText = myWalletAddress.toLowerCase();
   } else {
     connectWalletBtn.classList.remove("d-none");
     movePersonalPageBtn.classList.add("d-none");
@@ -191,31 +200,3 @@ async function connectWallet() {
     console.log(networkId)
   }
 }
-
-async function sampleTransaction(params) {
-  const transactionParameters = {
-    // nonce: '0x00', // ignored by MetaMask
-    gasPrice: '0x09184e72a000', // customizable by user during MetaMask confirmation. 가스가격이 높을수록 빠른처리
-    // gas: '0x2710', // customizable by user during MetaMask confirmation.
-    to: '0x0000000000000000000000000000000000000000', // Required except during contract publications.
-    from: ethereum.selectedAddress, // must match user's active address.
-    value: '0x00', // Wei로 표시되며, 전송할때 혹은 민팅수수료 등 계약에 지불할때에 사용
-    data:
-      '0x7f7465737432000000000000000000000000000000000000000000000000000000600057', // Optional, but used for defining smart contract creation and interaction.
-    // chainId: '0x5', // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
-  };
-  // Hex    Decimal   Network
-  // 0x1	  1	        Ethereum Main Network (Mainnet)
-  // 0x3	  3	        Ropsten Test Network
-  // 0x4	  4	        Rinkeby Test Network
-  // 0x5	  5	        Goerli Test Network
-  // 0x2a	  42	      Kovan Test Network
-
-  const txHash = await ethereum.request({
-    method: 'eth_sendTransaction',
-    params: [transactionParameters],
-  });
-
-  return txHash
-}
-

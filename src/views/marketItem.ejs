@@ -98,7 +98,7 @@
 
   const marketItemGrid = document.getElementById("marketItemGrid");
   const addGridItem = async (marketItemInfo) => {
-    let nftInfoUrl = await nft_contract.tokenURI(marketItemInfo.nftId);
+    let nftInfoUrl = await erc721_contract.tokenURI(marketItemInfo.nftId);
     let nftCostETH = web3.utils.fromWei(marketItemInfo.price, "ether")
     let fetchResponse = await fetch(nftInfoUrl)
     if(fetchResponse.ok){
@@ -131,7 +131,7 @@
     if (contractAddress != "") {
       if(web3.utils.isAddress(contractAddress)){
         marketItems = await market_contract.getMarketItems(contractAddress)
-        await nft_contract.initInstance(contractAddress)
+        await erc721_contract.initInstance(contractAddress)
       } else {
         alert("주소가 잘못되었습니다. 마켓 기본화면으로 이동합니다.")
         window.location.href = window.location.origin + `/market`;

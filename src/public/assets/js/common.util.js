@@ -216,6 +216,44 @@ const fn_table_getInputDataFromTableId = (tableId, buttonExist=false) => {
   });
   return {metaData, data};
 }
+const findPointPosition = (str) => {
+  let index = str.indexOf(".");
+  if(index >= 0){
+    return index
+  } else {
+    return str.length
+  }
+}
+
+const fn_multiply = (strA, strB) => {
+  let pointPositionA, pointPositionB;
+  let decimalCountA, decimalCountB
+
+  if(isNaN(Number(strA)) || isNaN(Number(strB))) throw "is not number";
+
+  // find point position
+  pointPositionA = findPointPosition(strA);
+  pointPositionB = findPointPosition(strB);
+
+  decimalCountA = strA.length - (pointPositionA + (pointPositionA==strA.length?  0 : 1))
+  decimalCountB = strB.length - (pointPositionB + (pointPositionB==strB.length?  0 : 1))
+
+  let tempA = Number(strA.replace(".", "")).toFixed(0)
+  let tempB = Number(strB.replace(".", "")).toFixed(0)
+  let decimalTotalCount = decimalCountA + decimalCountB;
+  let tempResult = (tempA * tempB).toString()
+
+  if(decimalTotalCount != 0) {
+    if(tempResult.length < decimalTotalCount){
+      tempResult = tempResult.padStart(decimalTotalCount + 1, "0");
+      tempResult = tempResult.slice(0, 1) + "." + tempResult.slice(1, tempResult.length)
+    } else {
+      let tempPointPosition = tempResult.length - decimalTotalCount
+      tempResult = tempResult.slice(0, tempPointPosition) + "." + tempResult.slice(tempPointPosition, tempResult.length)
+    }
+  }
+  return tempResult;
+}
 
 
 /////////////////////////
@@ -320,6 +358,7 @@ const uploadFile = async (file) => {
   data.append('user', await getAccount())
 
   try {
+    // let resultHash = await fetch('/api/IPFS/uploadSeperateGateway', {
     let resultHash = await fetch('/api/IPFS/upload', {
       method: 'POST',
       // headers: {},
@@ -337,6 +376,7 @@ const uploadJson = async(json) => {
   data.append('user', await getAccount())
 
   try {
+    // let resultHash = await fetch('/api/IPFS/uploadSeperateGateway', {
     let resultHash = await fetch('/api/IPFS/upload', {
       method: 'POST',
       // headers: {},
@@ -352,6 +392,17 @@ const uploadJson = async(json) => {
 /////////////////////////
 // Blockchain function
 /////////////////////////
+const getContractTypeObj = async function(contractInstance){
+  const ERC1155InterfaceId = "0xd9b67a26";
+  const ERC721InterfaceId = "0x80ac58cd";
+  const is721 = await contractInstance.supportsInterface(ERC721InterfaceId)
+  const is1155 = await contractInstance.supportsInterface(ERC1155InterfaceId)
+  return {
+    isERC721 : is721,
+    isERC1155 : is1155
+  }
+}
+
 const compareAddress = (addr1, addr2) => {
   const lowerAddr1 = String(addr1).toLowerCase();
   const lowerAddr2 = String(addr2).toLowerCase();
@@ -362,9 +413,6 @@ const isNullAddress = (addr) => {
   return addr == "0x0000000000000000000000000000000000000000"
 }
 const isAddress = (addr) => {
-  console.log("call isAddress")
-  console.log(addr)
-  console.log(web3.utils.isAddress(addr))
   return web3.utils.isAddress(addr)
 }
 const NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
@@ -389,6 +437,10 @@ const convertFromBlockTime = (blockTimestamp) => {
 }
 const convertToBlockTime = (timestamp) => {
   return timestamp / 1000
+}
+
+function getInterfaceId(nameWithParam) {
+  return web3.utils.toHex(web3.utils.keccak256(nameWithParam).slice(0, 10));
 }
 
 /////////////////////////

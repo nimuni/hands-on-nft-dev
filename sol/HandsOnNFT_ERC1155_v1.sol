@@ -5,8 +5,9 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "./AccessControl-v2.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 
-contract NFT_ERC1155_HNM is ERC1155, AccessControl, ERC1155Burnable {
+contract HandsOnNFT_ERC1155 is ERC1155, AccessControl, ERC1155Burnable, ERC1155Supply {
     string public version = "0.1.0";
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
@@ -39,16 +40,26 @@ contract NFT_ERC1155_HNM is ERC1155, AccessControl, ERC1155Burnable {
         _tokenURIs[_tokenId] = _uri;
     }
 
-    function mintBatch(address _to, uint256[] memory _ids, uint256[] memory _amounts, bytes memory _data) public onlyRole(MINTER_ROLE) {
-        // require. amounts array의 길이와, uri array의 길이가 같아야 함.
-        
-        // ids array를 만들어야함. from counter. 시작부터 
-        // uri array를 받아서, 
-        _mintBatch(_to, _ids, _amounts, _data);
+    function mintBatch(address _to, uint256[] memory _amounts, uint256[] memory _ids, bytes memory _data) public onlyRole(MINTER_ROLE) {
+        require(_ids.length == _amounts.length, "NFT_ERC1155_HNM: ids and amounts length mismatch");
+
+        uint256[] memory newIds = new uint256[](_ids.length);
+
+        for (uint256 i = 0; i < _ids.length; i++) {
+            _tokenIds.increment();
+            newIds[i] = _tokenIds.current();
+            _setTokenURI(newIds[i], _tokenURIs[_ids[i]]);
+        }
+
+        _mintBatch(_to, newIds, _amounts, _data);
     }
 
     // The following functions are overrides required by Solidity.
     function supportsInterface(bytes4 _interfaceId) public view override(ERC1155) returns (bool) {
         return super.supportsInterface(_interfaceId);
+    }
+
+    function _beforeTokenTransfer(address operator, address from, address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data) internal virtual override(ERC1155, ERC1155Supply) {
+        super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
 }

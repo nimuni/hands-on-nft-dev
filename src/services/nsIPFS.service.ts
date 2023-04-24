@@ -7,7 +7,7 @@ import { NFTStorage, File } from 'nft.storage'
 import mime from 'mime'
 import path from 'path'
 const NFT_STORAGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGU5MDA4MmQ4NTE4MTM1ZDMwOGY1OGM4NDE0ODQ3M2E0MEE5NjI0MDgiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2OTA3OTkwMjkwMywibmFtZSI6IkhhbmRzT25NYXJrZXRUZXN0In0.iRDETUMXxMEQW4X0sLnm018hGsPW9nxJ2wsLywki-v8'
-
+const baseGatewayUri = "https://nftstorage.link/ipfs/";
 const fn_convertToAllowedStr = (value) => {
   console.log(`call fn_convertToAllowedStr = ${value}`)
   const regex = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\.\,\!]/gi;
@@ -25,7 +25,7 @@ const getFileExtentionFromIPFS = (ipfsUri:string) => {
   return strArr[strArr.length-1];
 }
 const addingIPFSGateway = (hashAndFilename:string) => {
-  return "https://nftstorage.link/ipfs/" + hashAndFilename;
+  return baseGatewayUri + hashAndFilename;
 }
 const convertIPFSToGatewayURI = (ipfsURI:string) => {
   return addingIPFSGateway(removeProtocol(ipfsURI))
@@ -93,6 +93,20 @@ class IPFSService {
       name: name,
       size: file.size,
       uri: addingIPFSGateway(cid)
+    }
+  }
+  public async uploadSeperateUri (data:Buffer, name:string, mimeType:string) {
+    console.log("call uploadin service")
+    let file = new File([data], name, {type: mimeType});
+
+    // Blob, File, FormData
+    const cid = await this.#nftStorageClient.storeBlob(file);
+    return {
+      cid: cid,
+      name: name,
+      size: file.size,
+      baseUri: baseGatewayUri,
+      uri: cid
     }
   }
 }

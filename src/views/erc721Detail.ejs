@@ -1,0 +1,1770 @@
+
+<div>
+  <div class="wrapper">
+    <div class="row">
+      <div class="col-12 col-md-5">
+        <div class="item-summary">
+          <article class="my-5">
+            <div class="row">
+              <div class="col-12">
+                <!-- show base coin -->
+                <!-- show like count -->
+              </div>
+              <div class="col-12">
+                <img id="nftImage"/>
+              </div>
+            </div>
+            <div class="my-5">
+              <div class="accordion" id="accordion">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="header-one">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription" aria-expanded="true" aria-controls="collapseDescription">
+                      <i class="bi bi-list-columns-reverse mr-4"></i>
+                      &nbsp Description
+                    </button>
+                  </h2>
+                  <div id="collapseDescription" class="accordion-collapse collapse show" aria-labelledby="header-one" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="header-two">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProperties" aria-expanded="true" aria-controls="collapseProperties">
+                      <i class="bi bi-tags-fill"></i>
+                      &nbsp Properties
+                    </button>
+                  </h2>
+                  <div id="collapseProperties" class="accordion-collapse collapse show" aria-labelledby="header-two" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <div class="row properties-grid justify-content-between"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="header-two">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails" aria-expanded="true" aria-controls="collapseDetails">
+                      <i class="bi bi-info-square"></i>
+                      &nbsp Details
+                    </button>
+                  </h2>
+                  <div id="collapseDetails" class="accordion-collapse collapse show" aria-labelledby="header-two" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <div class="nft-detail">
+                        Contract Address
+                        <span id="contractAddressSpan"></span>
+                      </div>
+                      <div class="nft-detail">
+                        Token ID
+                        <span><%= tokenId %></span>
+                      </div>
+                      <div class="nft-detail">
+                        Token Standard
+                        <span id="ercTypeSpan"></span>
+                      </div>
+                      <div class="nft-detail">
+                        Chain
+                        <!-- HARD CODING. TODO Change -->
+                        <span>Ethereum</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="col-12 col-md-7">
+        <div class="item-detail">
+          <div class="my-5">
+            <div class="flex-between">
+              Created by <a id="creatorNameLink" class="wallet-address-link"></a>
+              <!-- creator name -->
+              <!-- external link -->
+              <div id="externalLinksDiv"></div>
+            </div>
+            <div class="item-name">
+              <h1 id="nftNameH1">NFT name</h1>
+              <div>
+                <!-- owner button -->
+                <button type="button" id="auctionEndBtn" class="btn btn-default btn-danger btn-outline d-none">
+                  Auction End
+                </button>
+                <button type="button" id="moveSellPageBtn" class="btn btn-default btn-primary d-none">
+                  Sell NFT
+                </button>
+                <button type="button" id="sellCancelBtn" class="btn btn-default btn-primary d-none">
+                  Sell Cancel
+                </button>
+              </div>
+            </div>
+            <div class="item-owner">
+              Owned by <a id="nftOwnerLink" class="wallet-address-link"></a>
+            </div>
+          </div>
+          <div>
+            <div id="viewCountsDiv" style="display:flex">
+            </div>
+          </div>
+          <div class="my-5 d-none" id="marketItemInfoDiv">
+            <div style="border-radius:10px;border:1px solid #e5e8eb;">
+              <div style="padding:25px;">
+                <div class="flex-vertical-box">
+                  <div>
+                    <span id="auctionRemainLabelSpan">Auction ends at</span>
+                  </div>
+                  <div class="d-flex">
+                    <div class="flex-vertical-box" style="width: 100px;">
+                      <span id ="remainDays" class="auction-limit-time">00</span>
+                      <span class="auction-limit-time-label">Days</span>
+                    </div>
+                    <div class="flex-vertical-box" style="width: 100px;">
+                      <span id ="remainHours" class="auction-limit-time">00</span>
+                      <span class="auction-limit-time-label">Hours</span>
+                    </div>
+                    <div class="flex-vertical-box" style="width: 100px;">
+                      <span id ="remainMinutes" class="auction-limit-time">00</span>
+                      <span class="auction-limit-time-label">Minutes</span>
+                    </div>
+                    <div class="flex-vertical-box" style="width: 100px;">
+                      <span id ="remainSeconds" class="auction-limit-time">00</span>
+                      <span class="auction-limit-time-label">Seconds</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="border-top:1px solid #e5e8eb;padding:25px;background:#fbfdff;border-radius:0px 0px 10px 10px;">
+                <div>
+                  <div id="priceLabel">Current Price</div>
+                  <div class="mt-2">
+                    <span class="market-info-price">
+                      <span id="marketPriceEth">0</span> ETH
+                    </span>
+                    ￦ <span id="marketPriceWon">0</span>
+                  </div>
+                  <div class="d-flex" style="gap:10px">
+                    <button type="button" id="buyNowBtn" class="btn btn-modern btn-primary btn-arrow-effect-1" onclick="buyNow()">
+                      Buy now <i class="fas fa-external-link-alt ms-2"></i>
+                    </button>
+                    <button type="button" id="offerBtn" class="btn btn-modern btn-primary btn-outline btn-arrow-effect-1" onclick="showModal('offer')">
+                      Make offer <i class="fas fa-arrow-right ms-2"></i>
+                    </button>
+                    <button type="button" id="auctionBidBtn" class="btn btn-modern btn-primary btn-outline btn-arrow-effect-1" onclick="showModal('bid')">
+                      Bid
+                    </button>
+                    <div id="remainPriceBtnWrapper" class="d-flex" style="gap:10px"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="my-5">
+            <div class="accordion" id="accordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="header-one">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice" aria-expanded="true" aria-controls="collapsePrice">
+                    <i class="bi bi-graph-up mr-4"></i>
+                    &nbsp Price History
+                  </button>
+                </h2>
+                <div id="collapsePrice" class="accordion-collapse collapse show" aria-labelledby="header-one" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <div id="priceHistoryDiv" class="d-none">
+                      <canvas id="chart"></canvas>
+                    </div>
+                    <div id="noPriceHistoryDiv" class="">
+                      <div class="div-flex-vh-center font-color-1">
+                        <span class="my-4">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                            <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                          </svg>
+                        </span>
+                        <span>No events have occurred yet</span>
+                        <span class="mb-4">Check back later.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="my-5">
+            <div class="accordion" id="accordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="header-one">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOffers" aria-expanded="true" aria-controls="collapseOffers">
+                    <i class="bi bi-wallet-fill mr-4"></i>
+                    &nbsp Current Offers
+                  </button>
+                </h2>
+                <div id="collapseOffers" class="accordion-collapse collapse show" aria-labelledby="header-one" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <div class="offer-table-wrapper scroll-bar">
+                      <table class="table" id="OffersTable">
+                        <tr>
+                          <th>Price(ETH)</th>
+                          <th>KRW Price</th>
+                          <th>Floor Difference</th>
+                          <th>Expiration</th>
+                          <th>From</th>
+                          <th><!-- Button셀 -->　</th>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row my-5">
+      <div class="col-12">
+        <div class="accordion" id="accordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="header-one">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseActivity" aria-expanded="true" aria-controls="collapseActivity">
+                <i class="bi bi-arrow-down-up"></i>
+                &nbsp Item Activity
+              </button>
+            </h2>
+            <div id="collapseActivity" class="accordion-collapse collapse show" aria-labelledby="header-one" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <div class="activity-table-wrapper scroll-bar">
+                  <table class="table" id="itemActivityTable">
+                    <tr>
+                      <th>Event</th>
+                      <th>From</th>
+                      <th>To</th>
+                      <th>Date</th>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row my-5">
+      <div class="col-12">
+        <div class="accordion" id="accordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="header-one">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMoreItems" aria-expanded="true" aria-controls="collapseMoreItems">
+                <i class="bi bi-grid-3x2-gap-fill"></i>
+                &nbsp More Items
+              </button>
+            </h2>
+            <div id="collapseMoreItems" class="accordion-collapse collapse show" aria-labelledby="header-one" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <div class="row">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- modal -->
+<div class="modal-popup-back div-flex-vh-center2 d-none" id="offerModal">
+  <div class="card" style="max-width: 600px;">
+    <div class="card-text m-4">
+      <div class="div-vertical-center">
+        <div class="row">
+          <div class="col-1"></div>
+          <div class="col-10">
+            <h4>Make an Offer</h4>
+          </div>
+          <div class="col-1">
+            <button type="button" class="btn-close" onclick="fn_modal_close()"></button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <h5>Price</h5>
+          <div class="input-group">
+            <input type="text" class="form-control set-price-input input-eth" placeholder="Price"  aria-describedby="basic-addon2" id="offerPriceInput"/>
+            <span class="input-group-text set-price-span" id="basic-addon2">ETH</span>
+          </div>
+          <div class="mx-3 mb-3 input-info">
+            <span class="d-none info-allow font-color-allow">
+              <i class="bi bi-check-circle"></i>
+            </span>
+            <span class="d-none info-deny font-color-warn">
+              <i class="bi bi-dash-circle"></i>
+            </span>
+            <span class="info-message font-color-warn"></span>
+          </div>
+        </div>
+        <div class="col-12 my-4">
+          <h5>Duration</h5>
+          <div class="row">
+            <div class="col-6">
+              <input type="date" id="endDatePicker" class="form-control"/>
+            </div>
+            <div class="col-6">
+              <input type="time" id="endTimePicker" class="form-control"/>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 mt-4 d-grid">
+          <button type="button" class="btn btn-primary" onclick="makeOffer()">offer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-popup-back div-flex-vh-center2 d-none" id="bidModal">
+  <div class="card" style="max-width: 600px;">
+    <div class="card-text m-4">
+      <div class="div-vertical-center">
+        <div class="row">
+          <div class="col-1"></div>
+          <div class="col-10">
+            <h4>Bid the auction Item</h4>
+          </div>
+          <div class="col-1">
+            <button type="button" class="btn-close" onclick="fn_modal_close()"></button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <h5>Price</h5>
+          <div class="input-group">
+            <input type="text" class="form-control set-price-input input-eth" placeholder="Price" aria-describedby="basic-addon2" id="bidPriceInput"/>
+            <span class="input-group-text set-price-span" id="basic-addon2">ETH</span>
+          </div>
+          <div class="mx-3 mb-3 input-info">
+            <span class="d-none info-allow font-color-allow">
+              <i class="bi bi-check-circle"></i>
+            </span>
+            <span class="d-none info-deny font-color-warn">
+              <i class="bi bi-dash-circle"></i>
+            </span>
+            <span class="info-message font-color-warn"></span>
+          </div>
+        </div>
+        <div class="col-12 mt-4 d-grid">
+          <button type="button" class="btn btn-primary" onclick="auctionBid()">bid</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- import chartjs -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- import decimaljs to show correct decimal -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/10.4.3/decimal.min.js"></script>
+<!-- page script -->
+<script>
+  let contractTypeObj;
+  const contractAddress = "<%= contractAddress %>"
+  const tokenId = "<%= tokenId %>"
+  const nftImage = document.getElementById("nftImage");
+  const collapseDescription = document.getElementById("collapseDescription");
+  const contractAddressSpan = document.getElementById("contractAddressSpan");
+  const marketPriceEth = document.getElementById("marketPriceEth");
+  const marketPriceWon = document.getElementById("marketPriceWon");
+  const marketItemInfoDiv = document.getElementById("marketItemInfoDiv");
+  const sellBtn = document.getElementById("moveSellPageBtn");
+  const buyNowBtn = document.getElementById("buyNowBtn");
+  const auctionBidBtn = document.getElementById("auctionBidBtn");
+  const auctionEndBtn = document.getElementById("auctionEndBtn");
+  const offerBtn = document.getElementById("offerBtn");
+  const priceLabel = document.getElementById("priceLabel");
+  const auctionRemainLabelSpan = document.getElementById("auctionRemainLabelSpan");
+  const remainDays = document.getElementById("remainDays");
+  const remainHours = document.getElementById("remainHours");
+  const remainMinutes = document.getElementById("remainMinutes");
+  const remainSeconds = document.getElementById("remainSeconds");
+  const remainPriceBtnWrapper = document.getElementById("remainPriceBtnWrapper")
+  const ercTypeSpan = document.getElementById("ercTypeSpan")
+  let timeInterval;
+  const SECOND = 1000
+  const MINUTE = 1000 * 60;
+  const HOUR = MINUTE * 60;
+  const DAY = HOUR * 24;
+  let myaddress, ownerAddress, marketAddress, auctionAddress, erc721Address, erc1155Address;
+  let priceChart;
+  let activityData = [];
+  let offerDataArray = [];
+
+  const moveSellPage = async () => {
+    console.log("call moveSellPage")
+    let owner = await erc721_contract.ownerOf(tokenId);
+    myaddress = await getAccount()
+    if(compareAddress(owner,myaddress)){
+      window.location.href = window.location.origin + window.location.pathname + "/sell"
+    }
+  }
+  sellBtn.addEventListener("click", moveSellPage)
+
+  const fn_modal_open = (innerDom) => {
+    const bodyDom = document.getElementsByTagName('body')[0];
+    const offerModalDom = document.getElementById("offerModal");
+
+    offerModalDom.classList.remove("d-none");
+    bodyDom.classList.add("holding-body");
+    offerModalDom.innerHTML = innerDom
+  }
+  const fn_modal_close = () => {
+    const bodyDom = document.getElementsByTagName('body')[0];
+    const offerModalDom = document.getElementById("offerModal");
+
+    offerModalDom.classList.add("d-none");
+    bodyDom.classList.remove("holding-body");
+  }
+  const buyNow = async () => {
+    console.log("call buyNow")
+    let priceEth = marketPriceEth.innerHTML;
+    let option = {
+      value: web3.utils.toWei(priceEth, "ether"),
+      receipt: (receipt)=>{
+        if(receipt.status) {
+          console.log("구매가 완료되었습니다.")
+          alert("구매 완료")
+          window.location.reload()
+        } else {
+          console.log("구매가 실패되었습니다.")
+          console.log(receipt)
+          console.warn(`receipt.status=${receipt.status}`)
+          alert("구매 실패")
+        }
+        fn_overlay_blindLoading(false)
+      },
+      error: (error, receipt)=>{
+        console.log("event error")
+        console.error(error)
+        alert("구매 실패")
+        fn_overlay_blindLoading(false)
+      }
+    }
+    fn_overlay_blindLoading(true, "구매 진행중")
+    await market_contract.buyMarketItem(contractAddress, tokenId, option)
+  }
+  const showOfferModal = () => {
+    const offerModal = document.getElementById("offerModal")
+    fn_modal_open(offerModal.innerHTML);
+  }
+  const showModal = (type) => {
+    let modalInnerHTML;
+    if(type == "offer"){
+      modalInnerHTML = document.getElementById("offerModal").innerHTML;
+    } else if(type == "bid"){
+      modalInnerHTML = document.getElementById("bidModal").innerHTML;
+    } else {
+      alert("error")
+      return;
+    }
+    fn_modal_open(modalInnerHTML)
+  }
+  const auctionEnd = async () => {
+    console.log("click auctionEnd")
+    // TODO
+    try {
+      let option = {
+        receipt: (receipt)=>{
+          if(receipt.status) {
+            console.log("Auction 종료를 완료했습니다.")
+            window.location.reload()
+          } else {
+            console.log("Auction 종료를 실패했습니다.")
+            console.log(receipt)
+            console.warn(`receipt.status=${receipt.status}`)
+            alert("Auction 실패")
+          }
+          fn_overlay_blindLoading(false)
+        },
+        error: (error, receipt)=>{
+          console.log("event error")
+          console.error(error)
+          console.error(receipt)
+          alert("Auction 실패")
+          fn_overlay_blindLoading(false)
+        }
+      }
+      fn_overlay_blindLoading(true, "Auction 종료중")
+      await auction_contract.endAuctionItem(contractAddress, tokenId, option);
+    } catch (error) {
+      console.log(error)
+      fn_overlay_blindLoading(false)
+    }
+  }
+  auctionEndBtn.addEventListener("click", auctionEnd)
+  const auctionBid = async () => {
+    myAddress = await getAccount();
+    let owner = await erc721_contract.ownerOf(tokenId);
+    if(compareAddress(myAddress, owner)) {
+      alert("You are nft owner. You can't do the offer")
+      fn_modal_close()
+      return ;
+    }
+    // check input valid
+    const bidPrice = document.getElementById("bidPriceInput").value;
+    if(isValidEth(bidPrice)){
+      let option = {
+        value: web3.utils.toWei(bidPrice, "ether"),
+        receipt: (receipt)=>{
+          if(receipt.status) {
+            console.log("bid가 완료되었습니다.")
+            alert("bid 완료")
+            setPriceLabel("auction", web3.utils.toWei(bidPrice.toString(), "ether"))
+            fn_modal_close();
+            window.location.reload()
+          } else {
+            console.log("bid가 실패되었습니다.")
+            console.log(receipt)
+            console.warn(`receipt.status=${receipt.status}`)
+            alert("bid 실패")
+          }
+          fn_overlay_blindLoading(false)
+        },
+        error: (error, receipt)=>{
+          console.log("event error")
+          console.error(error)
+          alert("bid 실패")
+          fn_overlay_blindLoading(false)
+        }
+      }
+      fn_overlay_blindLoading(true, "NFT auction에 bid 제출중")
+
+      try {
+        console.log("bidAuctionItem")
+        await auction_contract.bidAuctionItem(contractAddress, tokenId, option)
+      } catch (error) {
+        console.error(error)
+        fn_overlay_blindLoading(false);
+      }
+    }
+  }
+  const withdrawBid = async (bidCount) => {
+    console.log("call withdrawBid, bidCount="+bidCount)
+    try {
+      const callback = () => {
+        fn_overlay_blindLoading(false);
+      }
+      const label = "Bid금액 회수"
+      const option = getDefaultMethodOption(label, callback);
+      console.log(label)
+      console.log(option)
+      fn_overlay_blindLoading(true, `${label} 진행중`);
+      await auction_contract.withdrawFromAuction(contractAddress, tokenId, bidCount, option)
+    } catch (error) {
+      console.log("withdraw Bid 실패.")
+      console.log(error)
+      fn_overlay_blindLoading(false);
+    }
+  }
+  const makeOffer = async () => {
+    myAddress = await getAccount();
+    let owner = await erc721_contract.ownerOf(tokenId);
+    if(compareAddress(myAddress, owner)) {
+      alert("You are nft owner. You can't do the offer")
+      fn_modal_close()
+      return ;
+    }
+    // check input valid
+    const offerPrice = document.getElementById("offerPriceInput").value;
+    const endDate = document.getElementById("endDatePicker").value;
+    const endTime = document.getElementById("endTimePicker").value;
+    const validPriceChecker = (value) => {
+      return isValidEth(value)
+    }
+    const validDurationChecker = (date, time) => {
+      let now = new Date();
+      let selectTimestamp = getEndTimestamp(date, time);
+
+      return now.getTime() < selectTimestamp;
+    }
+    const getEndTimestamp = (date, time) => {
+      const [_hours, _minutes] = String(time).split(":");
+
+      let selectDate = new Date(date);
+      selectDate.setHours(_hours)
+      selectDate.setMinutes(_minutes)
+
+      return selectDate.getTime()
+    }
+
+    // execute offer
+    if(validPriceChecker(offerPrice) && validDurationChecker(endDate, endTime)){
+      let option = {
+        value: web3.utils.toWei(offerPrice, "ether"),
+        receipt: (receipt)=>{
+          if(receipt.status) {
+            console.log("offer가 완료되었습니다.")
+            fn_modal_close();
+            window.location.reload()
+          } else {
+            console.log("offer가 실패되었습니다.")
+            console.log(receipt)
+            console.warn(`receipt.status=${receipt.status}`)
+            alert("offer 실패")
+          }
+          fn_overlay_blindLoading(false)
+        },
+        error: (error, receipt)=>{
+          console.log("event error")
+          console.error(error)
+          alert("offer 실패")
+          fn_overlay_blindLoading(false)
+        }
+      }
+      fn_overlay_blindLoading(true, "NFT에 대한 offer 등록중")
+      let endTimestamp = getEndTimestamp(endDate, endTime) / 1000;
+
+      try {
+        await market_contract.offerMarketItem(contractAddress, tokenId, endTimestamp, option)
+      } catch (error) {
+        console.error(error)
+        fn_overlay_blindLoading(false);
+      }
+    } else {
+      alert("Price or Duration is not valid")
+    }
+  }
+
+  const cancelSell = async () => {
+    let marketItemInfo = await market_contract.getMarketInfo(contractAddress, tokenId)
+    if(marketItemInfo){
+      var result = confirm("판매를 취소하시겠습니까?\n취소 시 Gas Fee가 소모됩니다.");
+      if(result){
+        let option = {
+          receipt: (receipt)=>{
+            if(receipt.status) {
+              console.log("취소가 완료되었습니다.")
+              alert("취소 완료")
+              window.location.reload()
+            } else {
+              console.log("취소가 실패되었습니다.")
+              console.log(receipt)
+              console.warn(`receipt.status=${receipt.status}`)
+              alert("취소 실패")
+            }
+            fn_overlay_blindLoading(false)
+          },
+          error: (error, receipt)=>{
+            console.log("error발생")
+            console.error(error)
+            alert("취소 실패")
+            fn_overlay_blindLoading(false)
+          }
+        }
+        fn_overlay_blindLoading(true, "판매 취소중입니다.")
+        await market_contract.cancelListedItem(contractAddress, tokenId, option)
+      }
+    }
+  }
+  const sellCancelBtn = document.getElementById("sellCancelBtn");
+  sellCancelBtn.addEventListener("click", cancelSell)
+  const getMetadata = async (contractAddress, tokenId) => {
+    let metadataURI
+    if(contractTypeObj.isERC721){
+      metadataURI = await erc721_contract.tokenURI(tokenId);
+    } else {
+      metadataURI = await erc1155_contract.uri(tokenId);
+    }
+
+    let fetchResponse = await fetch(metadataURI)
+    if(fetchResponse.ok){
+      return await fetchResponse.json();
+    } else {
+      console.log("Metadata load error")
+      throw `Metadata load error. \n contractAddress=${contractAddress}\n tokenId=${tokenId}`
+    }
+  }
+
+  const setNFTdata = async (metadata) => {
+    // init NFT image
+    nftImage.src = metadata.image;
+
+    // init NFT description
+    collapseDescription.children[0].innerHTML = metadata.description
+
+    // init NFT Properties
+    setProperties(metadata.attributes);
+
+    // init details
+    contractAddressSpan.innerHTML =
+      `<a class="cursor-pointer wallet-address-link" onclick="openEtherscan('contract', '${contractAddress}')">
+        ${maskingString(contractAddress)}
+      </a>`
+
+    let nftNameH1 = document.getElementById("nftNameH1");
+    nftNameH1.innerHTML = metadata.name;
+
+    // init externalLink
+    // console.log(`link=${data.external_url}`);
+  }
+  const getContractTransferEvent = async () => {
+    let transferEvents = [];
+    if(contractTypeObj.isERC721){
+      // Transfer 이벤트는 from과 id 둘 다 검색 가능하기때문에 tokenId도 걸러준다.
+      let eventTransfer = await erc721_contract.getPastEvents({eventName: "Transfer", tokenId: tokenId});
+      transferEvents.push(...eventTransfer);
+    } else {
+      // TransferSingle, Batch Event는 operator, from, to만 검색가능하기에 filter함수로 걸러준다.
+      let eventSingle = await erc1155_contract.getPastEvents({eventName: "TransferSingle"});
+      let eventBatch = await erc1155_contract.getPastEvents({eventName: "TransferBatch"});
+      eventSingle = eventSingle.filter(e => e.returnValues.id == tokenId)
+      eventBatch = eventBatch.filter(e => e.returnValues.id == tokenId)
+      transferEvents.push(...eventSingle);
+      transferEvents.push(...eventBatch);
+    }
+    return transferEvents
+  }
+  const getMintEventFromTransferEvent = async (transferEvents) => {
+    let mintEvents = transferEvents.filter(e => e.returnValues.from == NULL_ADDRESS);
+    return mintEvents
+  }
+  const getCreator = (mintEvents) => {
+    return mintEvents[0].returnValues.to;
+  }
+  const setCreatorFromMintEvent = (mintEvents) => {
+    const creator = getCreator(mintEvents)
+
+    // setCreator to span;
+    const nftCreatorLink = document.getElementById("creatorNameLink");
+    nftCreatorLink.href = window.location.origin + `/user/${creator}`;
+    nftCreatorLink.innerHTML = maskingString(creator)
+  }
+  const setOwnerLabel = (label) => {
+    const nftOwnerLink = document.getElementById("nftOwnerLink");
+    nftOwnerLink.innerHTML = label;
+  }
+  const getOwnerLabelFromContract = async () => {
+    const interfaceId = getInterfaceId('totalSupply(uint256)');
+    console.log("interfaceId")
+    console.log(interfaceId)
+
+    const isSupportInterface = await erc1155_contract.supportsInterface(interfaceId);
+    console.log(`isSupportInterface=${isSupportInterface}`)
+    let totalSupply = await erc1155_contract.totalSupply(tokenId);
+    console.log(totalSupply)
+    if(isSupportInterface){
+      return `${totalSupply} has this nft`
+    } else {
+      let count = await erc1155_contract.balanceOf(myaddress, tokenId);
+      if(count > 0){
+        return `You have ${count}`;
+      } else {
+        return ``;
+      }
+    }
+  }
+  const getSoldEvents = async () => {
+    let itemSoldEvents = [];
+
+    let marketSolds = await market_contract.getPastEvents({eventName:"MarketItemSold", nft:contractAddress, tokenId:Number(tokenId)});
+    itemSoldEvents.push(...marketSolds)
+    let marketOfferAccept = await market_contract.getPastEvents({eventName:"OfferAccept", nft:contractAddress, tokenId:Number(tokenId)});
+    itemSoldEvents.push(...marketOfferAccept)
+
+    return itemSoldEvents;
+  }
+  const getCreatorAddress = (mintEvents) => {
+    const creator = mintEvents[0].returnValues.to;
+    return creator;
+  }
+  const getOtherCreatorItem = async (creatorAddress) => {
+    let mintEvents = [];
+    if(contractTypeObj.isERC721){
+      // Transfer 이벤트는 from과 id 둘 다 검색 가능하기때문에 tokenId도 걸러준다.
+      let eventTransfer = await erc721_contract.getPastEvents({eventName: "Transfer", from:NULL_ADDRESS, to:creatorAddress});
+      mintEvents.push(...eventTransfer);
+      mintEvents = mintEvents.filter(e => e.returnValues.tokenId != Number(tokenId))
+    } else {
+      let eventSingle = await erc1155_contract.getPastEvents({eventName: "TransferSingle", from:NULL_ADDRESS, to:creatorAddress});
+      let eventBatch = await erc1155_contract.getPastEvents({eventName: "TransferBatch", from:NULL_ADDRESS, to:creatorAddress});
+      mintEvents.push(...eventSingle)
+      mintEvents.push(...eventBatch)
+      mintEvents = mintEvents.filter(e => e.returnValues.id != Number(tokenId))
+    }
+    let creatorItem = mintEvents.slice(0,4);
+    return creatorItem
+  }
+
+  const setProperties = (array) => {
+    const grid = document.getElementsByClassName("properties-grid")[0];
+    grid.innerHTML = "";
+    if(array){
+      array.forEach(element => {
+        let {trait_type, value} = element;
+
+        let propertiesCol = document.createElement("div");
+        propertiesCol.classList.add("col-4");
+        propertiesCol.classList.add("py-2");
+
+        let propertiesWrap = document.createElement("div");
+        propertiesWrap.classList.add("properties-wrap")
+
+        let propertiesType = document.createElement("div");
+        propertiesType.classList.add("properties-type")
+        propertiesType.innerHTML = trait_type;
+
+        let propertiesValue = document.createElement("div");
+        propertiesValue.classList.add("properties-value")
+        propertiesValue.innerHTML = value;
+
+        propertiesWrap.appendChild(propertiesType)
+        propertiesWrap.appendChild(propertiesValue)
+        propertiesCol.appendChild(propertiesWrap)
+        grid.appendChild(propertiesCol);
+      });
+    }
+  }
+  const setItemActivity = async (dataArray) => {
+    // init Item Activity
+    const itemActivityTable = document.getElementById("itemActivityTable")
+    fn_table_DataClear("itemActivityTable")
+
+    const getActivityAddressButton = (address) => {
+      if(compareAddress(address, marketAddress)){
+        let label = "Market Contract"
+        return `<a class="cursor-pointer wallet-address-link" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="${label}">${label}</a>`;
+      } else if(compareAddress(address, auctionAddress)){
+        let label = "Auction Contract"
+        return `<a class="cursor-pointer wallet-address-link" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="${label}">${label}</a>`;
+      } else {
+        return `<a class="cursor-pointer wallet-address-link" onclick="openUserInfoPage('${address}')" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="${address}">${maskingString(address)}</a>`;
+      }
+    }
+    const addActivityData = (rowObj) => {
+      let newRow = itemActivityTable.insertRow(-1);
+
+      let eventCell = newRow.insertCell(-1);
+      eventCell.innerHTML = isNullAddress(rowObj['from']) ? "Mint" : rowObj['event'];
+      let fromCell = newRow.insertCell(-1);
+      fromCell.innerHTML = getActivityAddressButton(rowObj['from'])
+      let toCell = newRow.insertCell(-1);
+      toCell.innerHTML = getActivityAddressButton(rowObj['to'])
+      let dateCell = newRow.insertCell(-1);
+      dateCell.innerHTML = rowObj['diffDate'];
+    }
+
+    if(dataArray){
+      let promiseArray = dataArray.map(async (element, index)=> {
+        const tempBlock = await web3.eth.getBlock(element.blockNumber);
+
+        // time difference
+        let diffObj = getTimeDiffAndUnit(new Date().getTime(), new Date(tempBlock.timestamp*1000).getTime())
+
+        const rowData = {
+          event: element.event,
+          from: element.returnValues.from,
+          to: element.returnValues.to,
+          diffDate: new Intl.RelativeTimeFormat('ko-KR').format(diffObj.diff, diffObj.unit),
+          datetime: new Date(tempBlock.timestamp*1000).getTime()
+        };
+
+        activityData.push(rowData);
+      })
+
+      const sortData = (sort=-1) => {
+        activityData.sort((a,b)=>{
+          // return a[4] > b[4] ? -1 : 1;
+          return a['datetime'] > b['datetime'] ? -1 : 1;
+        })
+        activityData.forEach(element => {
+          addActivityData(element)
+        });
+      }
+      await Promise.all(promiseArray).then(()=>{
+        sortData(-1)
+      })
+    }
+  }
+  const setPriceHistory = async (marketAuctionEvents) => {
+    console.log("call setPriceHistory")
+    console.log(marketAuctionEvents)
+    const priceHistoryDiv = document.getElementById("priceHistoryDiv")
+    const noPriceHistoryDiv = document.getElementById("noPriceHistoryDiv")
+    const oneDaySeconds = 1000*60*60*24
+    const removeLastZeros = (value) => {
+      return value.replace(/(0+$)/, "")
+    }
+    const minimizeShowFloat = (value) => {
+      const MAXIMUM_LENGTH = 18;
+      const MINIMUM_LENGTH = 6
+
+      let result = Number.parseFloat(value.toFixed(MAXIMUM_LENGTH)).toFixed(MINIMUM_LENGTH)
+      return removeLastZeros(result);
+    }
+    const maximizeShowFloat = (value) => {
+      const MAXIMUM_LENGTH = 18;
+      const MINIMUM_LENGTH = 18;
+      let result = Number.parseFloat(Number(value).toFixed(MAXIMUM_LENGTH)).toFixed(MINIMUM_LENGTH)
+      return removeLastZeros(result);
+    }
+
+    // PriceData가 있는 경우에만
+    if(marketAuctionEvents.length > 0){
+      priceHistoryDiv.classList.remove("d-none")
+      noPriceHistoryDiv.classList.add("d-none")
+      let promiseArray = []
+      marketAuctionEvents.sort((a, b) => {
+
+      })
+      marketAuctionEvents.forEach(element => {
+        promiseArray.push(
+          new Promise(async (resolve, reject) => {
+            let blockData = await web3.eth.getBlock(element.blockNumber)
+            switch (element.event) {
+              case "MarketItemSold":
+                resolve({type:"Market", price:element.returnValues.price, date: new Date(blockData.timestamp*1000)})
+                break;
+              case "OfferAccept":
+                resolve({type:"Offer", price:element.returnValues.price, date: new Date(blockData.timestamp*1000)})
+                break;
+              case "AuctionEnded":
+                resolve({type:"Auction", price:element.returnValues.highestBid, date: new Date(blockData.timestamp*1000)})
+                break;
+              default:
+                reject("no matching event in price chart");
+                break;
+            }
+          })
+        )
+      });
+      let itemDatas = await Promise.all(promiseArray)
+
+      let labels=[], data=[];
+      itemDatas.sort((a, b) => {
+        return a.date < b.date ? -1 : 1;
+      })
+      itemDatas.forEach(element => {
+        let tempLabel = [getYYYYMMDDStr(element.date), element.type]
+        labels.push(tempLabel)
+        data.push(web3.utils.fromWei(element.price, 'ether'))
+      })
+
+      let datasets = [{
+        label: "ETH",
+        data: data,
+        fill: false,
+        borderColor: 'rgba(0, 0, 0, 0.2)',
+        borderWidth: 1,
+        backgroundColor: '#86b7fe',
+        pointBorderColor: '#86b7fe',
+        pointBackgroundColor: '#86b7fe',
+        pointBorderWidth: 4,
+        pointRadius: 4,
+        pointHitRadius: 8,
+        pointHoverRadius: 8,
+        tension: 0
+      }]
+
+      const ctx = document.getElementById("chart");
+      if (priceChart !== undefined) {
+        priceChart.destroy();
+      }
+      priceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: datasets
+        },
+        options: {
+          scales: {
+            x: {
+              offset: true
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                // stepSize: 0.001,
+                callback: function(value, index, values) {
+                  return `${minimizeShowFloat(value)}`
+                },
+              }
+            }
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: "Trade Price"
+            },
+            subtitle: {
+              display: true,
+              text: "시간별 거래된 금액"
+            },
+            tooltip: {
+              callbacks: {
+                title: function(context) {
+                  let dateLabel = context[0].label.split(",")[0];
+                  return new Intl.DateTimeFormat('ko-KR').format(new Date(dateLabel))
+                },
+                label: function(context) {
+                  let data = context.dataset.data[context.dataIndex]
+                  let valueStr = data.toString()
+                  return ` ${valueStr} ${context.dataset.label}`;
+                  // return " " + removeLastZeros(maximizeShowFloat(data)) + " " + context.dataset.label
+                },
+              }
+            }
+          }
+        }
+      })
+    } else {
+      priceHistoryDiv.classList.add("d-none")
+      noPriceHistoryDiv.classList.remove("d-none")
+    }
+
+  }
+  const setCreatorLink = async (contractAddress, tokenId, external_url) => {
+    const getCreatorLink = async (contractAddress, tokenId) => {
+      // temp. DB구현 전까지 임시 리턴할 데이터
+      return {discord: "url"};
+
+      // TODO. DB에서 조회기능 구현
+      const url = "";
+      let fetchResponse = await fetch(url)
+      if(fetchResponse.ok){
+        let CreatorLinkData = await fetchResponse.json();
+        return CreatorLinkData
+      } else {
+        console.error("setCreatorLink fetchResponse not ok")
+        console.log(fetchResponse)
+        return null;
+      }
+    }
+
+    const externalLinksDiv = document.getElementById("externalLinksDiv");
+    let { discord } = await getCreatorLink();
+
+    let shareButton = `<button type="button" class="btn btn-outline-dark mx-1" onclick="copyUrlToClipboard()"><i class="bi bi-share-fill"></i></button>`
+    let discordButton = `<button type="button" class="btn btn-outline-dark mx-1" onclick="javascript:window.location.href='${external_url}'"><i class="bi bi-discord"></i></button>`
+    let websiteButton = `<button type="button" class="btn btn-outline-dark mx-1" onclick="javascript:window.location.href='${external_url}'"><i class="bi bi-globe2"></i></button>`
+    let reportButton = `<button type="button" class="btn btn-outline-dark mx-1" onclick="javascript:console.log(1)"><i class="bi bi-flag-fill"></i></button>`
+
+    externalLinksDiv.insertAdjacentHTML("beforeend", shareButton);
+    if(external_url) externalLinksDiv.insertAdjacentHTML("beforeend", websiteButton);
+    if(discord) externalLinksDiv.insertAdjacentHTML("beforeend", discordButton);
+    externalLinksDiv.insertAdjacentHTML("beforeend", reportButton);
+
+  }
+  const copyUrlToClipboard = async () => {
+    window.navigator.clipboard.writeText(window.location.href);
+    alert('링크 주소가 복사되었습니다.')
+  }
+  const setViewCounts = async (contractAddress, tokenId) => {
+    const getViewCounts = async (contractAddress, tokenId) => {
+      const url = "";
+      // temp
+      return {viewCount: 31, likeCount: 5};
+
+      // TODO. DB에서 데이터조회
+      let fetchResponse = await fetch(url)
+      if(fetchResponse.ok){
+        let ViewCountsData = await fetchResponse.json();
+        return ViewCountsData
+      } else {
+        console.error("setViewCounts fetchResponse not ok")
+        console.log(fetchResponse)
+        return null;
+      }
+    }
+
+    const viewCountsDiv = document.getElementById("viewCountsDiv");
+    let ViewCountsData = await getViewCounts(contractAddress, tokenId);
+    viewCountsDiv.innerHTML = "";
+    let viewDiv = document.createElement("div");
+    viewDiv.classList.add("mx-1")
+    viewDiv.insertAdjacentHTML("beforeend", `
+      <span><i class="bi bi-eye"></i></span>
+      <span>${ViewCountsData.viewCount}</span>
+    `)
+    let likeDiv = document.createElement("div");
+    likeDiv.classList.add("mx-1")
+    likeDiv.insertAdjacentHTML("beforeend", `
+      <span><i class="bi bi-hand-thumbs-up"></i></span>
+      <span>${ViewCountsData.likeCount}</span>
+    `)
+    ViewCountsData.likeCount;
+    viewCountsDiv.append(viewDiv);
+    viewCountsDiv.append(likeDiv);
+  }
+  const setApprove = (targetContract) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        fn_overlay_blindLoading(true, "NFT 권한 이양 중")
+        const approveOption = {
+          receipt: ()=>{
+            console.log("approve success")
+            fn_overlay_blindLoading(false)
+            resolve()
+          },
+          error: (error) => {
+            console.log("approve error")
+            console.log(error)
+            fn_overlay_blindLoading(false);
+            reject(error)
+          }
+        }
+        await erc721_contract.approve(targetContract, tokenId, approveOption);
+      } catch (error) {
+        console.log("approve error")
+        console.log(error)
+        fn_overlay_blindLoading(false);
+        reject(error)
+      }
+    })
+  }
+  const acceptOffer = async (offerIndex) => {
+    console.log(`call acceptOffer ${offerIndex}`)
+    // 권한 이양
+    fn_overlay_blindLoading(true, "NFT 권한 확인 중")
+    approveAddress = market_contract.getAddress();
+    getApproved = await erc721_contract.getApproved(tokenId)
+    if(!compareAddress(approveAddress, getApproved)) {
+      console.log(`getApproved=${getApproved}`)
+      await setApprove(approveAddress)
+    }
+    // offer 수락
+    let findedOffer = offerDataArray.find(element => element.offerIndex == offerIndex)
+    let option = {
+      value: web3.utils.toWei(findedOffer.price, "ether"),
+      receipt: (receipt)=>{
+        if(receipt.status) {
+          console.log("Offer 수락이 완료되었습니다.")
+          alert("Offer 수락 완료")
+          window.location.reload()
+        } else {
+          console.log("Offer 수락이 실패되었습니다.")
+          console.log(receipt)
+          console.warn(`receipt.status=${receipt.status}`)
+          alert("Offer 수락 실패")
+        }
+        fn_overlay_blindLoading(false)
+      },
+      error: (error, receipt)=>{
+        console.log("event error")
+        console.error(error)
+        alert("Offer 수락 실패")
+        fn_overlay_blindLoading(false)
+      }
+    }
+    fn_overlay_blindLoading(true, "제안된 가격에 Offer 수락 진행중")
+    await market_contract.acceptOffer(contractAddress, tokenId, findedOffer.offerIndex, option)
+  }
+  const withdrawOffer = async (offerIndex) => {
+    console.log(`call withdrawOffer ${offerIndex}`)
+    let findedOffer = offerDataArray.find(element => element.offerIndex == offerIndex)
+    let option = {
+      receipt: (receipt)=>{
+        if(receipt.status) {
+          console.log("회수가 완료되었습니다.")
+          alert("회수 완료")
+          window.location.reload()
+        } else {
+          console.log("회수가 실패되었습니다.")
+          console.log(receipt)
+          console.warn(`receipt.status=${receipt.status}`)
+          alert("회수 실패")
+        }
+        fn_overlay_blindLoading(false)
+      },
+      error: (error, receipt)=>{
+        console.log("event error")
+        console.error(error)
+        alert("회수 실패")
+        fn_overlay_blindLoading(false)
+      }
+    }
+    fn_overlay_blindLoading(true, "제안한 금액 회수 진행중")
+    console.log(contractAddress)
+    console.log(tokenId)
+    console.log(findedOffer.offerIndex)
+    console.log(option)
+    await market_contract.withdrawOutdatedOffer(contractAddress, tokenId, findedOffer.offerIndex, option)
+  }
+  const setPriceLabel = async (type, priceWei) => {
+    priceLabel.innerHTML = type == "auction" ? "Highest Bid" : "Current Price"
+
+    const eth = web3.utils.fromWei(priceWei, "ether");
+    marketPriceEth.innerHTML = eth;
+
+    let priceObj = await getCurrentMarketPriceObj("KRW-ETH");
+    let wonPrice = priceObj.trade_price * eth;
+    marketPriceWon.innerHTML = wonPrice.toLocaleString('ko-KR');
+  }
+  const setOffers = async (contractAddress, tokenId) => {
+    const OffersTable = document.getElementById("OffersTable")
+    // init table
+    fn_table_Initialize("OffersTable")
+
+    // offer history 조회
+    const getOfferData = async (contractAddress, tokenId) => {
+      const url = "";
+      let offerEventArray = await market_contract.getPastEvents({eventName: "OfferItem", nft:contractAddress, tokenId: tokenId});
+      if(offerEventArray.length > 0){
+        let temp = [];
+        const timeOption = {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric'
+        }
+        const priceObj = await getCurrentMarketPriceObj("KRW-ETH");
+
+        let promiseArray = offerEventArray.map(async (element, index)=> {
+          const _nft = element.returnValues.nft
+          const _tokenId = element.returnValues.tokenId
+          const _offerer = element.returnValues.offerer
+          const _price = element.returnValues.price
+          const _offerIndex = element.returnValues.offerIndex
+          const _endTime = element.returnValues.endTime
+          const offerDetail = await market_contract.getOfferDetail(_nft, _tokenId, _offerIndex);
+
+          // time difference
+          let diffObj = getTimeDiffAndUnit(new Date().getTime(), new Date(_endTime*1000).getTime())
+          let currentPriceETH = web3.utils.fromWei(_price, 'ether')
+          console.log("offerDetail.remainPrice")
+          console.log(offerDetail)
+          if(offerDetail.remainPrice > 0){
+            temp.push({
+              price: _price,
+              remainPrice: offerDetail.remainPrice,
+              krwPrice: `￦ ${(priceObj.trade_price * currentPriceETH).toLocaleString('ko-KR')}`,
+              floorDiff: "",
+              // expiration: new Intl.DateTimeFormat('ko-KR', timeOption).format(element.endTime),
+              expiration: "약 "+new Intl.RelativeTimeFormat('ko-KR').format(diffObj.diff, diffObj.unit),
+              from: _offerer,
+              targetTime: new Date(_endTime*1000).getTime(),
+              offerIndex: _offerIndex
+            })
+          }
+        })
+        await Promise.all(promiseArray)
+
+        return temp;
+      } else {
+        // TODO. ReferenceError: offersArray is not defined
+        console.log("offerEventArray.length == 0")
+        console.log(offerEventArray)
+        return null;
+      }
+    }
+    const addOfferData = async (rowData) => {
+      let sort = -1
+      let newRow = OffersTable.insertRow(sort);
+      let priceCell = newRow.insertCell(sort);
+      priceCell.innerHTML = web3.utils.fromWei(rowData["price"], 'ether')
+      let krwPriceCell = newRow.insertCell(sort);
+      krwPriceCell.innerHTML = rowData["krwPrice"];
+      let floorDiffCell = newRow.insertCell(sort);
+      floorDiffCell.innerHTML = rowData["floorDiff"];
+      let expirationCell = newRow.insertCell(sort);
+      expirationCell.innerHTML = rowData["expiration"];
+      let fromCell = newRow.insertCell(sort);
+      fromCell.innerHTML = maskingString(rowData["from"]);
+      if(rowData["targetTime"] > new Date().getTime()){
+        if(compareAddress(myaddress, ownerAddress)){
+          tempCell = newRow.insertCell(sort);
+          tempCell.innerHTML = `<button class="btn btn-primary" onclick="acceptOffer(${rowData["offerIndex"]})">Accept</button>`
+        }
+      } else {
+        if(compareAddress(myaddress, rowData["from"])){
+          if(Number(rowData["remainPrice"]) > 0){
+            tempCell = newRow.insertCell(sort);
+            tempCell.innerHTML = `<button class="btn btn-danger" onclick="withdrawOffer(${rowData["offerIndex"]}, ${rowData["remainPrice"]})">Withdraw</button>`
+          }
+        }
+      }
+    }
+
+
+    offerDataArray = await getOfferData(contractAddress, tokenId);
+    if(offerDataArray) {
+      offerDataArray.sort((a,b)=>{
+        return a.targetTime > b.targetTime ? -1 : 1;
+      })
+      offerDataArray.forEach((element, index, array) => {
+        addOfferData(element);
+      });
+    }
+  }
+  const setCreatorItem = (eventArray) => {
+    let moreItemsDiv = document.getElementById("collapseMoreItems").children[0].children[0];
+    moreItemsDiv.innerHTML = "";
+
+    const addCardItems = (contractAddress, tokenId, nftData) => {
+      let colWrapper = document.createElement("div");
+      colWrapper.classList.add('col-3');
+      colWrapper.classList.add('my-2');
+      colWrapper.classList.add('cursor-pointer');
+
+      colWrapper.innerHTML = `
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="${nftData.image}" style="max-height: 286px; object-fit: scale-down;"/>
+        <div class="card-body">
+          <h5 class="card-title">
+            ${nftData.name}
+          </h5>
+          <p class="card-text">
+            ${nftData.description}
+          </p>
+        </div>
+      </div>
+      `
+
+      colWrapper.onclick = ()=>{
+        window.location.href = window.location.origin + `/nft/${contractAddress}/${tokenId}`;
+      }
+      moreItemsDiv.append(colWrapper)
+    }
+    const addItemToMoreItems = async (contractAddress, tokenId) => {
+      let nftData = await getMetadata(contractAddress, tokenId)
+      addCardItems(contractAddress, tokenId, nftData)
+    }
+    // const addItemToMoreItems = async (contractAddress, tokenId) => {
+    //   const metadataURI = await erc721_contract.tokenURI(tokenId);
+    //   let fetchResponse = await fetch(metadataURI)
+    //   if(fetchResponse.ok){
+    //     let nftData = await fetchResponse.json();
+    //     addCardItems(contractAddress, tokenId, nftData)
+    //   }
+    // }
+    // for (let index = 0; index < eventArray.length; index++) {
+    //   if(index < 4 && eventArray[index]?.returnValues?.tokenId != tokenId) {
+    //     // 4개만 표시
+    //     addItemToMoreItems(eventArray[index].address, eventArray[index].returnValues.tokenId)
+    //   } else {
+    //     break;
+    //   }
+    // }
+    for (let index = 0; index < eventArray.length; index++) {
+      if(index < 4 ) {
+        // 4개만 표시
+        let address, tokenId
+        address = eventArray[index].address;
+        if(contractTypeObj.isERC721){
+          tokenId = eventArray[index].returnValues.tokenId
+        } else {
+          tokenId = eventArray[index].returnValues.id
+        }
+        addItemToMoreItems(address, tokenId)
+      } else {
+        break;
+      }
+    }
+  }
+  const setCreatorOwner = (dataArray) => {
+    // creator, owner setting
+    let creatorNameLink = document.getElementById("creatorNameLink");
+    creatorNameLink.href = window.location.origin + `/user/${dataArray[0].returnValues.to}`;
+    creatorNameLink.innerHTML = maskingString(dataArray[0].returnValues.to)
+    let nftOwnerLink = document.getElementById("nftOwnerLink");
+    nftOwnerLink.href = window.location.origin + `/user/${dataArray[dataArray.length-1].returnValues.to}`;
+    nftOwnerLink.innerHTML = maskingString(dataArray[dataArray.length-1].returnValues.to)
+  }
+  const showMarketAuctionBtn = (showBtnObj) => {
+    const { hideAll, sell, sellCancel, buyNow, offer, auctionEnd, auctionBid } = showBtnObj;
+
+    hideAll ? marketItemInfoDiv.classList.add("d-none") : marketItemInfoDiv.classList.remove("d-none")
+    sell ? sellBtn.classList.remove("d-none") : sellBtn.classList.add("d-none")
+    sellCancel ? sellCancelBtn.classList.remove("d-none") : sellCancelBtn.classList.add("d-none")
+    buyNow ? buyNowBtn.classList.remove("d-none") : buyNowBtn.classList.add("d-none")
+    offer ? offerBtn.classList.remove("d-none") : offerBtn.classList.add("d-none")
+    auctionEnd ? auctionEndBtn.classList.remove("d-none") : auctionEndBtn.classList.add("d-none")
+    auctionBid ? auctionBidBtn.classList.remove("d-none") : auctionBidBtn.classList.add("d-none")
+  }
+  const setRemainTimeLabel = (label, days, hours, minutes, seconds) => {
+    console.log("call setRemainTimeLabel")
+    auctionRemainLabelSpan.innerText = label;
+    remainDays.innerText = days;
+    remainHours.innerText = hours;
+    remainMinutes.innerText = minutes;
+    remainSeconds.innerText = seconds;
+  }
+  const setRemainTime = (startBlockDatetime, endBlockDatetime) => {
+    console.log("call setRemainTime")
+    // set interval
+    if(!timeInterval){
+      timeInterval = setInterval((startDatetime, endDatetime) => {
+        let nowTimestamp = new Date().getTime();
+        let targetTime, remainLabel;
+
+        if(nowTimestamp < startDatetime){
+          // start time
+          targetTime = startDatetime;
+          remainLabel = "Auction start after";
+        } else if(nowTimestamp < endDatetime){
+          // end time
+          targetTime = endDatetime;
+          remainLabel = "Auction end at";
+        } else {
+          // over time
+          targetTime = endDatetime;
+          remainLabel = "Auction ended";
+          setRemainTimeLabel(remainLabel, 0, 0, 0, 0);
+
+          // clear interval
+          setTimeout(() => {
+            clearInterval(timeInterval)
+          }, 0);
+          return;
+        }
+
+        let diff = targetTime - nowTimestamp;
+        let remainDays = parseInt(diff / DAY);
+        diff = diff % DAY;
+        let remainHours = parseInt(diff / HOUR);
+        diff = diff % HOUR;
+        let remainMinutes = parseInt(diff / MINUTE);
+        diff = diff % MINUTE;
+        let remainSeconds = parseInt(diff / SECOND)
+
+        setRemainTimeLabel(remainLabel, remainDays, remainHours, remainMinutes, remainSeconds);
+      }, 1000, convertFromBlockTime(startBlockDatetime), convertFromBlockTime(endBlockDatetime));
+    }
+  }
+  const setMarketAuctionPriceDiv = async (type, isSellerObj, priceWei, startBlockDatetime, endBlockDatetime) => {
+    // isSellerObj = {isMarketSeller:Boolean, isAuctionSeller:Boolean, isOwner:Boolean}
+    switch (type) {
+      case "validAuction":
+        marketItemInfoDiv.classList.remove("d-none")
+
+        // 남은 시간 표시
+        setRemainTime(startBlockDatetime, endBlockDatetime);
+        // Current Price를 Highest Bid로 바꾸고 값 표시.
+        setPriceLabel("auction", priceWei)
+
+        const nowTime = new Date().getTime();
+        const auctionEndTime = getDateFromBlocktime(endBlockDatetime).getTime();
+        const auctionStartTime = getDateFromBlocktime(startBlockDatetime).getTime();
+        if(nowTime < auctionStartTime){
+          showMarketAuctionBtn({})
+        } else if(nowTime < auctionEndTime){
+          if(isSellerObj.isAuctionSeller){
+            showMarketAuctionBtn({})
+          } else {
+            showMarketAuctionBtn({auctionBid: true})
+          }
+        } else {
+          if(isSellerObj.isAuctionSeller){
+            showMarketAuctionBtn({auctionEnd: true})
+          } else {
+            showMarketAuctionBtn({})
+          }
+        }
+        break;
+      case "validMarket":
+        marketItemInfoDiv.classList.remove("d-none")
+        setPriceLabel("market", priceWei)
+        if(isSellerObj.isMarketSeller){
+          showMarketAuctionBtn({sellCancel: true})
+        } else {
+          showMarketAuctionBtn({buyNow: true})
+        }
+        break;
+
+      case "invalidMarket":
+        // 과거 마켓이력이 있는 경우
+        marketItemInfoDiv.classList.remove("d-none")
+        setPriceLabel("market", priceWei)
+        if(isSellerObj.isOwner){
+          showMarketAuctionBtn({sell: true})
+        } else {
+          showMarketAuctionBtn({offer: true})
+        }
+        break;
+      default:
+        // 아무 정보가 없는 경우, 해당 div 자체를 숨김
+        showMarketAuctionBtn({hideAll: true})
+        break;
+    }
+  }
+  ////////////////////////////
+  // auction 이벤트 구독 시작
+  ////////////////////////////
+  let currentHighestBid = 0;
+  let bidSubscriptionId, endSubscriptionId;
+
+  const connectAuctionEvent = async () => {
+    // connectAuctionEvent의 경우, auction이 끝나지 않은 상황에서만 호출이 되어야 함.
+    // AuctionBided 이벤트 구독
+    auction_contract.getInstance().events.AuctionBided({
+      filter: {
+        nft: contractAddress,
+        tokenId: tokenId
+      }
+    }).on('data', (event) => {
+      const bidder = event.returnValues.bidder;
+      const bid = parseInt(event.returnValues.bid);
+
+      if (bid > currentHighestBid) {
+        currentHighestBid = bid;
+        console.log(`New highest bid: ${bid} from ${bidder}`);
+        // TODO
+        // 최고가 바꿔주기.
+      }
+    }).on('error', console.error)
+      .on('connected', (subscriptionId) => {
+        console.log(`Subscribed to AuctionBided event with subscription ID: ${subscriptionId}`);
+        bidSubscriptionId = subscriptionId;
+    });
+
+    // AuctionEnded 이벤트 구독
+    auction_contract.getInstance().events.AuctionEnded({
+      filter: {
+        nft: contractAddress,
+        tokenId: tokenId
+      }
+    }).on('data', (event) => {
+      console.log(`Auction ended for NFT ${contractAddress} with ID ${tokenId}.`);
+      console.log(`Highest bidder: ${event.returnValues.highestBidder}`);
+      console.log(`Highest bid: ${event.returnValues.highestBid}`);
+
+      // AuctionBided 이벤트 구독 취소
+      web3.eth.clearSubscriptions(bidSubscriptionId);
+      // AuctionEnded 이벤트 구독 취소
+      web3.eth.clearSubscriptions(endSubscriptionId);
+
+    }).on('error', console.error)
+      .on('connected', (subscriptionId) => {
+        console.log(`Subscribed to AuctionEnded event with subscription ID: ${subscriptionId}`);
+        endSubscriptionId = subscriptionId;
+      });
+  }
+  ////////////////////////////
+  // auction 이벤트 구독 끝
+  ////////////////////////////
+
+
+  const loadNFTInfo = async function(){
+    if(web3.utils.isAddress(contractAddress)){
+      myaddress = await getAccount();
+      // erc721_contract = new NftContract721Wrapper(contractAddress, myaddress);
+      erc721_contract = await contractClassDecorator(BasicERC721ContractWrapper, contractAddress, ERC721_CONTRACT_ABI);
+      contractTypeObj = await getContractTypeObj(erc721_contract);
+      console.log(`contractType=${contractTypeObj}`)
+      ercTypeSpan.innerText = contractTypeObj.isERC721 ? ERC721 : ERC1155;
+
+      if(contractTypeObj.isERC1155){
+        window.location.href = `/nft/${contractAddress}/${tokenId}`
+      }
+
+      const metadata = await getMetadata(contractAddress, tokenId);
+      console.log("metadata")
+      console.log(metadata)
+      setNFTdata(metadata)
+
+      const transferEvents = await getContractTransferEvent();
+      setItemActivity(transferEvents)
+
+      const mintEvents = await getMintEventFromTransferEvent(transferEvents);
+      setCreatorFromMintEvent(mintEvents)
+
+      const creatorAddress = getCreator(mintEvents)
+      const otherCreatorItem = await getOtherCreatorItem(creatorAddress);
+      setCreatorItem(otherCreatorItem)
+
+
+
+      const metadataURI = await erc721_contract.tokenURI(tokenId);
+      let fetchResponse = await fetch(metadataURI)
+      if(fetchResponse.ok){
+        let nftData = await fetchResponse.json();
+        setNFTdata(nftData)
+        let contractEventArray = []
+        let nftTransferEvents = await erc721_contract.getPastEvents({eventName: "Transfer", tokenId: tokenId});
+        contractEventArray.push(...nftTransferEvents)
+        console.log(nftTransferEvents)
+        setItemActivity(contractEventArray)
+
+        setCreatorOwner(contractEventArray)
+
+        // owner address 세팅
+        ownerAddress = await erc721_contract.ownerOf(tokenId)
+
+        // Price History 세팅
+        let itemSoldEvents = []
+        let marketSolds = await market_contract.getPastEvents({eventName:"MarketItemSold", nft:contractAddress, tokenId:Number(tokenId)});
+        itemSoldEvents.push(...marketSolds)
+        let marketOfferAccept = await market_contract.getPastEvents({eventName:"OfferAccept", nft:contractAddress, tokenId:Number(tokenId)});
+        itemSoldEvents.push(...marketOfferAccept)
+        let auctionEnded = await auction_contract.getPastEvents({eventName:"AuctionEnded", nft:contractAddress, tokenId:Number(tokenId)});
+        // AuctionEnd되었지만, 입찰자가 없는 경우는 제거.
+        auctionEnded = auctionEnded.filter(element => !isNullAddress(element.returnValues.highestBidder))
+        itemSoldEvents.push(...auctionEnded)
+        setPriceHistory(itemSoldEvents)
+
+        // TODO. Link 세팅 from db
+        setCreatorLink(contractAddress, tokenId, nftData.external_url);
+
+        // Offers 세팅
+        setOffers(contractAddress, tokenId);
+
+        // TODO. View count 세팅 from db
+        setViewCounts(contractAddress, tokenId);
+
+        // More Items 세팅 from contract
+        let creatorAddress = contractEventArray[0].returnValues.to
+
+        try {
+          let mintEvents = await erc721_contract.getPastEvents({eventName: "Transfer", from: NULL_ADDRESS, to:creatorAddress});
+          // let mintEvents = await erc721_contract.getPastEvents({eventName: "MintToken", from: NULL_ADDRESS, to:creatorAddress});
+          //  TODO . mintEvent에서 3번이 안나옴
+          setCreatorItem(mintEvents);
+        } catch (error) {
+          console.log("error")
+          console.log(JSON.stringify(error))
+          console.log(error)
+        }
+
+        // Market 버튼 세팅
+        // Sell NFT 버튼 세팅
+        // listing cancel nft 버튼 세팅 - 마켓에 올라갔는데, 주인이 자신인 경우
+        let marketItemInfo = await market_contract.getMarketInfo(contractAddress, tokenId)
+        let auctionCurrentCount = await auction_contract.getAuctionCurrentCount(contractAddress, tokenId)
+        let auctionInfo = await auction_contract.getItemInfoOnAuction(contractAddress, tokenId, auctionCurrentCount)
+
+        let remainBidArray = [];
+        let bidInfoPromiseArray = [];
+        for(let i=1; i<=auctionCurrentCount; i++){
+          let tempPromise = new Promise(async (resolve, reject) => {
+            let countAuctionInfo = await auction_contract.getItemInfoOnAuction(contractAddress, tokenId, i)
+            let bidData = await auction_contract.getMyAuctionBid(contractAddress, tokenId, i)
+            if(!compareAddress(myaddress, countAuctionInfo.highestBidder)){
+              resolve({count:i, bidAmount:bidData})
+            } else {
+              resolve();
+            }
+          })
+          bidInfoPromiseArray.push(tempPromise);
+        }
+        remainBidArray = await Promise.all(bidInfoPromiseArray)
+        remainBidArray = remainBidArray.filter(element => element?.bidAmount != '0')
+        remainBidArray.forEach(element => {
+          if(element){
+            const tempEthPrice = web3.utils.fromWei(element.bidAmount);
+            let tempDiv = document.createElement("div");
+            tempDiv.innerHTML =
+            `<button type="button" id="auctionBidWithdrawBtn" class="btn btn-modern btn-primary btn-outline btn-arrow-effect-1" onclick="withdrawBid(${element.count})">
+              Withdraw ${tempEthPrice} ETH
+            </button>`
+            console.log(remainPriceBtnWrapper)
+            remainPriceBtnWrapper.append(tempDiv)
+            console.log(remainPriceBtnWrapper)
+          }
+        });
+        // 남은 bid 금액이 있으면 withDraw 함수 호출해서 금액 뺄 수 있게 설정. 버튼에 세팅하면될듯
+        // let bidCount = 1 ; // 금액이 남아있는 경우의 count 값
+        // await auction_contract.withdrawFromAuction(contractAddress, tokenId, bidCount)
+
+        const isMarketSeller = compareAddress(marketItemInfo.seller, myaddress)
+        const isAuctionSeller = compareAddress(auctionInfo.seller, myaddress)
+        const isOwner = compareAddress(ownerAddress, myaddress)
+
+
+        // market리스팅여부 || auction리스팅여부 || 둘다없을때
+        if(isAvailableAuctionItem(auctionInfo)){
+          // auction에 리스팅 되어있을때.
+          setMarketAuctionPriceDiv("validAuction", {isAuctionSeller}, auctionInfo.highestBid, auctionInfo.startAt, auctionInfo.endAt);
+        } else if(isAvailableMarketItem(marketItemInfo)){
+          // market에 리스팅 되어있을때.
+          setMarketAuctionPriceDiv("validMarket", {isMarketSeller}, marketItemInfo.price);
+        } else {
+          // 둘다 올라와 있지 않은 경우.
+          if(!isNullAddress(marketItemInfo.seller)){
+            // if(!) && !marketItemInfo.sold){
+            // 과거 마켓 거래이력이 있는 경우 현재가 표시
+            setMarketAuctionPriceDiv("invalidMarket", {isMarketSeller, isAuctionSeller, isOwner}, marketItemInfo.price);
+          } else if(auctionInfo) {
+            // 마켓 거래이력 없이 경매만 진행되었던 경우, 최근 경매가 표시
+            console.log(auctionInfo)
+            setMarketAuctionPriceDiv("invalidMarket", {isMarketSeller, isAuctionSeller, isOwner}, auctionInfo.highestBid);
+          } else {
+            // 마켓, 옥션 이력이 없는 경우 모두 안보이게 표시;
+            setMarketAuctionPriceDiv("noData");
+          }
+        }
+      } else {
+        console.log("Metadata load error")
+        throw `Metadata load error. \n contractAddress=${contractAddress}\n tokenId=${tokenId}`
+      }
+    } else {
+      alert(`Contract Address is not valid. contract address = ${contractAddress}`);
+    }
+  }
+  afterInitFunction = async function(){
+    // init variable
+    marketAddress = market_contract.getAddress();
+    auctionAddress = auction_contract.getAddress();
+    erc721Address = erc721_contract.getAddress();
+    erc1155Address = erc1155_contract.getAddress();
+
+    myaddress = await getAccount();
+
+    await loadNFTInfo();
+  }
+</script>
+<style>
+.accordion{
+  --bs-accordion-color: var(--bs-body-color);
+  --bs-accordion-bg: #fff;
+  --bs-accordion-transition: color 0.15s ease-in-out,background-color 0.15s ease-in-out,border-color 0.15s ease-in-out,box-shadow 0.15s ease-in-out,border-radius 0.15s ease;
+  --bs-accordion-border-color: var(--bs-border-color);
+  --bs-accordion-border-width: 1px;
+  --bs-accordion-border-radius: 0.375rem;
+  --bs-accordion-inner-border-radius: calc(0.375rem - 1px);
+  --bs-accordion-btn-padding-x: 1.25rem;
+  --bs-accordion-btn-padding-y: 1rem;
+  --bs-accordion-btn-color: var(--bs-body-color);
+  --bs-accordion-btn-bg: var(--bs-accordion-bg);
+  --bs-accordion-btn-icon: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='var%28--bs-body-color%29'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e);
+  --bs-accordion-btn-icon-width: 1.25rem;
+  --bs-accordion-btn-icon-transform: rotate(-180deg);
+  --bs-accordion-btn-icon-transition: transform 0.2s ease-in-out;
+  --bs-accordion-btn-active-icon: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%230c63e4'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e);
+  --bs-accordion-btn-focus-border-color: #86b7fe;
+  --bs-accordion-btn-focus-box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  --bs-accordion-body-padding-x: 1.25rem;
+  --bs-accordion-body-padding-y: 1rem;
+
+  --bs-accordion-active-color: #000 !important;
+  --bs-accordion-active-bg: #fff !important;
+}
+.market-info-price {
+  font-size:30px;font-weight:bold;color:#000
+}
+.auction-limit-time {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333333;
+}
+.auction-limit-time-label {
+  font-size: 1rem;
+  color: #444444;
+}
+.offer-table-wrapper {
+  width: 100%;
+  height: 300px;
+  overflow: auto;
+}
+.activity-table-wrapper {
+  width: 100%;
+  height: 500px;
+  overflow: auto;
+}
+</style>
