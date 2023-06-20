@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import nsIpfsInstance from '@/services/nsIPFS.service';
-import * as fs from "fs"
+import fs from "fs";
 import { randomUUID } from 'crypto';
-import mime from 'mime'
-import path from 'path'
+import mime from 'mime';
+import path from 'path';
 
 class IPFSController {
   //////////////////////////////////

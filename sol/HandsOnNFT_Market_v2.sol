@@ -19,7 +19,7 @@ contract HandsOnNFT_Market is AccessControl, IERC721Receiver, IERC1155Receiver {
     uint256 public marketDataId;
     mapping (uint => MarketData) public marketDatas;
     // offer 정보 (market에 아이템 하위 리스트)
-    mapping (address => uint) public escrowAmount;
+    // mapping (address => uint) public escrowAmount;
     mapping (uint => mapping (uint => OfferData)) public offerDatas;    // marketDataId 하부 offerCount 기반으로 offer정보 저장
     mapping (uint => uint) public offerCount;   // marketDataId 기반으로 offer여러건이 들어올 수 있으므로 각각 따로 카운팅
 
@@ -38,16 +38,18 @@ contract HandsOnNFT_Market is AccessControl, IERC721Receiver, IERC1155Receiver {
     }
     struct OfferData {
         address offerer;
+        uint256 remainEscrow;
         uint256 pricePerPiece;
         uint256 amountOfToken;
         bool isAccepted;
+        bool isCanceled;
     }
 
-    event MarketAdded(uint256 indexed marketDataId, address indexed token, uint256 indexed tokenId, uint256 tokenERCType, uint256 remainAmountToken, uint256 totalAmountToken, uint256 _pricePerPiece, uint256 _startAt, uint256 _endAt);
+    event MarketAdded(uint256 indexed marketDataId, address indexed token, uint256 indexed tokenId, uint256 tokenERCType, uint256 remainAmountToken, uint256 totalAmountToken, uint256 pricePerPiece, uint256 _startAt, uint256 _endAt);
     event MarketCancel(uint256 indexed marketDataId, address indexed token, uint256 indexed tokenId, uint256 tokenERCType, uint256 remainAmountToken, uint256 totalAmountToken);
-    event MarketSold(uint256 indexed marketDataId, address indexed token, uint256 indexed tokenId, uint256 tokenERCType, uint256 amountOfToken, uint256 remainAmountToken, uint256 totalAmountToken, uint256 _pricePerPiece);
-    event OfferItem(uint256 indexed marketDataId, uint256 indexed offerCount, address indexed offerer, uint256 _pricePerPiece, uint256 amountOfToken);
-    event OfferAccept(uint256 indexed marketDataId, uint256 indexed offerCount, address offerer, uint256 _pricePerPiece, uint256 amountOfToken);
+    event MarketSold(uint256 indexed marketDataId, address indexed token, uint256 indexed tokenId, uint256 tokenERCType, uint256 amountOfToken, uint256 remainAmountToken, uint256 totalAmountToken, uint256 pricePerPiece);
+    event OfferItem(uint256 indexed marketDataId, uint256 indexed offerCount, address indexed offerer, uint256 pricePerPiece, uint256 amountOfToken);
+    event OfferAccept(uint256 indexed marketDataId, uint256 indexed offerCount, address offerer, uint256 pricePerPiece, uint256 amountOfToken);
 
     constructor(){
         marketOwner = msg.sender;
@@ -261,14 +263,16 @@ contract HandsOnNFT_Market is AccessControl, IERC721Receiver, IERC1155Receiver {
 
         offerDatas[_marketDataId][counter] = OfferData(
             msg.sender,
+            msg.value,
             _pricePerPiece,
             _amountOfToken,
+            false,
             false
         );
 
         offerCount[_marketDataId]++;
 
-        escrowAmount[msg.sender] += msg.value;
+        // escrowAmount[msg.sender] += msg.value;
 
         emit OfferItem(_marketDataId, counter, msg.sender, _pricePerPiece, _amountOfToken);
 
@@ -281,7 +285,8 @@ contract HandsOnNFT_Market is AccessControl, IERC721Receiver, IERC1155Receiver {
         require(marketData.sold != true, "already sold.");
         require(marketData.seller == msg.sender, "not seller");
         require(offer.isAccepted == false, "already accepted");
-        require(offer.pricePerPiece * offer.amountOfToken <= escrowAmount[offer.offerer], "lower amount");
+        // require(offer.pricePerPiece * offer.amountOfToken <= escrowAmount[offer.offerer], "lower amount");
+        require(offer.pricePerPiece * offer.amountOfToken <= offer.remainEscrow, "lower amount");
         require(marketData.remainAmountToken >= offer.amountOfToken, "Needs to be smaller or equal to the offer amountOfToken");
 
         // 갯수조정
@@ -308,7 +313,10 @@ contract HandsOnNFT_Market is AccessControl, IERC721Receiver, IERC1155Receiver {
         uint256 offerPrice = offer.pricePerPiece * offer.amountOfToken;
         uint256 feePrice = offerPrice * marketFee / 100;
 
-        escrowAmount[offer.offerer] -= offerPrice;
+        // escrowAmount[offer.offerer] -= offerPrice;
+        // offer수락처리
+        offerDatas[_marketDataId][_offerCount].isAccepted = true;
+        offerDatas[_marketDataId][_offerCount].remainEscrow -= offerPrice;
 
         payable(marketDatas[_marketDataId].seller).transfer(offerPrice - feePrice);
 
@@ -327,7 +335,6 @@ contract HandsOnNFT_Market is AccessControl, IERC721Receiver, IERC1155Receiver {
             // 판매완료 or Offer수락 완료된 Item 대상으로 offer 돌려주기.
             returnExpiredOffer(_marketDataId);
         }
-        offerDatas[_marketDataId][_offerCount].isAccepted = true;
 
         emit OfferAccept(_marketDataId, _offerCount, offer.offerer, offer.pricePerPiece, offer.amountOfToken);
 
@@ -339,29 +346,28 @@ contract HandsOnNFT_Market is AccessControl, IERC721Receiver, IERC1155Receiver {
 
         require(msg.sender == offer.offerer, "not offerAddress");
         require(offer.isAccepted == false, "already accepted");
-        require(offer.pricePerPiece * offer.amountOfToken <= escrowAmount[msg.sender], "lower amount");
+        // require(offer.pricePerPiece * offer.amountOfToken <= escrowAmount[msg.sender], "lower amount");
+        require(offer.pricePerPiece * offer.amountOfToken <= offer.remainEscrow, "lower amount");
 
         payable(offer.offerer).transfer(offer.pricePerPiece * offer.amountOfToken);
-        escrowAmount[msg.sender] -= offer.pricePerPiece * offer.amountOfToken;
+        // escrowAmount[msg.sender] -= offer.pricePerPiece * offer.amountOfToken;
+        offerDatas[_marketDataId][_offerCount].remainEscrow -= offer.pricePerPiece * offer.amountOfToken;
 
-        delete offerDatas[_marketDataId][_offerCount];
+        offerDatas[_marketDataId][_offerCount].isCanceled = true;
 
         return true;
     }
 
     function returnExpiredOffer(uint256 _marketDataId) internal returns (bool) {
-        require(marketDatas[_marketDataId].sold == true, "market item is not solded");
 
         uint256 counter = offerCount[_marketDataId];
 
         for (uint i = 0; i < counter; i++) {
             if(!offerDatas[_marketDataId][i].isAccepted){
-                uint256 totalPrice = offerDatas[_marketDataId][i].pricePerPiece * offerDatas[_marketDataId][i].amountOfToken;
-                offerDatas[_marketDataId][i].pricePerPiece = 0;
-                offerDatas[_marketDataId][i].amountOfToken = 0;
+                // uint256 totalPrice = offerDatas[_marketDataId][i].pricePerPiece * offerDatas[_marketDataId][i].amountOfToken;
+                uint256 totalPrice = offerDatas[_marketDataId][i].remainEscrow;
                 payable(offerDatas[_marketDataId][i].offerer).transfer(totalPrice); 
-
-                delete offerDatas[_marketDataId][i];
+                offerDatas[_marketDataId][i].isCanceled = true;
             }
         }
         return true;

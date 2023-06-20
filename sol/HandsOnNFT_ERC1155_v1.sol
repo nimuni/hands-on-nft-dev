@@ -8,7 +8,6 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 
 contract HandsOnNFT_ERC1155 is ERC1155, AccessControl, ERC1155Burnable, ERC1155Supply {
-    string public version = "0.1.0";
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     

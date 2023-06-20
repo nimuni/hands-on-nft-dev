@@ -1,7 +1,6 @@
-const openEtherscan = (type="tx", value1, value2) => {
-  const baseURI = "https://etherscan.io";
-  console.log(type)
-  console.log(value1)
+const openEtherscan = (networkname="", type="tx", value1, value2) => {
+  let baseURI = "etherscan.io";
+  baseURI = networkname == "" ? `https://${baseURI}` : `https://${networkname}.${baseURI}`;
   switch (type) {
     case "tx":
       window.open(`${baseURI}/tx/${value1}`);
@@ -97,31 +96,6 @@ let intervalFunctionObj = {};
 let intervalVariable;
 const intervalDuration = 1000;
 
-const initPublicInterval = (durationTime) => {
-  intervalVariable = setInterval(()=>{
-    console.log("intervalFunctionArray")
-    Object.keys(intervalFunctionObj).forEach(function(elem){
-      console.log(elem)
-      console.log(intervalFunctionObj[elem]);
-      intervalFunctionObj[elem]();
-    })
-  }, durationTime ? durationTime : intervalDuration)
-}
-const clearPublicInterval = () => {
-  clearInterval(intervalVariable);
-}
-const addFunctionToPublicInterval = (func) => {
-  intervalFunctionObj[func.name] = func;
-}
-const removeFunctionToPublicInterval = (func) => {
-  if(typeof func == 'function') {
-    delete intervalFunctionObj[func.name];
-  } else if(typeof func == 'string'){
-    delete intervalFunctionObj[func];
-  } else {
-    console.log("removeFunctionToPublicInterval error. func is not function or string")
-  }
-}
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
@@ -225,37 +199,6 @@ const findPointPosition = (str) => {
   }
 }
 
-const fn_multiply = (strA, strB) => {
-  let pointPositionA, pointPositionB;
-  let decimalCountA, decimalCountB
-
-  if(isNaN(Number(strA)) || isNaN(Number(strB))) throw "is not number";
-
-  // find point position
-  pointPositionA = findPointPosition(strA);
-  pointPositionB = findPointPosition(strB);
-
-  decimalCountA = strA.length - (pointPositionA + (pointPositionA==strA.length?  0 : 1))
-  decimalCountB = strB.length - (pointPositionB + (pointPositionB==strB.length?  0 : 1))
-
-  let tempA = Number(strA.replace(".", "")).toFixed(0)
-  let tempB = Number(strB.replace(".", "")).toFixed(0)
-  let decimalTotalCount = decimalCountA + decimalCountB;
-  let tempResult = (tempA * tempB).toString()
-
-  if(decimalTotalCount != 0) {
-    if(tempResult.length < decimalTotalCount){
-      tempResult = tempResult.padStart(decimalTotalCount + 1, "0");
-      tempResult = tempResult.slice(0, 1) + "." + tempResult.slice(1, tempResult.length)
-    } else {
-      let tempPointPosition = tempResult.length - decimalTotalCount
-      tempResult = tempResult.slice(0, tempPointPosition) + "." + tempResult.slice(tempPointPosition, tempResult.length)
-    }
-  }
-  return tempResult;
-}
-
-
 /////////////////////////
 // HTML overlays function
 /////////////////////////
@@ -311,10 +254,6 @@ const fn_overlay_blindDotAnimation = (show) => {
     loadingDotDom.innerText = dotStr;
     clearInterval(var_fn_overlayIntervalId);
   }
-}
-const fn_overlay_blindLabel = (value="Loading...") => {
-  const loadingLabelDom = document.getElementById("loadingLabel");
-  loadingLabelDom.innerText = value;
 }
 
 /////////////////////////
@@ -409,13 +348,13 @@ const compareAddress = (addr1, addr2) => {
   return lowerAddr1 === lowerAddr2;
 }
 
+const NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
 const isNullAddress = (addr) => {
-  return addr == "0x0000000000000000000000000000000000000000"
+  return addr == NULL_ADDRESS
 }
 const isAddress = (addr) => {
   return web3.utils.isAddress(addr)
 }
-const NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 const getDollerPriceFromEth = (wei) => {
   // TODO api를 이용해서 거래소 가격을 불러와서 달러가격리턴
@@ -428,13 +367,10 @@ const getDateFromBlocktime = (blockTimestamp) => {
   return new Date(blockTimestamp * 1000);
 }
 
-const isApproved = (targetAddress) => {
-  return 1;
-}
-
 const convertFromBlockTime = (blockTimestamp) => {
   return blockTimestamp * 1000
 }
+
 const convertToBlockTime = (timestamp) => {
   return timestamp / 1000
 }

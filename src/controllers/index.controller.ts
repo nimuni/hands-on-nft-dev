@@ -39,13 +39,13 @@ class IndexController {
       next(error);
     }
   };
-  public erc1155Detail = (req: Request, res: Response, next: NextFunction): void => {
+  public nftDetail = (req: Request, res: Response, next: NextFunction): void => {
     try {
       let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
       ejs_params.contractAddress = req.params.contractAddress
       ejs_params.tokenId = req.params.tokenId
       console.log(ejs_params)
-      res.render('erc1155Detail', ejs_params)
+      res.render('nftDetail', ejs_params)
     } catch (error) {
       next(error);
     }
@@ -111,15 +111,6 @@ class IndexController {
       let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
       console.log(ejs_params)
       res.render('create', ejs_params)
-    } catch (error) {
-      next(error);
-    }
-  };
-  public create1155 = (req: Request, res: Response, next: NextFunction): void => {
-    try {
-      let ejs_params = _.cloneDeep(DEFAULT_PARAMS)
-      console.log(ejs_params)
-      res.render('create1155', ejs_params)
     } catch (error) {
       next(error);
     }

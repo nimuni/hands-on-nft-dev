@@ -395,7 +395,19 @@
 
     endingPriceDiv.classList.remove("d-none");
   }
+  amountInput.addEventListener("change", async (event)=>{
+    let value = Number(event.target?.value);
+    let min = Number(event.target?.min);
+    let max = Number(event.target?.max);
+    if(value >= min && value <= max){
+      // calc potential earning
+      let calcObj = await calcEarning();
+      listingPriceSpan.innerHTML = calcObj.listingPrice;
+      feePriceSpan.innerHTML = calcObj.feePrice;
 
+      portentialEarnSpan.innerHTML = calcObj.portentialEarn;
+    }
+  })
   // set validator of eth input
   const inputsEth = document.getElementsByClassName("input-eth");
   [...inputsEth].forEach(e => {
@@ -439,9 +451,16 @@
     } else {
       serviceFeePercentage = auctionServiceFeePercentage;
     }
-    const feePrice = fn_multiply(listingPrice, String(serviceFeePercentage/100));
-    // const portentialEarn = Number(listingPrice) - Number(feePrice)
+    let amountOfToken;
+    if(contractTypeObj.isERC721) {
+      amountOfToken = 1
+    } else {
+      amountOfToken = Number(amountInput.value);
+    }
+    listingPrice = new Decimal(listingPrice).mul(amountOfToken);
+    const feePrice = new Decimal(listingPrice).mul(serviceFeePercentage/100);
     const portentialEarn = new Decimal(listingPrice).minus(feePrice).toString();
+    // const portentialEarn = Number(listingPrice) - Number(feePrice)
 
     return {
       listingPrice,

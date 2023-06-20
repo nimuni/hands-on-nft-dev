@@ -702,7 +702,7 @@
 
     // init details
     contractAddressSpan.innerHTML =
-      `<a class="cursor-pointer wallet-address-link" onclick="openEtherscan('contract', '${contractAddress}')">
+      `<a class="cursor-pointer wallet-address-link" onclick="openEtherscan('${networkname}', 'contract', '${contractAddress}')">
         ${maskingString(contractAddress)}
       </a>`
 

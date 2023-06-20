@@ -8,7 +8,6 @@ import "./AccessControl-v1.sol";
 
 // v3은 ERC721 상속을 통해 mint token 대신 safemint 사용, _burn, tokenURI 오버라이드 구현
 contract HandsOnNFT_ERC721 is ERC721, ERC721URIStorage, AccessControl {
-    string public version = "0.1.6";
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     mapping(address => uint256[]) creatorNFTs;
@@ -42,14 +41,4 @@ contract HandsOnNFT_ERC721 is ERC721, ERC721URIStorage, AccessControl {
         require(_isApprovedOrOwner(msg.sender, tokenId), "ERC721: caller is not owner nor approved");
         _burn(tokenId);
     }
-
-    // function migrate(address receiver, uint256 tokenId, uint256 amount) public {
-    //     require(ownerOf(tokenId) == msg.sender, "ERC721: caller is not owner of the token");
-
-    //     // Burn ERC721 token
-    //     burn(tokenId);
-
-    //     // Mint ERC1155 token
-    //     ERC1155(receiver).mint(receiver, tokenId, amount, "");
-    // }
 }
